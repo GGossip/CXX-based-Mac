@@ -1,4 +1,4 @@
-#include "CXX_AppKit.h"
+#include "Headers_CXX/AppKit_CXX.h"
 
 void _I_AppViewController_loadView(struct NSViewController *self, struct NSViewController_loadView *_cmd)
 {

@@ -1,5 +1,5 @@
-#ifndef _CXX_COREGRAPHICS_H_
-#define _CXX_COREGRAPHICS_H_ 1
+#ifndef _COREGRAPHICS_CXX_H_
+#define _COREGRAPHICS_CXX_H_ 1
 
 typedef double CGFloat;
 

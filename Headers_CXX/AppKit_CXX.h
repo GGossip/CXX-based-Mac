@@ -1,7 +1,7 @@
-#ifndef _CXX_APPKIT_H_
-#define _CXX_APPKIT_H_ 1
+#ifndef _APPKIT_CXX_H_
+#define _APPKIT_CXX_H_ 1
 
-#include "CXX_CoreGraphics.h"
+#include "CoreGraphics_CXX.h"
 
 //#include <objc/NSObjCRuntime.h>
 #if __LP64__ || NS_BUILD_32_LIKE_64

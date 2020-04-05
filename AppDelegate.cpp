@@ -1,9 +1,6 @@
-#include <objc/objc.h>
-#include <objc/runtime.h>
-#include <objc/message.h>
-#include <assert.h>
+#include <stddef.h>
 
-#include "CXX_AppKit.h"
+#include "Headers_CXX/AppKit_CXX.h"
 
 void _I_AppViewController_loadView(struct NSViewController *self, struct NSViewController_loadView *_cmd);
 
@@ -29,7 +26,7 @@ void _I_AppDelegate_applicationDidFinishLaunching_(struct NSApplicationDelegate 
         rect,
         NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskResizable,
         NSBackingStoreBuffered,
-        NO);
+        false);
 
     struct NSViewController *viewcontroller = NSViewController_initWithNibName(
         NSViewController_alloc(
