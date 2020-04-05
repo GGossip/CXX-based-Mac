@@ -12,8 +12,8 @@ int main(int argc, const char *argv[])
             _I_AppDelegate_applicationDidFinishLaunching_,
             _I_AppDelegate_applicationWillTerminate_);
 
-        struct NSApplicationDelegate *appdelegate = NSApplicationDelegate_alloc(appdelegate_Class);
-
+        struct NSApplicationDelegate *appdelegate = NSApplicationDelegate_init(NSApplicationDelegate_alloc(appdelegate_Class));
+        
         struct NSApplication *application = NSApplication_sharedApplication();
         NSApplication_setDelegate(application, appdelegate);
     }

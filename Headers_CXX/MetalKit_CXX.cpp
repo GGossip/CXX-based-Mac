@@ -23,11 +23,6 @@ struct MTKView *MTKView_initWithFrame(MTKView *self, CGRect frameRect, struct MT
     return reinterpret_cast<struct MTKView *>(view);
 }
 
-void NSViewController_setView(struct NSViewController *self, struct MTKView *view)
-{
-    NSViewController_setView(self, reinterpret_cast<struct NSView *>(view));
-}
-
 struct MTKViewDelegate_Class *MTKViewDelegate_allocClass(
     char const *classname,
     void (*_I_MTKViewDelegate_drawableSizeWillChange_)(struct NSApplicationDelegate *, struct MTKViewDelegate_drawableSizeWillChange_ *, struct MTKView *view, CGSize size),
@@ -68,10 +63,47 @@ struct MTKViewDelegate *MTKViewDelegate_alloc(struct MTKViewDelegate_Class *clas
     return reinterpret_cast<struct MTKViewDelegate *>(delegate);
 }
 
+struct MTKViewDelegate *MTKViewDelegate_init(struct MTKViewDelegate *self)
+{
+    struct objc_object *delegate = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+        reinterpret_cast<struct objc_object *>(self),
+        sel_registerName("init"));
+    return reinterpret_cast<struct MTKViewDelegate *>(delegate);
+}
+
 void MTKView_setDelegate(struct MTKView *self, struct MTKViewDelegate *delegate)
 {
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
         reinterpret_cast<struct objc_object *>(self),
         sel_registerName("setDelegate:"),
         reinterpret_cast<struct objc_object *>(delegate));
+}
+
+void MTKView_setColorPixelFormat(struct MTKView *self, MTLPixelFormat colorPixelFormat)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, MTLPixelFormat)>(objc_msgSend)(
+        reinterpret_cast<struct objc_object *>(self),
+        sel_registerName("setColorPixelFormat:"),
+        colorPixelFormat);
+}
+
+void MTKView_setDepthStencilPixelFormat(struct MTKView *self, MTLPixelFormat depthStencilPixelFormat)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, MTLPixelFormat)>(objc_msgSend)(
+        reinterpret_cast<struct objc_object *>(self),
+        sel_registerName("setDepthStencilPixelFormat:"),
+        depthStencilPixelFormat);
+}
+
+void MTKView_setSampleCount(struct MTKView *self, NSUInteger sampleCount)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, NSUInteger)>(objc_msgSend)(
+        reinterpret_cast<struct objc_object *>(self),
+        sel_registerName("setSampleCount:"),
+        sampleCount);
+}
+
+void NSViewController_setView(struct NSViewController *self, struct MTKView *view)
+{
+    NSViewController_setView(self, reinterpret_cast<struct NSView *>(view));
 }

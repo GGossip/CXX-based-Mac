@@ -217,6 +217,14 @@ struct NSApplicationDelegate *NSApplicationDelegate_alloc(struct NSApplicationDe
     return reinterpret_cast<struct NSApplicationDelegate *>(delegate);
 }
 
+struct NSApplicationDelegate *NSApplicationDelegate_init(struct NSApplicationDelegate *self)
+{
+    struct objc_object *delegate = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+        reinterpret_cast<struct objc_object *>(self),
+        sel_registerName("init"));
+    return reinterpret_cast<struct NSApplicationDelegate *>(delegate);
+}
+
 struct NSApplication *NSApplication_sharedApplication()
 {
     struct objc_object *application = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(

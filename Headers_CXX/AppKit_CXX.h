@@ -3,14 +3,7 @@
 
 #include "CoreGraphics_CXX.h"
 
-//#include <objc/NSObjCRuntime.h>
-#if __LP64__ || NS_BUILD_32_LIKE_64
-typedef long NSInteger;
-typedef unsigned long NSUInteger;
-#else
-typedef int NSInteger;
-typedef unsigned int NSUInteger;
-#endif
+#include "NSRuntime_CXX.h"
 
 typedef CGSize NSSize;
 
@@ -91,6 +84,8 @@ struct NSApplicationDelegate_Class *NSApplicationDelegate_allocClass(
     void (*_I_NSApplicationDelegate_applicationWillTerminate_)(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationWillTerminate_ *, void *aNotification));
 
 struct NSApplicationDelegate *NSApplicationDelegate_alloc(struct NSApplicationDelegate_Class *);
+
+struct NSApplicationDelegate *NSApplicationDelegate_init(struct NSApplicationDelegate *);
 
 struct NSApplication *NSApplication_sharedApplication();
 
