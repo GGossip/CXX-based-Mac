@@ -2,6 +2,6 @@
 <Workspace
    version = "1.0">
    <FileRef
-      location = "self:MetalByCXX.xcodeproj">
+      location = "self:CXXBasedMac.xcodeproj">
    </FileRef>
 </Workspace>
