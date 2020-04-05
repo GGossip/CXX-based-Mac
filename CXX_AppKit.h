@@ -69,10 +69,6 @@ struct NSView *NSView_alloc();
 
 struct NSView *NSView_initWithFrame(NSView *self, NSRect frameRect);
 
-struct NSApplicationDelegate *NSApplicationDelegate_alloc(
-    void (*_I_NSApplicationDelegate_applicationDidFinishLaunching_)(struct NSApplicationDelegate *, void *_cmd, void *aNotification),
-    void (*_I_NSApplicationDelegate_applicationWillTerminate_)(struct NSApplicationDelegate *, void *_cmd, void *aNotification));
-
 struct NSViewController *NSViewController_alloc(
     void (*_I_NSViewController_loadView)(struct NSViewController *, struct NSViewController_loadView *),
     void (*_I_NSViewController_viewDidLoad)(struct NSViewController *, struct NSViewController_viewDidLoad *),
@@ -85,6 +81,14 @@ void NSViewController_setView(struct NSViewController *self, NSView *view);
 void NSViewController_super_viewDidLoad(struct NSViewController *self, struct NSViewController_viewDidLoad *);
 
 void NSViewController_super_setRepresentedObject_(struct NSViewController *self, struct NSViewController_setRepresentedObject_ *_cmd, void *representedObject);
+
+struct NSApplicationDelegate *NSApplicationDelegate_alloc(
+    void (*_I_NSApplicationDelegate_applicationDidFinishLaunching_)(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationDidFinishLaunching_ *, void *aNotification),
+    void (*_I_NSApplicationDelegate_applicationWillTerminate_)(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationWillTerminate_ *, void *aNotification));
+
+struct NSApplication *NSApplication_sharedApplication();
+
+void NSApplication_setDelegate(struct NSApplication *self, struct NSApplicationDelegate *delegate);
 
 extern "C" int NSApplicationMain(int argc, const char *argv[]);
 

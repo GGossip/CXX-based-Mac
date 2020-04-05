@@ -11,7 +11,7 @@ void _I_AppViewController_viewDidLoad(struct NSViewController *self, struct NSVi
 
 void _I_AppViewController_setRepresentedObject_(struct NSViewController *self, struct NSViewController_setRepresentedObject_ *_cmd, void *representedObject);
 
-void _I_AppDelegate_applicationDidFinishLaunching_(struct objc_object *self, struct objc_selector *_cmd, struct objc_object *aNotification)
+void _I_AppDelegate_applicationDidFinishLaunching_(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationDidFinishLaunching_ *, void *aNotification)
 {
     NSSize windowSize = NSMakeSize(480, 480);
 
@@ -44,6 +44,7 @@ void _I_AppDelegate_applicationDidFinishLaunching_(struct objc_object *self, str
     NSWindow_makeKeyAndOrderFront(window, NULL);
 }
 
-void _I_AppDelegate_applicationWillTerminate_(struct objc_object *self, struct objc_selector *_cmd, struct objc_object *aNotification)
+void _I_AppDelegate_applicationWillTerminate_(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationWillTerminate_ *, void *aNotification)
 {
+
 }
