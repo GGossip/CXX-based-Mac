@@ -54,6 +54,16 @@ struct MTLRenderPipelineState : public NSObject
     MTLRenderPipelineState() = delete;
 };
 
+struct MTLDepthStencilDescriptor : public NSObject
+{
+    MTLDepthStencilDescriptor() = delete;
+};
+
+struct MTLDepthStencilState : public NSObject
+{
+    MTLDepthStencilState() = delete;
+};
+
 struct MTLLibrary : public NSObject
 {
     MTLLibrary() = delete;
@@ -69,15 +79,13 @@ struct MTLVertexDescriptor *MTLVertexDescriptor_alloc()
     struct objc_object *vertexdescriptor = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
         objc_getClass("MTLVertexDescriptor"),
         sel_registerName("alloc"));
-    return reinterpret_cast<struct MTLVertexDescriptor *>(vertexdescriptor);
+    return static_cast<struct MTLVertexDescriptor *>(vertexdescriptor);
 }
 
 struct MTLVertexDescriptor *MTLVertexDescriptor_init(struct MTLVertexDescriptor *self)
 {
-    struct objc_object *vertexdescriptor = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
-        self,
-        sel_registerName("init"));
-    return reinterpret_cast<struct MTLVertexDescriptor *>(vertexdescriptor);
+    struct NSObject *pipelinedescriptor = NSObject_init(self);
+    return static_cast<struct MTLVertexDescriptor *>(pipelinedescriptor);
 }
 
 struct MTLVertexBufferLayoutDescriptorArray *MTLVertexDescriptor_layouts(struct MTLVertexDescriptor *self)
@@ -85,7 +93,7 @@ struct MTLVertexBufferLayoutDescriptorArray *MTLVertexDescriptor_layouts(struct 
     struct objc_object *vertexdescriptor_layouts = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
         self,
         sel_registerName("layouts"));
-    return reinterpret_cast<struct MTLVertexBufferLayoutDescriptorArray *>(vertexdescriptor_layouts);
+    return static_cast<struct MTLVertexBufferLayoutDescriptorArray *>(vertexdescriptor_layouts);
 }
 
 struct MTLVertexBufferLayoutDescriptor *MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(struct MTLVertexBufferLayoutDescriptorArray *self, NSUInteger index)
@@ -94,7 +102,7 @@ struct MTLVertexBufferLayoutDescriptor *MTLVertexBufferLayoutDescriptorArray_obj
         self,
         sel_registerName("objectAtIndexedSubscript:"),
         index);
-    return reinterpret_cast<struct MTLVertexBufferLayoutDescriptor *>(vertexdescriptor_layout);
+    return static_cast<struct MTLVertexBufferLayoutDescriptor *>(vertexdescriptor_layout);
 }
 
 void MTLVertexBufferLayoutDescriptor_setStride(struct MTLVertexBufferLayoutDescriptor *self, NSUInteger stride)
@@ -126,7 +134,7 @@ struct MTLVertexAttributeDescriptorArray *MTLVertexDescriptor_attributes(struct 
     struct objc_object *vertexdescriptor_attributes = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
         self,
         sel_registerName("attributes"));
-    return reinterpret_cast<struct MTLVertexAttributeDescriptorArray *>(vertexdescriptor_attributes);
+    return static_cast<struct MTLVertexAttributeDescriptorArray *>(vertexdescriptor_attributes);
 }
 
 struct MTLVertexAttributeDescriptor *MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(struct MTLVertexAttributeDescriptorArray *self, NSUInteger index)
@@ -135,7 +143,7 @@ struct MTLVertexAttributeDescriptor *MTLVertexAttributeDescriptorArray_objectAtI
         self,
         sel_registerName("objectAtIndexedSubscript:"),
         index);
-    return reinterpret_cast<struct MTLVertexAttributeDescriptor *>(vertexdescriptor_attribute);
+    return static_cast<struct MTLVertexAttributeDescriptor *>(vertexdescriptor_attribute);
 }
 
 void MTLVertexAttributeDescriptor_setFormat(struct MTLVertexAttributeDescriptor *self, MTLVertexFormat format)
@@ -182,10 +190,8 @@ struct MTLRenderPipelineDescriptor *MTLRenderPipelineDescriptor_alloc()
 
 struct MTLRenderPipelineDescriptor *MTLRenderPipelineDescriptor_init(struct MTLRenderPipelineDescriptor *self)
 {
-    struct objc_object *pipelinedescriptor = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
-        self,
-        sel_registerName("init"));
-    return reinterpret_cast<struct MTLRenderPipelineDescriptor *>(pipelinedescriptor);
+    struct NSObject *pipelinedescriptor = NSObject_init(self);
+    return static_cast<struct MTLRenderPipelineDescriptor *>(pipelinedescriptor);
 }
 
 void MTLRenderPipelineDescriptor_setLabel(struct MTLRenderPipelineDescriptor *self, struct NSString *label)
@@ -193,7 +199,7 @@ void MTLRenderPipelineDescriptor_setLabel(struct MTLRenderPipelineDescriptor *se
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
         self,
         sel_registerName("setLabel:"),
-        reinterpret_cast<struct objc_object *>(label));
+        label);
 }
 
 void MTLRenderPipelineDescriptor_setVertexFunction(struct MTLRenderPipelineDescriptor *self, struct MTLFunction *vertexFunction)
@@ -201,7 +207,7 @@ void MTLRenderPipelineDescriptor_setVertexFunction(struct MTLRenderPipelineDescr
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
         self,
         sel_registerName("setVertexFunction:"),
-        reinterpret_cast<struct objc_object *>(vertexFunction));
+        vertexFunction);
 }
 
 void MTLRenderPipelineDescriptor_setFragmentFunction(struct MTLRenderPipelineDescriptor *self, struct MTLFunction *fragmentFunction)
@@ -209,7 +215,7 @@ void MTLRenderPipelineDescriptor_setFragmentFunction(struct MTLRenderPipelineDes
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
         self,
         sel_registerName("setFragmentFunction:"),
-        reinterpret_cast<struct objc_object *>(fragmentFunction));
+        fragmentFunction);
 }
 
 void MTLRenderPipelineDescriptor_setVertexDescriptor(struct MTLRenderPipelineDescriptor *self, struct MTLVertexDescriptor *vertexDescriptor)
@@ -217,7 +223,7 @@ void MTLRenderPipelineDescriptor_setVertexDescriptor(struct MTLRenderPipelineDes
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
         self,
         sel_registerName("setVertexDescriptor:"),
-        reinterpret_cast<struct objc_object *>(vertexDescriptor));
+        vertexDescriptor);
 }
 
 void MTLRenderPipelineDescriptor_setSampleCount(struct MTLRenderPipelineDescriptor *self, NSUInteger sampleCount)
@@ -233,7 +239,7 @@ struct MTLRenderPipelineColorAttachmentDescriptorArray *MTLRenderPipelineDescrip
     struct objc_object *renderpipelinedescriptor_colorattachments = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
         self,
         sel_registerName("colorAttachments"));
-    return reinterpret_cast<struct MTLRenderPipelineColorAttachmentDescriptorArray *>(renderpipelinedescriptor_colorattachments);
+    return static_cast<struct MTLRenderPipelineColorAttachmentDescriptorArray *>(renderpipelinedescriptor_colorattachments);
 }
 
 struct MTLRenderPipelineColorAttachmentDescriptor *MTLRenderPipelineColorAttachmentDescriptorArray_objectAtIndexedSubscript(struct MTLRenderPipelineColorAttachmentDescriptorArray *self, NSUInteger attachmentIndex)
@@ -242,7 +248,7 @@ struct MTLRenderPipelineColorAttachmentDescriptor *MTLRenderPipelineColorAttachm
         self,
         sel_registerName("objectAtIndexedSubscript:"),
         attachmentIndex);
-    return reinterpret_cast<struct MTLRenderPipelineColorAttachmentDescriptor *>(renderpipelinedescriptor_colorattachment);
+    return static_cast<struct MTLRenderPipelineColorAttachmentDescriptor *>(renderpipelinedescriptor_colorattachment);
 }
 
 void MTLRenderPipelineColorAttachmentDescriptor_setPixelFormat(struct MTLRenderPipelineColorAttachmentDescriptor *self, MTLPixelFormat pixelFormat)
@@ -289,12 +295,61 @@ struct MTLRenderPipelineState *MTLDevice_newRenderPipelineStateWithDescriptor(st
     return static_cast<MTLRenderPipelineState *>(pipelinestate);
 }
 
+struct MTLDepthStencilDescriptor *MTLDepthStencilDescriptor_alloc()
+{
+    struct objc_object *pipelinedescriptor = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
+        objc_getClass("MTLDepthStencilDescriptor"),
+        sel_registerName("alloc"));
+    return static_cast<struct MTLDepthStencilDescriptor *>(pipelinedescriptor);
+}
+
+struct MTLDepthStencilDescriptor *MTLDepthStencilDescriptor_init(struct MTLDepthStencilDescriptor *self)
+{
+    struct NSObject *depthstencildescriptor = NSObject_init(self);
+    return static_cast<struct MTLDepthStencilDescriptor *>(depthstencildescriptor);
+}
+
+void MTLDepthStencilDescriptor_setDepthCompareFunction(struct MTLDepthStencilDescriptor *self, MTLCompareFunction compareFunction)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, MTLPixelFormat)>(objc_msgSend)(
+        self,
+        sel_registerName("setDepthCompareFunction:"),
+        compareFunction);
+}
+
+void MTLDepthStencilDescriptor_setDepthWriteEnabled(struct MTLDepthStencilDescriptor *self, bool depthWriteEnabled)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, BOOL)>(objc_msgSend)(
+        self,
+        sel_registerName("setDepthWriteEnabled:"),
+        (depthWriteEnabled != false) ? YES : NO);
+}
+
+void MTLDepthStencilDescriptor_release(struct MTLDepthStencilDescriptor *self)
+{
+    return NSObject_release(self);
+}
+
+NSUInteger MTLDepthStencilDescriptor_retainCount(struct MTLDepthStencilDescriptor *self)
+{
+    return NSObject_retainCount(self);
+}
+
+struct MTLDepthStencilState *MTLDevice_newDepthStencilStateWithDescriptor(struct MTLDevice *self, struct MTLDepthStencilDescriptor *descriptor)
+{
+    struct objc_object *depthstencilstate = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
+        self,
+        sel_registerName("newDepthStencilStateWithDescriptor:"),
+        descriptor);
+    return static_cast<struct MTLDepthStencilState *>(depthstencilstate);
+}
+
 struct MTLLibrary *MTLDevice_newDefaultLibrary(struct MTLDevice *self)
 {
     struct objc_object *library = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
         self,
         sel_registerName("newDefaultLibrary"));
-    return reinterpret_cast<struct MTLLibrary *>(library);
+    return static_cast<struct MTLLibrary *>(library);
 }
 
 struct MTLFunction *MTLLibrary_newFunctionWithName(struct MTLLibrary *self, struct NSString *functionName)
@@ -302,7 +357,7 @@ struct MTLFunction *MTLLibrary_newFunctionWithName(struct MTLLibrary *self, stru
     struct objc_object *function = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
         self,
         sel_registerName("newFunctionWithName:"),
-        reinterpret_cast<struct objc_object *>(functionName));
+        functionName);
     return static_cast<struct MTLFunction *>(function);
 }
 

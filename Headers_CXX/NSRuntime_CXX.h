@@ -10,6 +10,7 @@ typedef int NSInteger;
 typedef unsigned int NSUInteger;
 #endif
 
+struct NSObject *NSObject_init(struct NSObject *self);
 void NSObject_release(struct NSObject *self);
 NSUInteger NSObject_retainCount(struct NSObject *self);
 

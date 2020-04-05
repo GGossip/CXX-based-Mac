@@ -65,5 +65,11 @@ void demo_init()
     struct MTLRenderPipelineState *pipelineState = MTLDevice_newRenderPipelineStateWithDescriptor(g_device, pipelineStateDescriptor, &error);
     MTLRenderPipelineDescriptor_release(pipelineStateDescriptor);
 
+    struct MTLDepthStencilDescriptor *depthStateDesc = MTLDepthStencilDescriptor_init(MTLDepthStencilDescriptor_alloc());
+    MTLDepthStencilDescriptor_setDepthCompareFunction(depthStateDesc, MTLCompareFunctionLess);
+    MTLDepthStencilDescriptor_setDepthWriteEnabled(depthStateDesc, true);
+
+    struct MTLDepthStencilState *depthState = MTLDevice_newDepthStencilStateWithDescriptor(g_device, depthStateDesc);
+    MTLDepthStencilDescriptor_release(depthStateDesc);
     
 }

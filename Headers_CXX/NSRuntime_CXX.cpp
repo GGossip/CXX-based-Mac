@@ -3,6 +3,14 @@
 
 #include <objc/objc-runtime.h>
 
+struct NSObject *NSObject_init(struct NSObject *self)
+{
+    struct objc_object *object = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+        self,
+        sel_registerName("init"));
+    return static_cast<struct NSObject *>(object);
+}
+
 void NSObject_release(struct NSObject *self)
 {
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(

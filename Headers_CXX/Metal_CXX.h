@@ -333,6 +333,28 @@ static inline struct MTLRenderPipelineColorAttachmentDescriptor *MTLRenderPipeli
 
 struct MTLRenderPipelineState *MTLDevice_newRenderPipelineStateWithDescriptor(struct MTLDevice *self, struct MTLRenderPipelineDescriptor *descriptor, struct NSError **error);
 
+typedef NSUInteger MTLCompareFunction;
+enum
+{
+    MTLCompareFunctionNever = 0,
+    MTLCompareFunctionLess = 1,
+    MTLCompareFunctionEqual = 2,
+    MTLCompareFunctionLessEqual = 3,
+    MTLCompareFunctionGreater = 4,
+    MTLCompareFunctionNotEqual = 5,
+    MTLCompareFunctionGreaterEqual = 6,
+    MTLCompareFunctionAlways = 7
+};
+
+struct MTLDepthStencilDescriptor *MTLDepthStencilDescriptor_alloc();
+struct MTLDepthStencilDescriptor *MTLDepthStencilDescriptor_init(struct MTLDepthStencilDescriptor *self);
+void MTLDepthStencilDescriptor_setDepthCompareFunction(struct MTLDepthStencilDescriptor *self, MTLCompareFunction compareFunction);
+void MTLDepthStencilDescriptor_setDepthWriteEnabled(struct MTLDepthStencilDescriptor *self, bool depthWriteEnabled);
+void MTLDepthStencilDescriptor_release(struct MTLDepthStencilDescriptor *self);
+NSUInteger MTLDepthStencilDescriptor_retainCount(struct MTLDepthStencilDescriptor *self);
+
+struct MTLDepthStencilState *MTLDevice_newDepthStencilStateWithDescriptor(struct MTLDevice *self, struct MTLDepthStencilDescriptor *descriptor);
+
 struct MTLLibrary *MTLDevice_newDefaultLibrary(struct MTLDevice *self);
 struct MTLFunction *MTLLibrary_newFunctionWithName(struct MTLLibrary *self, struct NSString *functionName);
 void MTLFunction_release(struct MTLFunction *self);
