@@ -3,7 +3,7 @@
 #include <objc/message.h>
 #include <assert.h>
 
-#include "CXX_CoreGraphics.h"
+#include "CXX_AppKit.h"
 
 void _I_AppViewController_loadView(struct objc_object *self, struct objc_selector *_cmd);
 

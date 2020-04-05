@@ -2,7 +2,7 @@
 #include <objc/runtime.h>
 #include <objc/message.h>
 
-#include "CXX_CoreGraphics.h"
+#include "CXX_AppKit.h"
 
 void _I_AppViewController_loadView(struct objc_object *self, struct objc_selector *_cmd)
 {
@@ -15,7 +15,7 @@ void _I_AppViewController_loadView(struct objc_object *self, struct objc_selecto
         nsview,
         sel_registerName("initWithFrame:"),
         rect);
-        
+
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
         self,
         sel_registerName("setView:"),

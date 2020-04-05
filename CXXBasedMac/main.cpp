@@ -3,7 +3,7 @@
 #include <objc/message.h>
 #include <assert.h>
 
-extern "C" int NSApplicationMain(int argc, const char *argv[]);
+#include "CXX_AppKit.h"
 
 void _I_AppDelegate_applicationDidFinishLaunching_(struct objc_object *self, struct objc_selector *_cmd, struct objc_object *aNotification);
 
