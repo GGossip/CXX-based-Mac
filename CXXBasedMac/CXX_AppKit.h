@@ -3,6 +3,14 @@
 
 #include "CXX_CoreGraphics.h"
 
+#if __LP64__ || NS_BUILD_32_LIKE_64
+typedef long NSInteger;
+typedef unsigned long NSUInteger;
+#else
+typedef int NSInteger;
+typedef unsigned int NSUInteger;
+#endif
+
 typedef CGSize NSSize;
 
 typedef CGRect NSRect;
@@ -44,6 +52,14 @@ enum
     NSBackingStoreNonretained = 1,
     NSBackingStoreBuffered = 2,
 };
+
+struct NSWindow *NSWindow_alloc();
+
+struct NSWindow *NSWindow_initWithContentRect(struct NSWindow *self, NSRect rect, NSWindowStyleMask styleMask, NSBackingStoreType backing, bool defer);
+
+void NSWindow_setContentViewController(struct NSWindow *self, void *contentViewController);
+
+void NSWindow_makeKeyAndOrderFront(struct NSWindow *self, void *sender);
 
 extern "C" int NSApplicationMain(int argc, const char *argv[]);
 

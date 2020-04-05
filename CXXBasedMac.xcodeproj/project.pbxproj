@@ -9,6 +9,9 @@
 /* Begin PBXBuildFile section */
 		9202E2002439B9A500FEC77B /* AppDelegate.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9202E1FF2439B9A500FEC77B /* AppDelegate.cpp */; };
 		9202E2022439B9AC00FEC77B /* ViewController.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9202E2012439B9AC00FEC77B /* ViewController.cpp */; };
+		9202E2072439D54100FEC77B /* CXX_Metal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9202E2032439D54100FEC77B /* CXX_Metal.cpp */; };
+		9202E2092439D55D00FEC77B /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9202E2082439D55D00FEC77B /* Metal.framework */; };
+		9202E20B2439DA4D00FEC77B /* CXX_Appkit.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9202E20A2439DA4D00FEC77B /* CXX_Appkit.cpp */; };
 		9279CC2024390AB900DACBD7 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9279CC1F24390AB900DACBD7 /* main.cpp */; };
 		9279CC2324390AE300DACBD7 /* AppKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9279CC2224390AE300DACBD7 /* AppKit.framework */; };
 		92F977EE2439099100C5F3C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92F977ED2439099100C5F3C5 /* Assets.xcassets */; };
@@ -17,6 +20,12 @@
 /* Begin PBXFileReference section */
 		9202E1FF2439B9A500FEC77B /* AppDelegate.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AppDelegate.cpp; sourceTree = "<group>"; };
 		9202E2012439B9AC00FEC77B /* ViewController.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ViewController.cpp; sourceTree = "<group>"; };
+		9202E2032439D54100FEC77B /* CXX_Metal.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CXX_Metal.cpp; sourceTree = "<group>"; };
+		9202E2042439D54100FEC77B /* CXX_Metal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXX_Metal.h; sourceTree = "<group>"; };
+		9202E2052439D54100FEC77B /* CXX_AppKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXX_AppKit.h; sourceTree = "<group>"; };
+		9202E2062439D54100FEC77B /* CXX_CoreGraphics.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CXX_CoreGraphics.h; sourceTree = "<group>"; };
+		9202E2082439D55D00FEC77B /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
+		9202E20A2439DA4D00FEC77B /* CXX_Appkit.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CXX_Appkit.cpp; sourceTree = "<group>"; };
 		9279CC1F24390AB900DACBD7 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		9279CC2224390AE300DACBD7 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
 		92F977E42439099000C5F3C5 /* CXXBasedMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CXXBasedMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -30,6 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9202E2092439D55D00FEC77B /* Metal.framework in Frameworks */,
 				9279CC2324390AE300DACBD7 /* AppKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -40,6 +50,7 @@
 		9279CC2124390AE300DACBD7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9202E2082439D55D00FEC77B /* Metal.framework */,
 				9279CC2224390AE300DACBD7 /* AppKit.framework */,
 			);
 			name = Frameworks;
@@ -65,7 +76,12 @@
 		92F977E62439099000C5F3C5 /* CXXBasedMac */ = {
 			isa = PBXGroup;
 			children = (
+				9202E20A2439DA4D00FEC77B /* CXX_Appkit.cpp */,
 				9202E2012439B9AC00FEC77B /* ViewController.cpp */,
+				9202E2052439D54100FEC77B /* CXX_AppKit.h */,
+				9202E2062439D54100FEC77B /* CXX_CoreGraphics.h */,
+				9202E2032439D54100FEC77B /* CXX_Metal.cpp */,
+				9202E2042439D54100FEC77B /* CXX_Metal.h */,
 				9202E1FF2439B9A500FEC77B /* AppDelegate.cpp */,
 				9279CC1F24390AB900DACBD7 /* main.cpp */,
 				92F977ED2439099100C5F3C5 /* Assets.xcassets */,
@@ -146,6 +162,8 @@
 				9202E2022439B9AC00FEC77B /* ViewController.cpp in Sources */,
 				9202E2002439B9A500FEC77B /* AppDelegate.cpp in Sources */,
 				9279CC2024390AB900DACBD7 /* main.cpp in Sources */,
+				9202E20B2439DA4D00FEC77B /* CXX_Appkit.cpp in Sources */,
+				9202E2072439D54100FEC77B /* CXX_Metal.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

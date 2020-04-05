@@ -26,13 +26,8 @@ void _I_AppDelegate_applicationDidFinishLaunching_(struct objc_object *self, str
                              windowSize.width,
                              windowSize.height);
 
-    struct objc_object *window = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
-        objc_getClass("NSWindow"),
-        sel_registerName("alloc"));
-
-    window = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, NSRect, NSWindowStyleMask, NSBackingStoreType, BOOL)>(objc_msgSend)(
-        window,
-        sel_registerName("initWithContentRect:styleMask:backing:defer:"),
+    struct NSWindow *window = NSWindow_initWithContentRect(
+        NSWindow_alloc(),
         rect,
         NSWindowStyleMaskTitled | NSWindowStyleMaskClosable | NSWindowStyleMaskMiniaturizable | NSWindowStyleMaskResizable,
         NSBackingStoreBuffered,
@@ -92,17 +87,10 @@ void _I_AppDelegate_applicationDidFinishLaunching_(struct objc_object *self, str
         sel_registerName("setFrame:"),
         bounds);
 #endif
-    
-    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
-        window,
-        sel_registerName("setContentViewController:"),
-        controller);
 
-    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
-        window,
-        sel_registerName("makeKeyAndOrderFront:"),
-        NULL);
+    NSWindow_setContentViewController(window, controller);
 
+    NSWindow_makeKeyAndOrderFront(window, NULL);
 }
 
 void _I_AppDelegate_applicationWillTerminate_(struct objc_object *self, struct objc_selector *_cmd, struct objc_object *aNotification)

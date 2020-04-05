@@ -1,8 +1,6 @@
 #ifndef _CXX_COREGRAPHICS_H_
 #define _CXX_COREGRAPHICS_H_ 1
 
-#include <objc/NSObjCRuntime.h>
-
 typedef double CGFloat;
 
 typedef struct __attribute__((objc_boxable))
