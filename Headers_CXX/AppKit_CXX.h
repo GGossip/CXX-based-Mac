@@ -76,7 +76,7 @@ struct NSViewController *NSViewController_alloc(
 
 struct NSViewController *NSViewController_initWithNibName(struct NSViewController *self, void *nibNameOrNil, void *nibBundleOrNil);
 
-void NSViewController_setView(struct NSViewController *self, NSView *view);
+void NSViewController_setView(struct NSViewController *self, struct NSView *view);
 
 void NSViewController_super_viewDidLoad(struct NSViewController *self, struct NSViewController_viewDidLoad *);
 

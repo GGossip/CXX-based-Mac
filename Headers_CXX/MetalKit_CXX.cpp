@@ -1,0 +1,72 @@
+#include "MetalKit_CXX.h"
+
+#include <objc/objc.h>
+#include <objc/objc-runtime.h>
+
+#include <assert.h>
+
+struct MTKView *MTKView_alloc()
+{
+    struct objc_object *view = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
+        objc_getClass("MTKView"),
+        sel_registerName("alloc"));
+    return reinterpret_cast<struct MTKView *>(view);
+}
+
+struct MTKView *MTKView_initWithFrame(MTKView *self, CGRect frameRect, struct MTLDevice *device)
+{
+    struct objc_object *view = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, CGRect, struct objc_object *)>(objc_msgSend)(
+        reinterpret_cast<struct objc_object *>(self),
+        sel_registerName("initWithFrame:device:"),
+        frameRect,
+        reinterpret_cast<struct objc_object *>(device));
+    return reinterpret_cast<struct MTKView *>(view);
+}
+
+void NSViewController_setView(struct NSViewController *self, struct MTKView *view)
+{
+    NSViewController_setView(self, reinterpret_cast<struct NSView *>(view));
+}
+
+struct MTKViewDelegate *MTKViewDelegate_alloc(
+    void (*_I_MTKViewDelegate_drawableSizeWillChange_)(struct NSApplicationDelegate *, struct MTKViewDelegate_drawableSizeWillChange_ *, struct MTKView *view, CGSize size),
+    void (*_I_MTKViewDelegate_drawInMTKView_)(struct NSApplicationDelegate *, struct MTKViewDelegate_drawInMTKView_ *, struct MTKView *view))
+{
+    Class class_Renderer;
+    {
+        class_Renderer = objc_allocateClassPair(
+            objc_getClass("NSObject"),
+            "Renderer",
+            0);
+
+        BOOL res;
+
+        res = class_addMethod(
+            class_Renderer,
+            sel_registerName("mtkView:drawableSizeWillChange:"),
+            reinterpret_cast<IMP>(_I_MTKViewDelegate_drawableSizeWillChange_),
+            "v@:@{CGSize=dd}");
+        assert(res != NO);
+
+        res = class_addMethod(
+            class_Renderer,
+            sel_registerName("drawInMTKView:"),
+            reinterpret_cast<IMP>(_I_MTKViewDelegate_drawInMTKView_),
+            "v@:@");
+        assert(res != NO);
+    }
+
+    struct objc_object *appdelegate = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
+        class_Renderer,
+        sel_registerName("alloc"));
+
+    return reinterpret_cast<struct MTKViewDelegate *>(appdelegate);
+}
+
+void MTKView_setDelegate(struct MTKView *self, struct MTKViewDelegate *delegate)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
+        reinterpret_cast<struct objc_object *>(self),
+        sel_registerName("setDelegate:"),
+        reinterpret_cast<struct objc_object *>(delegate));
+}
