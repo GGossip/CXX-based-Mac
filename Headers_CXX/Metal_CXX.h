@@ -205,16 +205,6 @@ enum
     MTLPixelFormatX24_Stencil8 = 262,
 };
 
-struct MTLVertexDescriptor *MTLVertexDescriptor_alloc();
-
-struct MTLVertexDescriptor *MTLVertexDescriptor_init(struct MTLVertexDescriptor *self);
-
-struct MTLVertexBufferLayoutDescriptorArray *MTLVertexDescriptor_layouts(struct MTLVertexDescriptor *self);
-
-struct MTLVertexBufferLayoutDescriptor *MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(struct MTLVertexBufferLayoutDescriptorArray *self, NSUInteger index);
-
-void MTLVertexBufferLayoutDescriptor_setStride(struct MTLVertexBufferLayoutDescriptor *self, NSUInteger stride);
-
 typedef NSUInteger MTLVertexStepFunction;
 enum
 {
@@ -224,23 +214,6 @@ enum
     MTLVertexStepFunctionPerPatch = 3,
     MTLVertexStepFunctionPerPatchControlPoint = 4
 };
-
-void MTLVertexBufferLayoutDescriptor_setStepFunction(struct MTLVertexBufferLayoutDescriptor *self, MTLVertexStepFunction stepFunction);
-
-void MTLVertexBufferLayoutDescriptor_setStepRate(struct MTLVertexBufferLayoutDescriptor *self, NSUInteger stepRate);
-
-static void inline MTLVertexDescriptor_layoutAt(struct MTLVertexDescriptor *self, NSUInteger index, NSUInteger stride, MTLVertexStepFunction stepFunction, NSUInteger stepRate)
-{
-    struct MTLVertexBufferLayoutDescriptorArray *vertexdescriptor_layouts = MTLVertexDescriptor_layouts(self);
-    struct MTLVertexBufferLayoutDescriptor *vertexdescriptor_layout = MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(vertexdescriptor_layouts, index);
-    MTLVertexBufferLayoutDescriptor_setStride(vertexdescriptor_layout, stride);
-    MTLVertexBufferLayoutDescriptor_setStepFunction(vertexdescriptor_layout, stepFunction);
-    MTLVertexBufferLayoutDescriptor_setStepRate(vertexdescriptor_layout, stepRate);
-}
-
-struct MTLVertexAttributeDescriptorArray *MTLVertexDescriptor_attributes(struct MTLVertexDescriptor *self);
-
-struct MTLVertexAttributeDescriptor *MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(struct MTLVertexAttributeDescriptorArray *self, NSUInteger index);
 
 typedef NSUInteger MTLVertexFormat;
 enum
@@ -316,23 +289,49 @@ enum
     MTLVertexFormatHalf = 53
 };
 
+struct MTLVertexDescriptor *MTLVertexDescriptor_alloc();
+struct MTLVertexDescriptor *MTLVertexDescriptor_init(struct MTLVertexDescriptor *self);
+struct MTLVertexBufferLayoutDescriptorArray *MTLVertexDescriptor_layouts(struct MTLVertexDescriptor *self);
+struct MTLVertexBufferLayoutDescriptor *MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(struct MTLVertexBufferLayoutDescriptorArray *self, NSUInteger index);
+void MTLVertexBufferLayoutDescriptor_setStride(struct MTLVertexBufferLayoutDescriptor *self, NSUInteger stride);
+void MTLVertexBufferLayoutDescriptor_setStepFunction(struct MTLVertexBufferLayoutDescriptor *self, MTLVertexStepFunction stepFunction);
+void MTLVertexBufferLayoutDescriptor_setStepRate(struct MTLVertexBufferLayoutDescriptor *self, NSUInteger stepRate);
+struct MTLVertexAttributeDescriptorArray *MTLVertexDescriptor_attributes(struct MTLVertexDescriptor *self);
+struct MTLVertexAttributeDescriptor *MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(struct MTLVertexAttributeDescriptorArray *self, NSUInteger index);
 void MTLVertexAttributeDescriptor_setFormat(struct MTLVertexAttributeDescriptor *self, MTLVertexFormat format);
-
 void MTLVertexAttributeDescriptor_setOffset(struct MTLVertexAttributeDescriptor *self, NSUInteger offset);
-
 void MTLVertexAttributeDescriptor_setBufferIndex(struct MTLVertexAttributeDescriptor *self, NSUInteger bufferIndex);
-
-static void inline MTLVertexDescriptor_attributeAt(struct MTLVertexDescriptor *self, NSUInteger index, MTLVertexFormat format, NSUInteger offset, NSUInteger bufferIndex)
+static inline struct MTLVertexBufferLayoutDescriptor *MTLVertexDescriptor_layoutAt(struct MTLVertexDescriptor *self, NSUInteger index)
 {
-    struct MTLVertexAttributeDescriptorArray *vertexdescriptor_attributes = MTLVertexDescriptor_attributes(self);
-    struct MTLVertexAttributeDescriptor *vertexdescriptor_attribute = MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(vertexdescriptor_attributes, index);
-    MTLVertexAttributeDescriptor_setFormat(vertexdescriptor_attribute, format);
-    MTLVertexAttributeDescriptor_setOffset(vertexdescriptor_attribute, offset);
-    MTLVertexAttributeDescriptor_setBufferIndex(vertexdescriptor_attribute, bufferIndex);
+    return MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_layouts(self), index);
+}
+static inline struct MTLVertexAttributeDescriptor *MTLVertexDescriptor_attributeAt(struct MTLVertexDescriptor *self, NSUInteger index)
+{
+    return MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_attributes(self), index);
+}
+
+struct MTLRenderPipelineDescriptor *MTLRenderPipelineDescriptor_alloc();
+struct MTLRenderPipelineDescriptor *MTLRenderPipelineDescriptor_init(struct MTLRenderPipelineDescriptor *self);
+void MTLRenderPipelineDescriptor_setLabel(struct MTLRenderPipelineDescriptor *self, struct NSString *label);
+void MTLRenderPipelineDescriptor_setVertexFunction(struct MTLRenderPipelineDescriptor *self, struct MTLFunction *vertexFunction);
+void MTLRenderPipelineDescriptor_setFragmentFunction(struct MTLRenderPipelineDescriptor *self, struct MTLFunction *fragmentFunction);
+void MTLRenderPipelineDescriptor_setVertexDescriptor(struct MTLRenderPipelineDescriptor *self, struct MTLVertexDescriptor *vertexDescriptor);
+void MTLRenderPipelineDescriptor_setSampleCount(struct MTLRenderPipelineDescriptor *self, NSUInteger sampleCount);
+struct MTLRenderPipelineColorAttachmentDescriptorArray *MTLRenderPipelineDescriptor_colorAttachments(struct MTLRenderPipelineDescriptor *self);
+struct MTLRenderPipelineColorAttachmentDescriptor *MTLRenderPipelineColorAttachmentDescriptorArray_objectAtIndexedSubscript(struct MTLRenderPipelineColorAttachmentDescriptorArray *self, NSUInteger attachmentIndex);
+void MTLRenderPipelineColorAttachmentDescriptor_setPixelFormat(struct MTLRenderPipelineColorAttachmentDescriptor *self, MTLPixelFormat pixelFormat);
+void MTLRenderPipelineDescriptor_setDepthAttachmentPixelFormat(struct MTLRenderPipelineDescriptor *self, MTLPixelFormat pixelFormat);
+void MTLRenderPipelineDescriptor_setStencilAttachmentPixelFormat(struct MTLRenderPipelineDescriptor *self, MTLPixelFormat pixelFormat);
+void MTLRenderPipelineDescriptor_release(struct MTLRenderPipelineDescriptor *self);
+NSUInteger MTLRenderPipelineDescriptor_retainCount(struct MTLRenderPipelineDescriptor *self);
+static inline struct MTLRenderPipelineColorAttachmentDescriptor *MTLRenderPipelineDescriptor_colorAttachmentAt(struct MTLRenderPipelineDescriptor *self, NSUInteger attachmentIndex)
+{
+    return MTLRenderPipelineColorAttachmentDescriptorArray_objectAtIndexedSubscript(MTLRenderPipelineDescriptor_colorAttachments(self), attachmentIndex);
 }
 
 struct MTLLibrary *MTLDevice_newDefaultLibrary(struct MTLDevice *self);
-
-struct MTLFunction *MTLLibrary_newFunctionWithName(struct MTLLibrary *self,struct NSString *functionName);
+struct MTLFunction *MTLLibrary_newFunctionWithName(struct MTLLibrary *self, struct NSString *functionName);
+void MTLFunction_release(struct MTLFunction *self);
+NSUInteger MTLFunction_retainCount(struct MTLFunction *self);
 
 #endif

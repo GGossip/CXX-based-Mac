@@ -19,11 +19,25 @@ void demo_init()
 {
     struct MTLVertexDescriptor *vertexdescriptor = MTLVertexDescriptor_init(MTLVertexDescriptor_alloc());
 
-    MTLVertexDescriptor_layoutAt(vertexdescriptor, BufferIndexMeshPositions, 12, MTLVertexStepFunctionPerVertex, 1);
-    MTLVertexDescriptor_layoutAt(vertexdescriptor, BufferIndexMeshGenerics, 0, MTLVertexStepFunctionPerVertex, 1);
+    struct MTLVertexBufferLayoutDescriptor *layout_tmp = MTLVertexDescriptor_layoutAt(vertexdescriptor, BufferIndexMeshPositions);
+    MTLVertexBufferLayoutDescriptor_setStride(layout_tmp, 12);
+    MTLVertexBufferLayoutDescriptor_setStepFunction(layout_tmp, MTLVertexStepFunctionPerVertex);
+    MTLVertexBufferLayoutDescriptor_setStepRate(layout_tmp, 1);
 
-    MTLVertexDescriptor_attributeAt(vertexdescriptor, VertexAttributePosition, MTLVertexFormatFloat3, 0, BufferIndexMeshPositions);
-    MTLVertexDescriptor_attributeAt(vertexdescriptor, VertexAttributePosition, MTLVertexFormatFloat2, 0, BufferIndexMeshGenerics);
+    layout_tmp = MTLVertexDescriptor_layoutAt(vertexdescriptor, BufferIndexMeshGenerics);
+    MTLVertexBufferLayoutDescriptor_setStride(layout_tmp, 0);
+    MTLVertexBufferLayoutDescriptor_setStepFunction(layout_tmp, MTLVertexStepFunctionPerVertex);
+    MTLVertexBufferLayoutDescriptor_setStepRate(layout_tmp, 1);
+
+    struct MTLVertexAttributeDescriptor *attribute_tmp = MTLVertexDescriptor_attributeAt(vertexdescriptor, VertexAttributePosition);
+    MTLVertexAttributeDescriptor_setFormat(attribute_tmp, MTLVertexFormatFloat3);
+    MTLVertexAttributeDescriptor_setOffset(attribute_tmp, 0);
+    MTLVertexAttributeDescriptor_setBufferIndex(attribute_tmp, BufferIndexMeshPositions);
+
+    attribute_tmp = MTLVertexDescriptor_attributeAt(vertexdescriptor, VertexAttributeTexcoord);
+    MTLVertexAttributeDescriptor_setFormat(attribute_tmp, MTLVertexFormatFloat2);
+    MTLVertexAttributeDescriptor_setOffset(attribute_tmp, 0);
+    MTLVertexAttributeDescriptor_setBufferIndex(attribute_tmp, BufferIndexMeshGenerics);
 
     struct MTLLibrary *defaultLibrary = MTLDevice_newDefaultLibrary(g_device);
 
@@ -34,4 +48,17 @@ void demo_init()
     string_tmp = NSString_stringWithUTF8String("fragmentShader");
     struct MTLFunction *fragmentFunction = MTLLibrary_newFunctionWithName(defaultLibrary, string_tmp);
     NSString_release(string_tmp);
+
+    NSUInteger retaincount_tmp = MTLFunction_retainCount(vertexFunction);
+    struct MTLRenderPipelineDescriptor *pipelineStateDescriptor = MTLRenderPipelineDescriptor_init(MTLRenderPipelineDescriptor_alloc());
+    MTLRenderPipelineDescriptor_setVertexFunction(pipelineStateDescriptor, vertexFunction);
+    MTLRenderPipelineDescriptor_setFragmentFunction(pipelineStateDescriptor, fragmentFunction);
+    MTLRenderPipelineDescriptor_setVertexDescriptor(pipelineStateDescriptor, vertexdescriptor);
+    MTLRenderPipelineDescriptor_setSampleCount(pipelineStateDescriptor, 1);
+    MTLRenderPipelineColorAttachmentDescriptor_setPixelFormat(MTLRenderPipelineDescriptor_colorAttachmentAt(pipelineStateDescriptor, 0), MTLPixelFormatBGRA8Unorm_sRGB);
+    MTLRenderPipelineDescriptor_setDepthAttachmentPixelFormat(pipelineStateDescriptor, MTLPixelFormatDepth32Float_Stencil8);
+    MTLRenderPipelineDescriptor_setStencilAttachmentPixelFormat(pipelineStateDescriptor, MTLPixelFormatDepth32Float_Stencil8);
+    retaincount_tmp = MTLFunction_retainCount(vertexFunction);
+    MTLFunction_release(vertexFunction);
+    retaincount_tmp = MTLFunction_retainCount(vertexFunction);
 }

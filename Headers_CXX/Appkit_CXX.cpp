@@ -40,7 +40,7 @@ struct NSWindow *NSWindow_initWithContentRect(struct NSWindow *self, NSRect rect
         rect,
         styleMask,
         backing,
-        defer);
+        (defer != false) ? YES : NO);
     return reinterpret_cast<struct NSWindow *>(window);
 }
 
