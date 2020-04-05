@@ -301,6 +301,8 @@ struct MTLVertexAttributeDescriptor *MTLVertexAttributeDescriptorArray_objectAtI
 void MTLVertexAttributeDescriptor_setFormat(struct MTLVertexAttributeDescriptor *self, MTLVertexFormat format);
 void MTLVertexAttributeDescriptor_setOffset(struct MTLVertexAttributeDescriptor *self, NSUInteger offset);
 void MTLVertexAttributeDescriptor_setBufferIndex(struct MTLVertexAttributeDescriptor *self, NSUInteger bufferIndex);
+void MTLVertexDescriptor_release(struct MTLVertexDescriptor *self);
+NSUInteger MTLVertexDescriptor_retainCount(struct MTLVertexDescriptor *self);
 static inline struct MTLVertexBufferLayoutDescriptor *MTLVertexDescriptor_layoutAt(struct MTLVertexDescriptor *self, NSUInteger index)
 {
     return MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_layouts(self), index);
