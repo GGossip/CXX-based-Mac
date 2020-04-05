@@ -10,9 +10,12 @@ struct MTKView *MTKView_initWithFrame(struct MTKView *self, CGRect frameRect, st
 
 void NSViewController_setView(struct NSViewController *self, struct MTKView *view);
 
-struct MTKViewDelegate *MTKViewDelegate_alloc(
+struct MTKViewDelegate_Class *MTKViewDelegate_allocClass(
+    char const *classname,
     void (*_I_MTKViewDelegate_drawableSizeWillChange_)(struct NSApplicationDelegate *, struct MTKViewDelegate_drawableSizeWillChange_ *, struct MTKView *view, CGSize size),
     void (*_I_MTKViewDelegate_drawInMTKView_)(struct NSApplicationDelegate *, struct MTKViewDelegate_drawInMTKView_ *, struct MTKView *view));
+
+struct MTKViewDelegate *MTKViewDelegate_alloc(struct MTKViewDelegate_Class *);
 
 void MTKView_setDelegate(struct MTKView *self, struct MTKViewDelegate *delegate);
 

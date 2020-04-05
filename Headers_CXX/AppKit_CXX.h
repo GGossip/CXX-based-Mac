@@ -69,10 +69,13 @@ struct NSView *NSView_alloc();
 
 struct NSView *NSView_initWithFrame(NSView *self, NSRect frameRect);
 
-struct NSViewController *NSViewController_alloc(
+struct NSViewController_Class *NSViewController_allocClass(
+    char const *classname,
     void (*_I_NSViewController_loadView)(struct NSViewController *, struct NSViewController_loadView *),
     void (*_I_NSViewController_viewDidLoad)(struct NSViewController *, struct NSViewController_viewDidLoad *),
     void (*_I_NSViewController_setRepresentedObject_)(struct NSViewController *, struct NSViewController_setRepresentedObject_ *, void *representedObject));
+
+struct NSViewController *NSViewController_alloc(struct NSViewController_Class *);
 
 struct NSViewController *NSViewController_initWithNibName(struct NSViewController *self, void *nibNameOrNil, void *nibBundleOrNil);
 
@@ -82,9 +85,12 @@ void NSViewController_super_viewDidLoad(struct NSViewController *self, struct NS
 
 void NSViewController_super_setRepresentedObject_(struct NSViewController *self, struct NSViewController_setRepresentedObject_ *_cmd, void *representedObject);
 
-struct NSApplicationDelegate *NSApplicationDelegate_alloc(
+struct NSApplicationDelegate_Class *NSApplicationDelegate_allocClass(
+    char const *classname,
     void (*_I_NSApplicationDelegate_applicationDidFinishLaunching_)(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationDidFinishLaunching_ *, void *aNotification),
     void (*_I_NSApplicationDelegate_applicationWillTerminate_)(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationWillTerminate_ *, void *aNotification));
+
+struct NSApplicationDelegate *NSApplicationDelegate_alloc(struct NSApplicationDelegate_Class *);
 
 struct NSApplication *NSApplication_sharedApplication();
 

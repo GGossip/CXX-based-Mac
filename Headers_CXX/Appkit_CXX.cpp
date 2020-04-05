@@ -77,44 +77,46 @@ struct NSView *NSView_initWithFrame(NSView *self, NSRect frameRect)
     return reinterpret_cast<struct NSView *>(view);
 }
 
-struct NSViewController *NSViewController_alloc(
+struct NSViewController_Class *NSViewController_allocClass(
+    char const *classname,
     void (*_I_NSViewController_loadView)(struct NSViewController *, struct NSViewController_loadView *),
     void (*_I_NSViewController_viewDidLoad)(struct NSViewController *, struct NSViewController_viewDidLoad *),
     void (*_I_NSViewController_setRepresentedObject_)(struct NSViewController *, struct NSViewController_setRepresentedObject_ *, void *representedObject))
 {
-    Class class_ViewController;
-    {
-        class_ViewController = objc_allocateClassPair(
-            objc_getClass("NSViewController"),
-            "ViewController",
-            0);
+    Class class_NSViewController_CXX = objc_allocateClassPair(
+        objc_getClass("NSViewController"),
+        classname,
+        0);
+    assert(class_NSViewController_CXX != NULL);
 
-        BOOL res;
+    BOOL result1 = class_addMethod(
+        class_NSViewController_CXX,
+        sel_registerName("loadView"),
+        reinterpret_cast<IMP>(_I_NSViewController_loadView),
+        "v@:");
+    assert(result1 != NO);
 
-        res = class_addMethod(
-            class_ViewController,
-            sel_registerName("loadView"),
-            reinterpret_cast<IMP>(_I_NSViewController_loadView),
-            "v@:");
-        assert(res != NO);
+    BOOL result2 = class_addMethod(
+        class_NSViewController_CXX,
+        sel_registerName("viewDidLoad"),
+        reinterpret_cast<IMP>(_I_NSViewController_viewDidLoad),
+        "v@:");
+    assert(result2 != NO);
 
-        res = class_addMethod(
-            class_ViewController,
-            sel_registerName("viewDidLoad"),
-            reinterpret_cast<IMP>(_I_NSViewController_viewDidLoad),
-            "v@:");
-        assert(res != NO);
+    BOOL result3 = class_addMethod(
+        class_NSViewController_CXX,
+        sel_registerName("setRepresentedObject:"),
+        reinterpret_cast<IMP>(_I_NSViewController_setRepresentedObject_),
+        "v@:@");
+    assert(result3 != NO);
 
-        res = class_addMethod(
-            class_ViewController,
-            sel_registerName("setRepresentedObject:"),
-            reinterpret_cast<IMP>(_I_NSViewController_setRepresentedObject_),
-            "v@:@");
-        assert(res != NO);
-    }
+    return reinterpret_cast<struct NSViewController_Class *>(class_NSViewController_CXX);
+}
 
+struct NSViewController *NSViewController_alloc(struct NSViewController_Class *class_NSViewController_CXX)
+{
     struct objc_object *viewcontroller = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
-        class_ViewController,
+        reinterpret_cast<Class>(class_NSViewController_CXX),
         sel_registerName("alloc"));
 
     return reinterpret_cast<struct NSViewController *>(viewcontroller);
@@ -162,53 +164,57 @@ void NSViewController_super_setRepresentedObject_(struct NSViewController *self,
         reinterpret_cast<struct objc_object *>(representedObject));
 }
 
-struct NSApplicationDelegate *NSApplicationDelegate_alloc(
+struct NSApplicationDelegate_Class *NSApplicationDelegate_allocClass(
+    char const *classname,
     void (*_I_NSApplicationDelegate_applicationDidFinishLaunching_)(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationDidFinishLaunching_ *, void *aNotification),
     void (*_I_NSApplicationDelegate_applicationWillTerminate_)(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationWillTerminate_ *, void *aNotification))
+
 {
-    Class class_AppDelegate;
-    {
-        //objc_object *protocol_NSApplicationDelegate = objc_getProtocol("NSApplicationDelegate");
-        //return NULL why???
+    Class class_NSApplicationDelegate_CXX;
 
-        class_AppDelegate = objc_allocateClassPair(
-            objc_getClass("NSObject"),
-            "AppDelegate",
-            0);
+    //objc_object *protocol_NSApplicationDelegate = objc_getProtocol("NSApplicationDelegate");
+    //return NULL why???
+    class_NSApplicationDelegate_CXX = objc_allocateClassPair(
+        objc_getClass("NSObject"),
+        classname,
+        0);
+    assert(class_NSApplicationDelegate_CXX != NULL);
 
-        BOOL res;
+    BOOL result1 = class_addMethod(
+        class_NSApplicationDelegate_CXX,
+        sel_registerName("applicationDidFinishLaunching:"),
+        reinterpret_cast<IMP>(_I_NSApplicationDelegate_applicationDidFinishLaunching_),
+        "v@:@");
+    assert(result1 != NO);
 
-        res = class_addMethod(
-            class_AppDelegate,
-            sel_registerName("applicationDidFinishLaunching:"),
-            reinterpret_cast<IMP>(_I_NSApplicationDelegate_applicationDidFinishLaunching_),
-            "v@:@");
-        assert(res != NO);
+    BOOL result2 = class_addMethod(
+        class_NSApplicationDelegate_CXX,
+        sel_registerName("applicationWillTerminate:"),
+        reinterpret_cast<IMP>(_I_NSApplicationDelegate_applicationWillTerminate_),
+        "v@:@");
+    assert(result2 != NO);
 
-        res = class_addMethod(
-            class_AppDelegate,
-            sel_registerName("applicationWillTerminate:"),
-            reinterpret_cast<IMP>(_I_NSApplicationDelegate_applicationWillTerminate_),
-            "v@:@");
-        assert(res != NO);
+    //res = class_addProtocol(
+    //      class_MyDelegate,
+    //      protocol_NSApplicationDelegate);
 
-        //res = class_addProtocol(
-        //      class_MyDelegate,
-        //      protocol_NSApplicationDelegate);
+    //assert(res != NO);
 
-        //assert(res != NO);
+    //objc_registerClassPair(class_NSApplicationDelegate_CXX);
 
-        //objc_registerClassPair(class_AppDelegate);
+    //res = class_conformsToProtocol(class_NSApplicationDelegate_CXX, protocol_NSApplicationDelegate);
+    //assert(res != NO);
 
-        //res = class_conformsToProtocol(class_MyDelegate,protocol_NSApplicationDelegate);
-        //assert(res != NO);
-    }
+    return reinterpret_cast<struct NSApplicationDelegate_Class *>(class_NSApplicationDelegate_CXX);
+}
 
-    struct objc_object *appdelegate = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
-        class_AppDelegate,
+struct NSApplicationDelegate *NSApplicationDelegate_alloc(struct NSApplicationDelegate_Class *class_NSApplicationDelegate_CXX)
+{
+    struct objc_object *delegate = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
+        reinterpret_cast<Class>(class_NSApplicationDelegate_CXX),
         sel_registerName("alloc"));
 
-    return reinterpret_cast<struct NSApplicationDelegate *>(appdelegate);
+    return reinterpret_cast<struct NSApplicationDelegate *>(delegate);
 }
 
 struct NSApplication *NSApplication_sharedApplication()

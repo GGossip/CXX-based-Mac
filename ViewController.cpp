@@ -5,18 +5,23 @@ void _I_Renderer_drawableSizeWillChange_(struct NSApplicationDelegate *, struct 
 
 void _I_Renderer_drawInMTKView_(struct NSApplicationDelegate *, struct MTKViewDelegate_drawInMTKView_ *, struct MTKView *view);
 
+extern struct MTLDevice *g_device;
+
 void _I_AppViewController_loadView(struct NSViewController *self, struct NSViewController_loadView *_cmd)
 {
     NSRect rect = NSMakeRect(0, 0, 800, 600);
-    MTLDevice *device = MTLCreateSystemDefaultDevice();
+    g_device = MTLCreateSystemDefaultDevice();
     struct MTKView *view = MTKView_initWithFrame(
         MTKView_alloc(),
         rect,
-        device);
+        g_device);
 
-    MTKViewDelegate *renderer = MTKViewDelegate_alloc(
+    MTKViewDelegate_Class *renderer_Class = MTKViewDelegate_allocClass(
+        "Renderer",
         _I_Renderer_drawableSizeWillChange_,
         _I_Renderer_drawInMTKView_);
+
+    MTKViewDelegate *renderer = MTKViewDelegate_alloc(renderer_Class);
     MTKView_setDelegate(view, renderer);
 
     NSViewController_setView(self, view);
