@@ -1,70 +1,9 @@
 #include <objc/objc.h>
 #include <objc/runtime.h>
 #include <objc/message.h>
-#include <objc/NSObjCRuntime.h>
 #include <assert.h>
 
-typedef double CGFloat;
-
-typedef struct __attribute__((objc_boxable))
-{
-    CGFloat width;
-    CGFloat height;
-} CGSize;
-
-typedef struct __attribute__((objc_boxable))
-{
-    CGFloat x;
-    CGFloat y;
-} CGPoint;
-
-typedef struct __attribute__((objc_boxable))
-{
-    CGPoint origin;
-    CGSize size;
-} CGRect;
-
-typedef CGSize NSSize;
-
-typedef CGRect NSRect;
-
-static inline NSSize NSMakeSize(CGFloat w, CGFloat h)
-{
-    NSSize s;
-    s.width = w;
-    s.height = h;
-    return s;
-}
-
-static inline NSRect NSMakeRect(CGFloat x, CGFloat y, CGFloat w, CGFloat h)
-{
-    NSRect r;
-    r.origin.x = x;
-    r.origin.y = y;
-    r.size.width = w;
-    r.size.height = h;
-    return r;
-}
-
-typedef NSUInteger NSWindowStyleMask;
-
-enum
-{
-    NSWindowStyleMaskBorderless = 0,
-    NSWindowStyleMaskTitled = 1 << 0,
-    NSWindowStyleMaskClosable = 1 << 1,
-    NSWindowStyleMaskMiniaturizable = 1 << 2,
-    NSWindowStyleMaskResizable = 1 << 3
-};
-
-typedef NSUInteger NSBackingStoreType;
-enum
-{
-
-    NSBackingStoreRetained = 0,
-    NSBackingStoreNonretained = 1,
-    NSBackingStoreBuffered = 2,
-};
+#include "CXX_CoreGraphics.h"
 
 void _I_AppViewController_loadView(struct objc_object *self, struct objc_selector *_cmd);
 
@@ -140,6 +79,7 @@ void _I_AppDelegate_applicationDidFinishLaunching_(struct objc_object *self, str
         NULL,
         NULL);
 
+#if 0
     struct objc_object *view = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(controller, sel_registerName("view"));
 
     struct objc_object *contentview = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(window, sel_registerName("contentView"));
@@ -151,7 +91,8 @@ void _I_AppDelegate_applicationDidFinishLaunching_(struct objc_object *self, str
         view,
         sel_registerName("setFrame:"),
         bounds);
-
+#endif
+    
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
         window,
         sel_registerName("setContentViewController:"),
@@ -161,9 +102,9 @@ void _I_AppDelegate_applicationDidFinishLaunching_(struct objc_object *self, str
         window,
         sel_registerName("makeKeyAndOrderFront:"),
         NULL);
+
 }
 
 void _I_AppDelegate_applicationWillTerminate_(struct objc_object *self, struct objc_selector *_cmd, struct objc_object *aNotification)
 {
-
 }
