@@ -25,7 +25,7 @@ void demo_init()
     MTLVertexBufferLayoutDescriptor_setStepRate(layout_tmp, 1);
 
     layout_tmp = MTLVertexDescriptor_layoutAt(vertexdescriptor, BufferIndexMeshGenerics);
-    MTLVertexBufferLayoutDescriptor_setStride(layout_tmp, 0);
+    MTLVertexBufferLayoutDescriptor_setStride(layout_tmp, 8);
     MTLVertexBufferLayoutDescriptor_setStepFunction(layout_tmp, MTLVertexStepFunctionPerVertex);
     MTLVertexBufferLayoutDescriptor_setStepRate(layout_tmp, 1);
 
@@ -49,7 +49,7 @@ void demo_init()
     struct MTLFunction *fragmentFunction = MTLLibrary_newFunctionWithName(defaultLibrary, string_tmp);
     NSString_release(string_tmp);
 
-    NSUInteger retaincount_tmp = MTLFunction_retainCount(vertexFunction);
+    //NSUInteger retaincount_tmp = MTLFunction_retainCount(vertexFunction);
     struct MTLRenderPipelineDescriptor *pipelineStateDescriptor = MTLRenderPipelineDescriptor_init(MTLRenderPipelineDescriptor_alloc());
     MTLRenderPipelineDescriptor_setVertexFunction(pipelineStateDescriptor, vertexFunction);
     MTLRenderPipelineDescriptor_setFragmentFunction(pipelineStateDescriptor, fragmentFunction);
@@ -58,7 +58,12 @@ void demo_init()
     MTLRenderPipelineColorAttachmentDescriptor_setPixelFormat(MTLRenderPipelineDescriptor_colorAttachmentAt(pipelineStateDescriptor, 0), MTLPixelFormatBGRA8Unorm_sRGB);
     MTLRenderPipelineDescriptor_setDepthAttachmentPixelFormat(pipelineStateDescriptor, MTLPixelFormatDepth32Float_Stencil8);
     MTLRenderPipelineDescriptor_setStencilAttachmentPixelFormat(pipelineStateDescriptor, MTLPixelFormatDepth32Float_Stencil8);
-    retaincount_tmp = MTLFunction_retainCount(vertexFunction);
+    //retaincount_tmp = MTLFunction_retainCount(vertexFunction);
     MTLFunction_release(vertexFunction);
-    retaincount_tmp = MTLFunction_retainCount(vertexFunction);
+    //retaincount_tmp = MTLFunction_retainCount(vertexFunction);
+    MTLFunction_release(fragmentFunction);
+
+    struct NSError *error = (struct NSError *)(1);
+    struct MTLRenderPipelineState *pipelineState = MTLDevice_newRenderPipelineStateWithDescriptor(g_device, pipelineStateDescriptor, &error);
+
 }

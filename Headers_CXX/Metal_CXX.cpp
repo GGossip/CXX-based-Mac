@@ -3,7 +3,23 @@
 #include <objc/objc.h>
 #include <objc/objc-runtime.h>
 
-struct MTLVertexDescriptor *MTLVertexDescriptor_alloc()
+struct MTLDevice : public objc_object
+{
+    MTLDevice() = delete;
+};
+
+struct MTLRenderPipelineDescriptor : public objc_object
+{
+    MTLRenderPipelineDescriptor() = delete;
+};
+
+struct MTLRenderPipelineState : public objc_object
+{
+    MTLRenderPipelineState() = delete;
+};
+
+struct MTLVertexDescriptor *
+MTLVertexDescriptor_alloc()
 {
     struct objc_object *vertexdescriptor = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
         objc_getClass("MTLVertexDescriptor"),
@@ -206,6 +222,16 @@ void MTLRenderPipelineDescriptor_release(struct MTLRenderPipelineDescriptor *sel
 NSUInteger MTLRenderPipelineDescriptor_retainCount(struct MTLRenderPipelineDescriptor *self)
 {
     return NSObject_retainCount(reinterpret_cast<struct NSObject *>(self));
+}
+
+struct MTLRenderPipelineState *MTLDevice_newRenderPipelineStateWithDescriptor(struct MTLDevice *self, struct MTLRenderPipelineDescriptor *descriptor, struct NSError **error)
+{
+    struct objc_object *pipelinestate = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, struct objc_object *, struct objc_object **)>(objc_msgSend)(
+        self,
+        sel_registerName("newRenderPipelineStateWithDescriptor:error:"),
+        descriptor,
+        reinterpret_cast<struct objc_object **>(error));
+    return static_cast<MTLRenderPipelineState *>(pipelinestate);
 }
 
 struct MTLLibrary *MTLDevice_newDefaultLibrary(struct MTLDevice *self)

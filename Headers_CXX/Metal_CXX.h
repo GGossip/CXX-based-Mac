@@ -329,6 +329,8 @@ static inline struct MTLRenderPipelineColorAttachmentDescriptor *MTLRenderPipeli
     return MTLRenderPipelineColorAttachmentDescriptorArray_objectAtIndexedSubscript(MTLRenderPipelineDescriptor_colorAttachments(self), attachmentIndex);
 }
 
+struct MTLRenderPipelineState *MTLDevice_newRenderPipelineStateWithDescriptor(struct MTLDevice *self, struct MTLRenderPipelineDescriptor *descriptor, struct NSError **error);
+
 struct MTLLibrary *MTLDevice_newDefaultLibrary(struct MTLDevice *self);
 struct MTLFunction *MTLLibrary_newFunctionWithName(struct MTLLibrary *self, struct NSString *functionName);
 void MTLFunction_release(struct MTLFunction *self);
