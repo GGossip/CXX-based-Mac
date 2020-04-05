@@ -15,7 +15,7 @@ struct MTKViewDelegate_Class *MTKViewDelegate_allocClass(
 
 struct MTKViewDelegate *MTKViewDelegate_alloc(struct MTKViewDelegate_Class *);
 
-struct MTKViewDelegate *MTKViewDelegate_init(struct MTKViewDelegate *);
+struct MTKViewDelegate *MTKViewDelegate_init(struct MTKViewDelegate *self);
 
 void MTKView_setDelegate(struct MTKView *self, struct MTKViewDelegate *delegate);
 

@@ -10,4 +10,11 @@ typedef int NSInteger;
 typedef unsigned int NSUInteger;
 #endif
 
+void NSObject_release(struct NSObject *self);
+NSUInteger NSObject_retainCount(struct NSObject *self);
+
+struct NSString *NSString_stringWithUTF8String(char const *nullTerminatedCString);
+void NSString_release(struct NSString *self);
+NSUInteger NSString_retainCount(struct NSString *self);
+
 #endif

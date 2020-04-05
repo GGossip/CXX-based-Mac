@@ -85,7 +85,7 @@ struct NSApplicationDelegate_Class *NSApplicationDelegate_allocClass(
 
 struct NSApplicationDelegate *NSApplicationDelegate_alloc(struct NSApplicationDelegate_Class *);
 
-struct NSApplicationDelegate *NSApplicationDelegate_init(struct NSApplicationDelegate *);
+struct NSApplicationDelegate *NSApplicationDelegate_init(struct NSApplicationDelegate *self);
 
 struct NSApplication *NSApplication_sharedApplication();
 

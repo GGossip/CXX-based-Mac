@@ -207,6 +207,132 @@ enum
 
 struct MTLVertexDescriptor *MTLVertexDescriptor_alloc();
 
-struct MTLVertexDescriptor *MTLVertexDescriptor_init(struct MTLVertexDescriptor *);
+struct MTLVertexDescriptor *MTLVertexDescriptor_init(struct MTLVertexDescriptor *self);
+
+struct MTLVertexBufferLayoutDescriptorArray *MTLVertexDescriptor_layouts(struct MTLVertexDescriptor *self);
+
+struct MTLVertexBufferLayoutDescriptor *MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(struct MTLVertexBufferLayoutDescriptorArray *self, NSUInteger index);
+
+void MTLVertexBufferLayoutDescriptor_setStride(struct MTLVertexBufferLayoutDescriptor *self, NSUInteger stride);
+
+typedef NSUInteger MTLVertexStepFunction;
+enum
+{
+    MTLVertexStepFunctionConstant = 0,
+    MTLVertexStepFunctionPerVertex = 1,
+    MTLVertexStepFunctionPerInstance = 2,
+    MTLVertexStepFunctionPerPatch = 3,
+    MTLVertexStepFunctionPerPatchControlPoint = 4
+};
+
+void MTLVertexBufferLayoutDescriptor_setStepFunction(struct MTLVertexBufferLayoutDescriptor *self, MTLVertexStepFunction stepFunction);
+
+void MTLVertexBufferLayoutDescriptor_setStepRate(struct MTLVertexBufferLayoutDescriptor *self, NSUInteger stepRate);
+
+static void inline MTLVertexDescriptor_layoutAt(struct MTLVertexDescriptor *self, NSUInteger index, NSUInteger stride, MTLVertexStepFunction stepFunction, NSUInteger stepRate)
+{
+    struct MTLVertexBufferLayoutDescriptorArray *vertexdescriptor_layouts = MTLVertexDescriptor_layouts(self);
+    struct MTLVertexBufferLayoutDescriptor *vertexdescriptor_layout = MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(vertexdescriptor_layouts, index);
+    MTLVertexBufferLayoutDescriptor_setStride(vertexdescriptor_layout, stride);
+    MTLVertexBufferLayoutDescriptor_setStepFunction(vertexdescriptor_layout, stepFunction);
+    MTLVertexBufferLayoutDescriptor_setStepRate(vertexdescriptor_layout, stepRate);
+}
+
+struct MTLVertexAttributeDescriptorArray *MTLVertexDescriptor_attributes(struct MTLVertexDescriptor *self);
+
+struct MTLVertexAttributeDescriptor *MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(struct MTLVertexAttributeDescriptorArray *self, NSUInteger index);
+
+typedef NSUInteger MTLVertexFormat;
+enum
+{
+    MTLVertexFormatInvalid = 0,
+
+    MTLVertexFormatUChar2 = 1,
+    MTLVertexFormatUChar3 = 2,
+    MTLVertexFormatUChar4 = 3,
+
+    MTLVertexFormatChar2 = 4,
+    MTLVertexFormatChar3 = 5,
+    MTLVertexFormatChar4 = 6,
+
+    MTLVertexFormatUChar2Normalized = 7,
+    MTLVertexFormatUChar3Normalized = 8,
+    MTLVertexFormatUChar4Normalized = 9,
+
+    MTLVertexFormatChar2Normalized = 10,
+    MTLVertexFormatChar3Normalized = 11,
+    MTLVertexFormatChar4Normalized = 12,
+
+    MTLVertexFormatUShort2 = 13,
+    MTLVertexFormatUShort3 = 14,
+    MTLVertexFormatUShort4 = 15,
+
+    MTLVertexFormatShort2 = 16,
+    MTLVertexFormatShort3 = 17,
+    MTLVertexFormatShort4 = 18,
+
+    MTLVertexFormatUShort2Normalized = 19,
+    MTLVertexFormatUShort3Normalized = 20,
+    MTLVertexFormatUShort4Normalized = 21,
+
+    MTLVertexFormatShort2Normalized = 22,
+    MTLVertexFormatShort3Normalized = 23,
+    MTLVertexFormatShort4Normalized = 24,
+
+    MTLVertexFormatHalf2 = 25,
+    MTLVertexFormatHalf3 = 26,
+    MTLVertexFormatHalf4 = 27,
+
+    MTLVertexFormatFloat = 28,
+    MTLVertexFormatFloat2 = 29,
+    MTLVertexFormatFloat3 = 30,
+    MTLVertexFormatFloat4 = 31,
+
+    MTLVertexFormatInt = 32,
+    MTLVertexFormatInt2 = 33,
+    MTLVertexFormatInt3 = 34,
+    MTLVertexFormatInt4 = 35,
+
+    MTLVertexFormatUInt = 36,
+    MTLVertexFormatUInt2 = 37,
+    MTLVertexFormatUInt3 = 38,
+    MTLVertexFormatUInt4 = 39,
+
+    MTLVertexFormatInt1010102Normalized = 40,
+    MTLVertexFormatUInt1010102Normalized = 41,
+
+    MTLVertexFormatUChar4Normalized_BGRA = 42,
+
+    MTLVertexFormatUChar = 45,
+    MTLVertexFormatChar = 46,
+    MTLVertexFormatUCharNormalized = 47,
+    MTLVertexFormatCharNormalized = 48,
+
+    MTLVertexFormatUShort = 49,
+    MTLVertexFormatShort = 50,
+    MTLVertexFormatUShortNormalized = 51,
+    MTLVertexFormatShortNormalized = 52,
+
+    MTLVertexFormatHalf = 53
+};
+
+void MTLVertexAttributeDescriptor_setFormat(struct MTLVertexAttributeDescriptor *self, MTLVertexFormat format);
+
+void MTLVertexAttributeDescriptor_setOffset(struct MTLVertexAttributeDescriptor *self, NSUInteger offset);
+
+void MTLVertexAttributeDescriptor_setBufferIndex(struct MTLVertexAttributeDescriptor *self, NSUInteger bufferIndex);
+
+static void inline MTLVertexDescriptor_attributeAt(struct MTLVertexDescriptor *self, NSUInteger index, MTLVertexFormat format, NSUInteger offset, NSUInteger bufferIndex)
+{
+    struct MTLVertexAttributeDescriptorArray *vertexdescriptor_attributes = MTLVertexDescriptor_attributes(self);
+    struct MTLVertexAttributeDescriptor *vertexdescriptor_attribute = MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(vertexdescriptor_attributes, index);
+    MTLVertexAttributeDescriptor_setFormat(vertexdescriptor_attribute, format);
+    MTLVertexAttributeDescriptor_setOffset(vertexdescriptor_attribute, offset);
+    MTLVertexAttributeDescriptor_setBufferIndex(vertexdescriptor_attribute, bufferIndex);
+}
+
+struct MTLLibrary *MTLDevice_newDefaultLibrary(struct MTLDevice *self);
+
+struct MTLFunction *MTLLibrary_newFunctionWithName(struct MTLLibrary *self,struct NSString *functionName);
 
 #endif
