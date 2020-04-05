@@ -4,32 +4,22 @@
 
 #include "CXX_AppKit.h"
 
-void _I_AppViewController_loadView(struct objc_object *self, struct objc_selector *_cmd)
+void _I_AppViewController_loadView(struct NSViewController *self, struct NSViewController_loadView *_cmd)
 {
-    struct objc_object *nsview = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
-        objc_getClass("NSView"),
-        sel_registerName("alloc"));
-
     NSRect rect = NSMakeRect(0, 0, 800, 600);
-    reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, NSRect)>(objc_msgSend)(
-        nsview,
-        sel_registerName("initWithFrame:"),
+    struct NSView *view = NSView_initWithFrame(
+        NSView_alloc(),
         rect);
 
-    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
-        self,
-        sel_registerName("setView:"),
-        nsview);
+    NSViewController_setView(self, view);
 }
 
-void _I_AppViewController_viewDidLoad(struct objc_object *self, struct objc_selector *_cmd)
+void _I_AppViewController_viewDidLoad(struct NSViewController *self, struct NSViewController_viewDidLoad *_cmd)
 {
-    struct objc_super super = {self, class_getSuperclass(object_getClass(self))};
-    reinterpret_cast<void (*)(struct objc_super *, struct objc_selector *)>(objc_msgSendSuper)(&super, _cmd);
+    NSViewController_super_viewDidLoad(self, _cmd);
 }
 
-void _I_AppViewController_setRepresentedObject_(struct objc_object *self, struct objc_selector *_cmd, struct objc_object *representedObject)
+void _I_AppViewController_setRepresentedObject_(struct NSViewController *self, struct NSViewController_setRepresentedObject_ *_cmd, void *representedObject)
 {
-    struct objc_super super = {self, class_getSuperclass(object_getClass(self))};
-    reinterpret_cast<void (*)(struct objc_super *, struct objc_selector *, struct objc_object *)>(objc_msgSendSuper)(&super, _cmd, representedObject);
+    NSViewController_super_setRepresentedObject_(self, _cmd, representedObject);
 }

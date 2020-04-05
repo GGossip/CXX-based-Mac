@@ -3,6 +3,7 @@
 
 #include "CXX_CoreGraphics.h"
 
+//#include <objc/NSObjCRuntime.h>
 #if __LP64__ || NS_BUILD_32_LIKE_64
 typedef long NSInteger;
 typedef unsigned long NSUInteger;
@@ -33,8 +34,13 @@ static inline NSRect NSMakeRect(CGFloat x, CGFloat y, CGFloat w, CGFloat h)
     return r;
 }
 
-typedef NSUInteger NSWindowStyleMask;
+struct NSScreen *NSScreen_mainScreen();
 
+NSRect NSScreen_frame(struct NSScreen *);
+
+struct NSWindow *NSWindow_alloc();
+
+typedef NSUInteger NSWindowStyleMask;
 enum
 {
     NSWindowStyleMaskBorderless = 0,
@@ -53,13 +59,32 @@ enum
     NSBackingStoreBuffered = 2,
 };
 
-struct NSWindow *NSWindow_alloc();
-
 struct NSWindow *NSWindow_initWithContentRect(struct NSWindow *self, NSRect rect, NSWindowStyleMask styleMask, NSBackingStoreType backing, bool defer);
 
-void NSWindow_setContentViewController(struct NSWindow *self, void *contentViewController);
+void NSWindow_setContentViewController(struct NSWindow *self, struct NSViewController *contentViewController);
 
 void NSWindow_makeKeyAndOrderFront(struct NSWindow *self, void *sender);
+
+struct NSView *NSView_alloc();
+
+struct NSView *NSView_initWithFrame(NSView *self, NSRect frameRect);
+
+struct NSApplicationDelegate *NSApplicationDelegate_alloc(
+    void (*_I_NSApplicationDelegate_applicationDidFinishLaunching_)(struct NSApplicationDelegate *, void *_cmd, void *aNotification),
+    void (*_I_NSApplicationDelegate_applicationWillTerminate_)(struct NSApplicationDelegate *, void *_cmd, void *aNotification));
+
+struct NSViewController *NSViewController_alloc(
+    void (*_I_NSViewController_loadView)(struct NSViewController *, struct NSViewController_loadView *),
+    void (*_I_NSViewController_viewDidLoad)(struct NSViewController *, struct NSViewController_viewDidLoad *),
+    void (*_I_NSViewController_setRepresentedObject_)(struct NSViewController *, struct NSViewController_setRepresentedObject_ *, void *representedObject));
+
+struct NSViewController *NSViewController_initWithNibName(struct NSViewController *self, void *nibNameOrNil, void *nibBundleOrNil);
+
+void NSViewController_setView(struct NSViewController *self, NSView *view);
+
+void NSViewController_super_viewDidLoad(struct NSViewController *self, struct NSViewController_viewDidLoad *);
+
+void NSViewController_super_setRepresentedObject_(struct NSViewController *self, struct NSViewController_setRepresentedObject_ *_cmd, void *representedObject);
 
 extern "C" int NSApplicationMain(int argc, const char *argv[]);
 

@@ -5,21 +5,19 @@
 
 #include "CXX_AppKit.h"
 
-void _I_AppViewController_loadView(struct objc_object *self, struct objc_selector *_cmd);
+void _I_AppViewController_loadView(struct NSViewController *self, struct NSViewController_loadView *_cmd);
 
-void _I_AppViewController_viewDidLoad(struct objc_object *self, struct objc_selector *_cmd);
+void _I_AppViewController_viewDidLoad(struct NSViewController *self, struct NSViewController_viewDidLoad *_cmd);
 
-void _I_AppViewController_setRepresentedObject_(struct objc_object *self, struct objc_selector *_cmd, struct objc_object *representedObject);
+void _I_AppViewController_setRepresentedObject_(struct NSViewController *self, struct NSViewController_setRepresentedObject_ *_cmd, void *representedObject);
 
 void _I_AppDelegate_applicationDidFinishLaunching_(struct objc_object *self, struct objc_selector *_cmd, struct objc_object *aNotification)
 {
     NSSize windowSize = NSMakeSize(480, 480);
-    struct objc_object *mainScreen = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
-        objc_getClass("NSScreen"),
-        sel_registerName("mainScreen"));
 
-    assert(sizeof(NSRect) != 1 && sizeof(NSRect) != 2 && sizeof(NSRect) != 4 && sizeof(NSRect) != 8);
-    NSSize screenSize = reinterpret_cast<NSRect (*)(struct objc_object *, struct objc_selector *)>(objc_msgSend_stret)(mainScreen, sel_registerName("frame")).size;
+    struct NSScreen *mainscreen = NSScreen_mainScreen();
+
+    NSSize screenSize = NSScreen_frame(mainscreen).size;
 
     NSRect rect = NSMakeRect(screenSize.width / 2 - windowSize.width / 2,
                              screenSize.height / 2 - windowSize.height / 2,
@@ -33,62 +31,15 @@ void _I_AppDelegate_applicationDidFinishLaunching_(struct objc_object *self, str
         NSBackingStoreBuffered,
         NO);
 
-    Class class_ViewController;
-    {
-        class_ViewController = objc_allocateClassPair(
-            objc_getClass("NSViewController"),
-            "ViewController",
-            0);
-
-        BOOL res;
-
-        res = class_addMethod(
-            class_ViewController,
-            sel_registerName("loadView"),
-            reinterpret_cast<IMP>(_I_AppViewController_loadView),
-            "v@:");
-        assert(res != NO);
-
-        res = class_addMethod(
-            class_ViewController,
-            sel_registerName("viewDidLoad"),
-            reinterpret_cast<IMP>(_I_AppViewController_viewDidLoad),
-            "v@:");
-        assert(res != NO);
-
-        res = class_addMethod(
-            class_ViewController,
-            sel_registerName("setRepresentedObject:"),
-            reinterpret_cast<IMP>(_I_AppViewController_setRepresentedObject_),
-            "v@:@");
-        assert(res != NO);
-    }
-
-    struct objc_object *controller = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
-        class_ViewController,
-        sel_registerName("alloc"));
-
-    controller = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, struct objc_object *, struct objc_object *)>(objc_msgSend)(
-        controller,
-        sel_registerName("initWithNibName:bundle:"),
+    struct NSViewController *viewcontroller = NSViewController_initWithNibName(
+        NSViewController_alloc(
+            _I_AppViewController_loadView,
+            _I_AppViewController_viewDidLoad,
+            _I_AppViewController_setRepresentedObject_),
         NULL,
         NULL);
 
-#if 0
-    struct objc_object *view = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(controller, sel_registerName("view"));
-
-    struct objc_object *contentview = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(window, sel_registerName("contentView"));
-
-    assert(sizeof(NSRect) != 1 && sizeof(NSRect) != 2 && sizeof(NSRect) != 4 && sizeof(NSRect) != 8);
-    NSRect bounds = reinterpret_cast<NSRect (*)(struct objc_object *, struct objc_selector *)>(objc_msgSend_stret)(contentview, sel_registerName("bounds"));
-
-    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, NSRect)>(objc_msgSend)(
-        view,
-        sel_registerName("setFrame:"),
-        bounds);
-#endif
-
-    NSWindow_setContentViewController(window, controller);
+    NSWindow_setContentViewController(window, viewcontroller);
 
     NSWindow_makeKeyAndOrderFront(window, NULL);
 }
