@@ -1,6 +1,6 @@
 
-#ifndef _NSRUNTIME_CXX_INL_
-#define _NSRUNTIME_CXX_INL_ 1
+#ifndef _NSRUNTIME_CXX_IMPL_H_
+#define _NSRUNTIME_CXX_IMPL_H_ 1
 
 #include <objc/objc.h>
 

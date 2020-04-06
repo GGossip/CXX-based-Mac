@@ -15,7 +15,7 @@ enum
     MTLPixelFormatA8Unorm = 1,
 
     MTLPixelFormatR8Unorm = 10,
-    MTLPixelFormatR8Unorm_sRGB = 11,
+    MTLPixelFormatR8Unorm_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 11,
 
     MTLPixelFormatR8Snorm = 12,
     MTLPixelFormatR8Uint = 13,
@@ -30,17 +30,17 @@ enum
     MTLPixelFormatR16Float = 25,
 
     MTLPixelFormatRG8Unorm = 30,
-    MTLPixelFormatRG8Unorm_sRGB = 31,
+    MTLPixelFormatRG8Unorm_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 31,
     MTLPixelFormatRG8Snorm = 32,
     MTLPixelFormatRG8Uint = 33,
     MTLPixelFormatRG8Sint = 34,
 
     /* Packed 16 bit formats */
 
-    MTLPixelFormatB5G6R5Unorm = 40,
-    MTLPixelFormatA1BGR5Unorm = 41,
-    MTLPixelFormatABGR4Unorm = 42,
-    MTLPixelFormatBGR5A1Unorm = 43,
+    MTLPixelFormatB5G6R5Unorm __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 40,
+    MTLPixelFormatA1BGR5Unorm __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 41,
+    MTLPixelFormatABGR4Unorm __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 42,
+    MTLPixelFormatBGR5A1Unorm __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 43,
 
     /* Normal 32 bit formats */
 
@@ -71,10 +71,10 @@ enum
     MTLPixelFormatRG11B10Float = 92,
     MTLPixelFormatRGB9E5Float = 93,
 
-    MTLPixelFormatBGR10A2Unorm = 94,
+    MTLPixelFormatBGR10A2Unorm __attribute__((availability(ios, introduced = 11.0), availability(macos, introduced = 10.13))) = 94,
 
-    MTLPixelFormatBGR10_XR = 554,
-    MTLPixelFormatBGR10_XR_sRGB = 555,
+    MTLPixelFormatBGR10_XR __attribute__((availability(ios, introduced = 10.0), availability(macos, unavailable))) = 554,
+    MTLPixelFormatBGR10_XR_sRGB __attribute__((availability(ios, introduced = 10.0), availability(macos, unavailable))) = 555,
 
     /* Normal 64 bit formats */
 
@@ -88,8 +88,8 @@ enum
     MTLPixelFormatRGBA16Sint = 114,
     MTLPixelFormatRGBA16Float = 115,
 
-    MTLPixelFormatBGRA10_XR = 552,
-    MTLPixelFormatBGRA10_XR_sRGB = 553,
+    MTLPixelFormatBGRA10_XR __attribute__((availability(ios, introduced = 10.0), availability(macos, unavailable))) = 552,
+    MTLPixelFormatBGRA10_XR_sRGB __attribute__((availability(ios, introduced = 10.0), availability(macos, unavailable))) = 553,
 
     /* Normal 128 bit formats */
 
@@ -100,78 +100,78 @@ enum
     /* Compressed formats. */
 
     /* S3TC/DXT */
-    MTLPixelFormatBC1_RGBA = 130,
-    MTLPixelFormatBC1_RGBA_sRGB = 131,
-    MTLPixelFormatBC2_RGBA = 132,
-    MTLPixelFormatBC2_RGBA_sRGB = 133,
-    MTLPixelFormatBC3_RGBA = 134,
-    MTLPixelFormatBC3_RGBA_sRGB = 135,
+    MTLPixelFormatBC1_RGBA __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 130,
+    MTLPixelFormatBC1_RGBA_sRGB __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 131,
+    MTLPixelFormatBC2_RGBA __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 132,
+    MTLPixelFormatBC2_RGBA_sRGB __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 133,
+    MTLPixelFormatBC3_RGBA __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 134,
+    MTLPixelFormatBC3_RGBA_sRGB __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 135,
 
     /* RGTC */
-    MTLPixelFormatBC4_RUnorm = 140,
-    MTLPixelFormatBC4_RSnorm = 141,
-    MTLPixelFormatBC5_RGUnorm = 142,
-    MTLPixelFormatBC5_RGSnorm = 143,
+    MTLPixelFormatBC4_RUnorm __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 140,
+    MTLPixelFormatBC4_RSnorm __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 141,
+    MTLPixelFormatBC5_RGUnorm __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 142,
+    MTLPixelFormatBC5_RGSnorm __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 143,
 
     /* BPTC */
-    MTLPixelFormatBC6H_RGBFloat = 150,
-    MTLPixelFormatBC6H_RGBUfloat = 151,
-    MTLPixelFormatBC7_RGBAUnorm = 152,
-    MTLPixelFormatBC7_RGBAUnorm_sRGB = 153,
+    MTLPixelFormatBC6H_RGBFloat __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 150,
+    MTLPixelFormatBC6H_RGBUfloat __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 151,
+    MTLPixelFormatBC7_RGBAUnorm __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 152,
+    MTLPixelFormatBC7_RGBAUnorm_sRGB __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 153,
 
     /* PVRTC */
-    MTLPixelFormatPVRTC_RGB_2BPP = 160,
-    MTLPixelFormatPVRTC_RGB_2BPP_sRGB = 161,
-    MTLPixelFormatPVRTC_RGB_4BPP = 162,
-    MTLPixelFormatPVRTC_RGB_4BPP_sRGB = 163,
-    MTLPixelFormatPVRTC_RGBA_2BPP = 164,
-    MTLPixelFormatPVRTC_RGBA_2BPP_sRGB = 165,
-    MTLPixelFormatPVRTC_RGBA_4BPP = 166,
-    MTLPixelFormatPVRTC_RGBA_4BPP_sRGB = 167,
+    MTLPixelFormatPVRTC_RGB_2BPP __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 160,
+    MTLPixelFormatPVRTC_RGB_2BPP_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 161,
+    MTLPixelFormatPVRTC_RGB_4BPP __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 162,
+    MTLPixelFormatPVRTC_RGB_4BPP_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 163,
+    MTLPixelFormatPVRTC_RGBA_2BPP __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 164,
+    MTLPixelFormatPVRTC_RGBA_2BPP_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 165,
+    MTLPixelFormatPVRTC_RGBA_4BPP __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 166,
+    MTLPixelFormatPVRTC_RGBA_4BPP_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 167,
 
     /* ETC2 */
-    MTLPixelFormatEAC_R11Unorm = 170,
-    MTLPixelFormatEAC_R11Snorm = 172,
-    MTLPixelFormatEAC_RG11Unorm = 174,
-    MTLPixelFormatEAC_RG11Snorm = 176,
-    MTLPixelFormatEAC_RGBA8 = 178,
-    MTLPixelFormatEAC_RGBA8_sRGB = 179,
+    MTLPixelFormatEAC_R11Unorm __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 170,
+    MTLPixelFormatEAC_R11Snorm __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 172,
+    MTLPixelFormatEAC_RG11Unorm __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 174,
+    MTLPixelFormatEAC_RG11Snorm __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 176,
+    MTLPixelFormatEAC_RGBA8 __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 178,
+    MTLPixelFormatEAC_RGBA8_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 179,
 
-    MTLPixelFormatETC2_RGB8 = 180,
-    MTLPixelFormatETC2_RGB8_sRGB = 181,
-    MTLPixelFormatETC2_RGB8A1 = 182,
-    MTLPixelFormatETC2_RGB8A1_sRGB = 183,
+    MTLPixelFormatETC2_RGB8 __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 180,
+    MTLPixelFormatETC2_RGB8_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 181,
+    MTLPixelFormatETC2_RGB8A1 __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 182,
+    MTLPixelFormatETC2_RGB8A1_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 183,
 
     /* ASTC */
-    MTLPixelFormatASTC_4x4_sRGB = 186,
-    MTLPixelFormatASTC_5x4_sRGB = 187,
-    MTLPixelFormatASTC_5x5_sRGB = 188,
-    MTLPixelFormatASTC_6x5_sRGB = 189,
-    MTLPixelFormatASTC_6x6_sRGB = 190,
-    MTLPixelFormatASTC_8x5_sRGB = 192,
-    MTLPixelFormatASTC_8x6_sRGB = 193,
-    MTLPixelFormatASTC_8x8_sRGB = 194,
-    MTLPixelFormatASTC_10x5_sRGB = 195,
-    MTLPixelFormatASTC_10x6_sRGB = 196,
-    MTLPixelFormatASTC_10x8_sRGB = 197,
-    MTLPixelFormatASTC_10x10_sRGB = 198,
-    MTLPixelFormatASTC_12x10_sRGB = 199,
-    MTLPixelFormatASTC_12x12_sRGB = 200,
+    MTLPixelFormatASTC_4x4_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 186,
+    MTLPixelFormatASTC_5x4_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 187,
+    MTLPixelFormatASTC_5x5_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 188,
+    MTLPixelFormatASTC_6x5_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 189,
+    MTLPixelFormatASTC_6x6_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 190,
+    MTLPixelFormatASTC_8x5_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 192,
+    MTLPixelFormatASTC_8x6_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 193,
+    MTLPixelFormatASTC_8x8_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 194,
+    MTLPixelFormatASTC_10x5_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 195,
+    MTLPixelFormatASTC_10x6_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 196,
+    MTLPixelFormatASTC_10x8_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 197,
+    MTLPixelFormatASTC_10x10_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 198,
+    MTLPixelFormatASTC_12x10_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 199,
+    MTLPixelFormatASTC_12x12_sRGB __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 200,
 
-    MTLPixelFormatASTC_4x4_LDR = 204,
-    MTLPixelFormatASTC_5x4_LDR = 205,
-    MTLPixelFormatASTC_5x5_LDR = 206,
-    MTLPixelFormatASTC_6x5_LDR = 207,
-    MTLPixelFormatASTC_6x6_LDR = 208,
-    MTLPixelFormatASTC_8x5_LDR = 210,
-    MTLPixelFormatASTC_8x6_LDR = 211,
-    MTLPixelFormatASTC_8x8_LDR = 212,
-    MTLPixelFormatASTC_10x5_LDR = 213,
-    MTLPixelFormatASTC_10x6_LDR = 214,
-    MTLPixelFormatASTC_10x8_LDR = 215,
-    MTLPixelFormatASTC_10x10_LDR = 216,
-    MTLPixelFormatASTC_12x10_LDR = 217,
-    MTLPixelFormatASTC_12x12_LDR = 218,
+    MTLPixelFormatASTC_4x4_LDR __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 204,
+    MTLPixelFormatASTC_5x4_LDR __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 205,
+    MTLPixelFormatASTC_5x5_LDR __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 206,
+    MTLPixelFormatASTC_6x5_LDR __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 207,
+    MTLPixelFormatASTC_6x6_LDR __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 208,
+    MTLPixelFormatASTC_8x5_LDR __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 210,
+    MTLPixelFormatASTC_8x6_LDR __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 211,
+    MTLPixelFormatASTC_8x8_LDR __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 212,
+    MTLPixelFormatASTC_10x5_LDR __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 213,
+    MTLPixelFormatASTC_10x6_LDR __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 214,
+    MTLPixelFormatASTC_10x8_LDR __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 215,
+    MTLPixelFormatASTC_10x10_LDR __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 216,
+    MTLPixelFormatASTC_12x10_LDR __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 217,
+    MTLPixelFormatASTC_12x12_LDR __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 218,
 
     /*!
      @constant MTLPixelFormatGBGR422
@@ -189,7 +189,7 @@ enum
 
     /* Depth */
 
-    MTLPixelFormatDepth16Unorm = 250,
+    MTLPixelFormatDepth16Unorm __attribute__((availability(ios, introduced = 13.0), availability(macos, introduced = 10.12))) = 250,
     MTLPixelFormatDepth32Float = 252,
 
     /* Stencil */
@@ -198,11 +198,11 @@ enum
 
     /* Depth Stencil */
 
-    MTLPixelFormatDepth24Unorm_Stencil8 = 255,
-    MTLPixelFormatDepth32Float_Stencil8 = 260,
+    MTLPixelFormatDepth24Unorm_Stencil8 __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 255,
+    MTLPixelFormatDepth32Float_Stencil8 __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 260,
 
-    MTLPixelFormatX32_Stencil8 = 261,
-    MTLPixelFormatX24_Stencil8 = 262,
+    MTLPixelFormatX32_Stencil8 __attribute__((availability(ios, introduced = 10.0), availability(macos, introduced = 10.12))) = 261,
+    MTLPixelFormatX24_Stencil8 __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.12))) = 262,
 };
 
 typedef NSUInteger MTLVertexStepFunction;
@@ -326,6 +326,12 @@ void MTLRenderPipelineDescriptor_setDepthAttachmentPixelFormat(struct MTLRenderP
 void MTLRenderPipelineDescriptor_setStencilAttachmentPixelFormat(struct MTLRenderPipelineDescriptor *self, MTLPixelFormat pixelFormat);
 void MTLRenderPipelineDescriptor_release(struct MTLRenderPipelineDescriptor *self);
 NSUInteger MTLRenderPipelineDescriptor_retainCount(struct MTLRenderPipelineDescriptor *self);
+static inline void MTLRenderPipelineDescriptor_setLabel(struct MTLRenderPipelineDescriptor *self, char const *label)
+{
+    struct NSString *string = NSString_stringWithUTF8String(label);
+    MTLRenderPipelineDescriptor_setLabel(self, string);
+    NSString_release(string);
+}
 static inline struct MTLRenderPipelineColorAttachmentDescriptor *MTLRenderPipelineDescriptor_colorAttachmentAt(struct MTLRenderPipelineDescriptor *self, NSUInteger attachmentIndex)
 {
     return MTLRenderPipelineColorAttachmentDescriptorArray_objectAtIndexedSubscript(MTLRenderPipelineDescriptor_colorAttachments(self), attachmentIndex);
@@ -355,9 +361,84 @@ NSUInteger MTLDepthStencilDescriptor_retainCount(struct MTLDepthStencilDescripto
 
 struct MTLDepthStencilState *MTLDevice_newDepthStencilStateWithDescriptor(struct MTLDevice *self, struct MTLDepthStencilDescriptor *descriptor);
 
+typedef NSUInteger MTLCPUCacheMode;
+enum
+{
+    MTLCPUCacheModeDefaultCache __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 0,
+    MTLCPUCacheModeWriteCombined __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 1,
+};
+
+typedef NSUInteger MTLStorageMode;
+enum
+{
+    MTLStorageModeShared __attribute__((availability(ios, introduced = 9.0), availability(macos, introduced = 10.11))) = 0,
+    MTLStorageModeManaged __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 1,
+    MTLStorageModePrivate __attribute__((availability(ios, introduced = 9.0), availability(macos, introduced = 10.11))) = 2,
+    MTLStorageModeMemoryless __attribute__((availability(ios, introduced = 10.0), availability(macos, unavailable))) = 3,
+};
+
+typedef NSUInteger MTLHazardTrackingMode;
+enum
+{
+    MTLHazardTrackingModeDefault __attribute__((availability(ios, introduced = 10.0), availability(macos, introduced = 10.13))) = 0,
+    MTLHazardTrackingModeUntracked __attribute__((availability(ios, introduced = 10.0), availability(macos, introduced = 10.13))) = 1,
+    MTLHazardTrackingModeTracked __attribute__((availability(ios, introduced = 10.0), availability(macos, introduced = 10.15))) = 2,
+};
+
+enum
+{
+    MTLResourceCPUCacheModeShift = 0,
+    MTLResourceCPUCacheModeMask = (0xfUL << MTLResourceCPUCacheModeShift),
+    MTLResourceStorageModeShift = 4,
+    MTLResourceStorageModeMask = (0xfUL << MTLResourceStorageModeShift),
+    MTLResourceHazardTrackingModeShift = 8,
+    MTLResourceHazardTrackingModeMask = (0x3UL << MTLResourceHazardTrackingModeShift)
+};
+
+typedef NSUInteger MTLResourceOptions;
+enum
+{
+    MTLResourceCPUCacheModeDefaultCache __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = MTLCPUCacheModeDefaultCache << MTLResourceCPUCacheModeShift,
+    MTLResourceCPUCacheModeWriteCombined __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = MTLCPUCacheModeWriteCombined << MTLResourceCPUCacheModeShift,
+
+    MTLResourceStorageModeShared __attribute__((availability(ios, introduced = 9.0), availability(macos, introduced = 10.11))) = MTLStorageModeShared << MTLResourceStorageModeShift,
+    MTLResourceStorageModeManaged __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = MTLStorageModeManaged << MTLResourceStorageModeShift,
+    MTLResourceStorageModePrivate __attribute__((availability(ios, introduced = 9.0), availability(macos, introduced = 10.11))) = MTLStorageModePrivate << MTLResourceStorageModeShift,
+    MTLResourceStorageModeMemoryless __attribute__((availability(ios, introduced = 10.0), availability(macos, unavailable))) = MTLStorageModeMemoryless << MTLResourceStorageModeShift,
+
+    MTLResourceHazardTrackingModeDefault __attribute__((availability(ios, introduced = 10.0), availability(macos, introduced = 10.13))) = MTLHazardTrackingModeDefault << MTLResourceHazardTrackingModeShift,
+    MTLResourceHazardTrackingModeUntracked __attribute__((availability(ios, introduced = 10.0), availability(macos, introduced = 10.13))) = MTLHazardTrackingModeUntracked << MTLResourceHazardTrackingModeShift,
+    MTLResourceHazardTrackingModeTracked __attribute__((availability(ios, introduced = 10.0), availability(macos, introduced = 10.15))) = MTLHazardTrackingModeTracked << MTLResourceHazardTrackingModeShift,
+
+    MTLResourceOptionCPUCacheModeDefault __attribute__((availability(ios, introduced = 8.0, deprecated = 9.0), availability(macos, deprecated = 10.11))) = MTLResourceCPUCacheModeDefaultCache,
+    MTLResourceOptionCPUCacheModeWriteCombined __attribute__((availability(ios, introduced = 8.0, deprecated = 9.0), availability(macos, deprecated = 10.11))) = MTLResourceCPUCacheModeWriteCombined,
+};
+
+void MTLResource_setLabel(struct MTLResource *self, struct NSString *label);
+
+struct MTLBuffer *MTLDevice_newBufferWithLength(struct MTLDevice *self, NSUInteger length, MTLResourceOptions options);
+void MTLBuffer_setLabel(struct MTLBuffer *self, struct NSString *label);
+void MTLBuffer_release(struct MTLBuffer *self);
+NSUInteger MTLBuffer_retainCount(struct MTLBuffer *self);
+static inline void MTLBuffer_setLabel(struct MTLBuffer *self, char const *label)
+{
+    struct NSString *string = NSString_stringWithUTF8String(label);
+    MTLBuffer_setLabel(self, string);
+    NSString_release(string);
+}
+
+struct MTLCommandQueue *MTLDevice_newCommandQueue(struct MTLDevice *self);
+
 struct MTLLibrary *MTLDevice_newDefaultLibrary(struct MTLDevice *self);
 struct MTLFunction *MTLLibrary_newFunctionWithName(struct MTLLibrary *self, struct NSString *functionName);
 void MTLFunction_release(struct MTLFunction *self);
 NSUInteger MTLFunction_retainCount(struct MTLFunction *self);
+static inline struct MTLFunction *MTLLibrary_newFunctionWithName(struct MTLLibrary *self, char const *functionName)
+{
+    struct NSString *string = NSString_stringWithUTF8String(functionName);
+    struct MTLFunction *function = MTLLibrary_newFunctionWithName(self, string);
+    NSString_release(string);
+    return function;
+}
 
 #endif

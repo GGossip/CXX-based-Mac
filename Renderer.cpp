@@ -15,6 +15,10 @@ void _I_Renderer_drawInMTKView_(struct NSApplicationDelegate *, struct MTKViewDe
 
 #include "ShaderTypes.h"
 
+static const NSUInteger kMaxBuffersInFlight = 3;
+
+static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
+
 void demo_init()
 {
     struct MTLVertexDescriptor *vertexdescriptor = MTLVertexDescriptor_init(MTLVertexDescriptor_alloc());
@@ -40,16 +44,11 @@ void demo_init()
     MTLVertexAttributeDescriptor_setBufferIndex(attribute_tmp, BufferIndexMeshGenerics);
 
     struct MTLLibrary *defaultLibrary = MTLDevice_newDefaultLibrary(g_device);
-
-    struct NSString *string_tmp = NSString_stringWithUTF8String("vertexShader");
-    struct MTLFunction *vertexFunction = MTLLibrary_newFunctionWithName(defaultLibrary, string_tmp);
-    NSString_release(string_tmp);
-
-    string_tmp = NSString_stringWithUTF8String("fragmentShader");
-    struct MTLFunction *fragmentFunction = MTLLibrary_newFunctionWithName(defaultLibrary, string_tmp);
-    NSString_release(string_tmp);
+    struct MTLFunction *vertexFunction = MTLLibrary_newFunctionWithName(defaultLibrary, "vertexShader");
+    struct MTLFunction *fragmentFunction = MTLLibrary_newFunctionWithName(defaultLibrary, "fragmentShader");
 
     struct MTLRenderPipelineDescriptor *pipelineStateDescriptor = MTLRenderPipelineDescriptor_init(MTLRenderPipelineDescriptor_alloc());
+    MTLRenderPipelineDescriptor_setLabel(pipelineStateDescriptor, "MyPipeline");
     MTLRenderPipelineDescriptor_setVertexFunction(pipelineStateDescriptor, vertexFunction);
     MTLRenderPipelineDescriptor_setFragmentFunction(pipelineStateDescriptor, fragmentFunction);
     MTLRenderPipelineDescriptor_setVertexDescriptor(pipelineStateDescriptor, vertexdescriptor);
@@ -71,5 +70,10 @@ void demo_init()
 
     struct MTLDepthStencilState *depthState = MTLDevice_newDepthStencilStateWithDescriptor(g_device, depthStateDesc);
     MTLDepthStencilDescriptor_release(depthStateDesc);
-    
+
+    NSUInteger uniformBufferSize = kAlignedUniformsSize * kMaxBuffersInFlight;
+    struct MTLBuffer *dynamicUniformBuffer = MTLDevice_newBufferWithLength(g_device, uniformBufferSize, MTLResourceStorageModeShared);
+    MTLBuffer_setLabel(dynamicUniformBuffer, "UniformBuffer");
+
+    struct MTLCommandQueue *commandQueue = MTLDevice_newCommandQueue(g_device);
 }

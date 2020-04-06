@@ -1,5 +1,5 @@
 #include "Metal_CXX.h"
-#include "NSRuntime_CXX.inl"
+#include "NSRuntime_CXX_IMPL.h"
 
 #include <objc/objc.h>
 #include <objc/objc-runtime.h>
@@ -62,6 +62,21 @@ struct MTLDepthStencilDescriptor : public NSObject
 struct MTLDepthStencilState : public NSObject
 {
     MTLDepthStencilState() = delete;
+};
+
+struct MTLResource : public NSObject
+{
+    MTLResource() = delete;
+};
+
+struct MTLBuffer : public MTLResource
+{
+    MTLBuffer() = delete;
+};
+
+struct MTLCommandQueue : public MTLResource
+{
+    MTLCommandQueue() = delete;
 };
 
 struct MTLLibrary : public NSObject
@@ -342,6 +357,47 @@ struct MTLDepthStencilState *MTLDevice_newDepthStencilStateWithDescriptor(struct
         sel_registerName("newDepthStencilStateWithDescriptor:"),
         descriptor);
     return static_cast<struct MTLDepthStencilState *>(depthstencilstate);
+}
+
+void MTLResource_setLabel(struct MTLResource *self, struct NSString *label)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
+        self,
+        sel_registerName("setLabel:"),
+        label);
+}
+
+struct MTLBuffer *MTLDevice_newBufferWithLength(struct MTLDevice *self, NSUInteger length, MTLResourceOptions options)
+{
+    struct objc_object *buffer = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, NSUInteger, MTLResourceOptions)>(objc_msgSend)(
+        self,
+        sel_registerName("newBufferWithLength:options:"),
+        length,
+        options);
+    return static_cast<struct MTLBuffer *>(buffer);
+}
+
+void MTLBuffer_setLabel(struct MTLBuffer *self, struct NSString *label)
+{
+    return MTLResource_setLabel(self, label);
+}
+
+void MTLBuffer_release(struct MTLBuffer *self)
+{
+    return NSObject_release(self);
+}
+
+NSUInteger MTLBuffer_retainCount(struct MTLBuffer *self)
+{
+    return NSObject_retainCount(self);
+}
+
+struct MTLCommandQueue *MTLDevice_newCommandQueue(struct MTLDevice *self)
+{
+    struct objc_object *commandQueue = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+        self,
+        sel_registerName("newCommandQueue"));
+    return static_cast<struct MTLCommandQueue *>(commandQueue);
 }
 
 struct MTLLibrary *MTLDevice_newDefaultLibrary(struct MTLDevice *self)

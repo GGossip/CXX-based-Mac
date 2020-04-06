@@ -1,5 +1,5 @@
 #include "NSRuntime_CXX.h"
-#include "NSRuntime_CXX.inl"
+#include "NSRuntime_CXX_IMPL.h"
 
 #include <objc/objc-runtime.h>
 
