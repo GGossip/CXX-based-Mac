@@ -7,8 +7,9 @@
 #ifndef _GC_EVENT_H_
 #define _GC_EVENT_H_ 1
 
-
 #include <stdint.h>
+
+#define INFINITE 0xFFFFFFFF
 
 // An event is a synchronization object whose state can be set and reset
 // indicating that an event has occured. It is used pervasively throughout

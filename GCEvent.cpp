@@ -6,6 +6,11 @@
 
 #include <pthread.h>
 
+#define HAVE_PTHREAD_CONDATTR_SETCLOCK 1
+
+#define HAVE_MACH_ABSOLUTE_TIME 1
+
+
 class Impl
 {
     pthread_cond_t m_condition;
