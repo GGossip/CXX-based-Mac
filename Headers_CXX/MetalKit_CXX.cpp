@@ -107,3 +107,4 @@ void NSViewController_setView(struct NSViewController *self, struct MTKView *vie
 {
     NSViewController_setView(self, reinterpret_cast<struct NSView *>(view));
 }
+

@@ -89,6 +89,28 @@ struct MTLFunction : public NSObject
     MTLFunction() = delete;
 };
 
+struct __block_literal_userdata_callback
+{
+    void *isa;
+    int flags;
+    int reserved;
+    void (*invoke)(struct __block_literal_userdata_callback *);
+    struct __block_descriptor_userdata_callback *descriptor;
+    void *pUserData;
+    void (*pfnCallback)(void *);
+};
+
+static void __block_invoke_userdata_callback(struct __block_literal_userdata_callback *_block)
+{
+    _block->pfnCallback(_block->pUserData);
+}
+
+static struct __block_descriptor_userdata_callback
+{
+    unsigned long int reserved;
+    unsigned long int Block_size;
+} __block_descriptor_userdata_callback = {0, sizeof(struct __block_literal_userdata_callback)};
+
 struct MTLVertexDescriptor *MTLVertexDescriptor_alloc()
 {
     struct objc_object *vertexdescriptor = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
@@ -398,6 +420,23 @@ struct MTLCommandQueue *MTLDevice_newCommandQueue(struct MTLDevice *self)
         self,
         sel_registerName("newCommandQueue"));
     return static_cast<struct MTLCommandQueue *>(commandQueue);
+}
+
+void MTLCommandQueue_addCompletedHandler(struct MTLCommandQueue *self, void *pUserData, void (*pfnCallback)(void *))
+{
+    struct __block_literal_userdata_callback __block_literal_userdata_callback = {
+        &_NSConcreteStackBlock,
+        BLOCK_HAS_STRET,
+        0, //<uninitialized>
+        __block_invoke_userdata_callback,
+        &__block_descriptor_userdata_callback,
+        pUserData,
+        pfnCallback};
+
+    reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
+        self,
+        sel_registerName("addCompletedHandler:"),
+        reinterpret_cast<struct objc_object *>(&__block_literal_userdata_callback));
 }
 
 struct MTLLibrary *MTLDevice_newDefaultLibrary(struct MTLDevice *self)
