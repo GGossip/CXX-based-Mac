@@ -5,11 +5,14 @@
 #include "GCEvent.h"
 
 #include <pthread.h>
+#include <mach/clock.h>
+#include <mach/mach_time.h>
+#include <assert.h>
+#include <memory>
+
 
 #define HAVE_PTHREAD_CONDATTR_SETCLOCK 1
-
 #define HAVE_MACH_ABSOLUTE_TIME 1
-
 
 class Impl
 {
