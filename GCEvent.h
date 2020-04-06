@@ -11,11 +11,11 @@
 
 #define INFINITE 0xFFFFFFFF
 
-#define UNREFERENCED_PARAMETER(P)          (void)(P)
+#define UNREFERENCED_PARAMETER(P) (void)(P)
 
-#define WAIT_OBJECT_0           0
-#define WAIT_TIMEOUT            258
-#define WAIT_FAILED             0xFFFFFFFF
+#define WAIT_OBJECT_0 0
+#define WAIT_TIMEOUT 258
+#define WAIT_FAILED 0xFFFFFFFF
 
 // An event is a synchronization object whose state can be set and reset
 // indicating that an event has occured. It is used pervasively throughout

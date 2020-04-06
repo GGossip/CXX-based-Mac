@@ -5,6 +5,7 @@
 #include "GCEvent.h"
 
 #include <pthread.h>
+#include <errno.h>
 #include <mach/clock.h>
 #include <mach/mach_time.h>
 #include <assert.h>
@@ -27,7 +28,7 @@ namespace
 {
 
 #if HAVE_PTHREAD_CONDATTR_SETCLOCK
-void TimeSpecAdd(timespec* time, uint32_t milliseconds)
+void TimeSpecAdd(timespec *time, uint32_t milliseconds)
 {
     uint64_t nsec = time->tv_nsec + (uint64_t)milliseconds * tccMilliSecondsToNanoSeconds;
     if (nsec >= tccSecondsToNanoSeconds)
@@ -45,7 +46,7 @@ void TimeSpecAdd(timespec* time, uint32_t milliseconds)
 // Parameters:
 //  nanoseconds - time in nanoseconds to convert
 //  t           - the target timespec structure
-void NanosecondsToTimeSpec(uint64_t nanoseconds, timespec* t)
+void NanosecondsToTimeSpec(uint64_t nanoseconds, timespec *t)
 {
     t->tv_sec = nanoseconds / tccSecondsToNanoSeconds;
     t->tv_nsec = nanoseconds % tccSecondsToNanoSeconds;
@@ -54,7 +55,7 @@ void NanosecondsToTimeSpec(uint64_t nanoseconds, timespec* t)
 
 } // anonymous namespace
 
-class Impl
+class GCEvent::Impl
 {
     pthread_cond_t m_condition;
     pthread_mutex_t m_mutex;
