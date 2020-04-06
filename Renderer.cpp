@@ -17,10 +17,8 @@ void _I_Renderer_drawInMTKView_(struct NSApplicationDelegate *, struct MTKViewDe
 
 #include "ShaderTypes.h"
 
-#include <pthread.h>
 #include <stdint.h>
 #include <string.h>
-#include <semaphore.h>
 
 struct MTLDevice *g_device = NULL;
 struct MTKView *g_view = NULL;
@@ -37,6 +35,9 @@ static struct MTLDepthStencilState *g_depthState = NULL;
 static struct MTLBuffer *g_meshvertexBuffer = NULL;
 static struct MTLBuffer *g_meshvertexBuffer_Addition = NULL;
 float g_rotation = 0.0f;
+
+#include "GCEvent.h"
+GCEvent g_inFlightSemaphore[kMaxBuffersInFlight];
 
 static inline matrix_float4x4 matrix4x4_translation(float tx, float ty, float tz)
 {
@@ -74,6 +75,11 @@ static inline matrix_float4x4 matrix_perspective_right_hand(float fovyRadians, f
 
 void demo_init(struct MTKView *view)
 {
+    for (NSUInteger i = 0; i < kMaxBuffersInFlight; ++i)
+    {
+        g_inFlightSemaphore[i].CreateAutoEventNoThrow(true);
+    }
+
     MTKView_setColorPixelFormat(view, MTLPixelFormatBGRA8Unorm_sRGB);
     MTKView_setDepthStencilPixelFormat(view, MTLPixelFormatDepth32Float_Stencil8);
     MTKView_setSampleCount(view, 1);
@@ -244,27 +250,13 @@ static void demo_resize(struct MTKView *view, CGSize size)
     g_projectionMatrix = matrix_perspective_right_hand(65.0f * (M_PI / 180.0f), aspect, 0.1f, 100.0f);
 }
 
-//Import Table Hook (Also Called "Function Redirection")
-void PT_ImportTableHook(
-    void const *const pLibraryImportBaseAddress, void const *const pLibraryImportSlideAddress //Only Used By Mach To Support Shared Cache
-    ,
-    char const *const //pLibraryExportName //Only Used By Win32 To Distinguish Different (Export)Library
-    ,
-    char const *const *const pFuntionToHookNameVector //SOA(Structure Of Array)
-    ,
-    void (*const *const pFuntionToHookNewAddressVector)(void) //SOA(Structure Of Array)
-    ,
-    size_t const FuntionToHookVectorCount);
-
-#include <mach-o/dyld.h>
-
-void Hook_Init();
-
 static void demo_draw(struct MTKView *view)
 {
+    /// Per frame updates here
+
     g_uniformBufferIndex = (g_uniformBufferIndex + 1) % kMaxBuffersInFlight;
 
-    //wait
+    g_inFlightSemaphore[g_uniformBufferIndex].Wait(INFINITE, false);
 
     uint32_t uniformBufferOffset = kAlignedUniformsSize * g_uniformBufferIndex;
     void *uniformBufferAddress = reinterpret_cast<void *>(reinterpret_cast<uintptr_t>(MTLBuffer_contents(g_dynamicUniformBuffer)) + uniformBufferOffset);
@@ -280,14 +272,17 @@ static void demo_draw(struct MTKView *view)
     struct MTLCommandBuffer *commandBuffer = MTLCommandQueue_commandBuffer(g_commandQueue);
     MTLCommandBuffer_setLabel(commandBuffer, "MyCommand");
 
-    MTLCommandBuffer_addCompletedHandler(commandBuffer, NULL, [](void *pUserData, struct MTLCommandBuffer *buffer) -> void {
-        int huhu = MTLCommandBuffer_retainCount(buffer);
-        //signal
+    MTLCommandBuffer_addCompletedHandler(commandBuffer, reinterpret_cast<void *>(g_uniformBufferIndex), [](void *pUserData, struct MTLCommandBuffer *buffer) -> void {
+        g_inFlightSemaphore[reinterpret_cast<uintptr_t>(pUserData)].Set();
     });
 
+    /// Delay getting the currentRenderPassDescriptor until we absolutely need it to avoid
+    ///   holding onto the drawable and blocking the display pipeline any longer than necessary
     struct MTLRenderPassDescriptor *renderPassDescriptor = MTKView_currentRenderPassDescriptor(view);
     if (NULL != renderPassDescriptor)
     {
+        /// Final pass rendering code here
+
         struct MTLRenderCommandEncoder *renderEncoder = MTLCommandBuffer_renderCommandEncoderWithDescriptor(commandBuffer, renderPassDescriptor);
         MTLRenderCommandEncoder_setLabel(renderEncoder, "MyRenderEncoder");
 
