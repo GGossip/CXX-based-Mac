@@ -366,7 +366,7 @@ void MTLCommandBuffer_addCompletedHandler(struct MTLCommandBuffer *self, void *p
     struct __block_literal_MTLCommandBufferHandler __block_literal_MTLCommandBufferHandler = {
         &_NSConcreteStackBlock,
         BLOCK_HAS_STRET,
-        0, //<uninitialized>
+        0, // uninitialized
         __block_invoke_MTLCommandBufferHandler,
         &__block_descriptor_MTLCommandBufferHandler,
         pUserData,
@@ -406,12 +406,12 @@ void MTLCommandEncoder_setLabel(struct MTLCommandEncoder *self, struct NSString 
         label);
 }
 
-void MTLCommandEncoder_pushDebugGroup(struct MTLCommandEncoder *self, struct NSString *label)
+void MTLCommandEncoder_pushDebugGroup(struct MTLCommandEncoder *self, struct NSString *string)
 {
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
         self,
         sel_registerName("pushDebugGroup:"),
-        label);
+        string);
 }
 
 void MTLCommandEncoder_popDebugGroup(struct MTLCommandEncoder *self)
@@ -426,9 +426,9 @@ void MTLRenderCommandEncoder_setLabel(struct MTLRenderCommandEncoder *self, stru
     return MTLCommandEncoder_setLabel(self, label);
 }
 
-void MTLRenderCommandEncoder_pushDebugGroup(struct MTLRenderCommandEncoder *self, struct NSString *label)
+void MTLRenderCommandEncoder_pushDebugGroup(struct MTLRenderCommandEncoder *self, struct NSString *string)
 {
-    return MTLCommandEncoder_pushDebugGroup(self, label);
+    return MTLCommandEncoder_pushDebugGroup(self, string);
 }
 
 void MTLRenderCommandEncoder_popDebugGroup(struct MTLRenderCommandEncoder *self)

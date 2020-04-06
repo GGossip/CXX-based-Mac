@@ -444,7 +444,7 @@ static inline void MTLCommandBuffer_setLabel(struct MTLCommandBuffer *self, char
 }
 
 void MTLCommandEncoder_setLabel(struct MTLCommandEncoder *self, struct NSString *label);
-void MTLCommandEncoder_pushDebugGroup(struct MTLCommandEncoder *self, struct NSString *label);
+void MTLCommandEncoder_pushDebugGroup(struct MTLCommandEncoder *self, struct NSString *string);
 void MTLCommandEncoder_popDebugGroup(struct MTLCommandEncoder *self);
 
 typedef NSUInteger MTLPrimitiveType;
