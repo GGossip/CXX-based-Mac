@@ -77,7 +77,7 @@ void demo_init(struct MTKView *view)
     MTKView_setColorPixelFormat(view, MTLPixelFormatBGRA8Unorm_sRGB);
     MTKView_setDepthStencilPixelFormat(view, MTLPixelFormatDepth32Float_Stencil8);
     MTKView_setSampleCount(view, 1);
-    
+
     struct MTLVertexDescriptor *vertexdescriptor = MTLVertexDescriptor_init(MTLVertexDescriptor_alloc());
 
     struct MTLVertexBufferLayoutDescriptor *layout_tmp = MTLVertexDescriptor_layoutAt(vertexdescriptor, BufferIndexMeshPositions);
@@ -135,7 +135,7 @@ void demo_init(struct MTKView *view)
     g_commandQueue = MTLDevice_newCommandQueue(g_device);
 
     g_projectionMatrix = matrix_perspective_right_hand(65.0f * (M_PI / 180.0f), 1.0f, 0.1f, 100.0f);
-    
+
     //sem
 
     //--------------------------------------------------------------------------------------
@@ -264,10 +264,10 @@ static void demo_draw(struct MTKView *view)
     struct MTLCommandBuffer *commandBuffer = MTLCommandQueue_commandBuffer(g_commandQueue);
     MTLCommandBuffer_setLabel(commandBuffer, "MyCommand");
 
-    //MTLCommandBuffer_addCompletedHandler(commandBuffer, NULL, [](void *pUserData, struct MTLCommandBuffer *buffer) -> void {
-    //    int huhu = 0;
+    MTLCommandBuffer_addCompletedHandler(commandBuffer, NULL, [](void *pUserData, struct MTLCommandBuffer *buffer) -> void {
+        int huhu = MTLCommandBuffer_retainCount(buffer);
         //signal
-    //});
+    });
 
     struct MTLRenderPassDescriptor *renderPassDescriptor = MTKView_currentRenderPassDescriptor(view);
     if (NULL != renderPassDescriptor)

@@ -435,6 +435,7 @@ void MTLCommandBuffer_setLabel(struct MTLCommandBuffer *self, struct NSString *l
 void MTLCommandBuffer_addCompletedHandler(struct MTLCommandBuffer *self, void *pUserData, void (*pfnCallback)(void *, struct MTLCommandBuffer *));
 void MTLCommandBuffer_presentDrawable(struct MTLCommandBuffer *self, struct MTLDrawable *drawable);
 void MTLCommandBuffer_commit(struct MTLCommandBuffer *self);
+NSUInteger MTLCommandBuffer_retainCount(struct MTLCommandBuffer *self);
 static inline void MTLCommandBuffer_setLabel(struct MTLCommandBuffer *self, char const *label)
 {
     struct NSString *string = NSString_stringWithUTF8String(label);

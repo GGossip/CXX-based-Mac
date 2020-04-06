@@ -393,6 +393,11 @@ void MTLCommandBuffer_commit(struct MTLCommandBuffer *self)
         sel_registerName("commit"));
 }
 
+NSUInteger MTLCommandBuffer_retainCount(struct MTLCommandBuffer *self)
+{
+    return NSObject_retainCount(self);
+}
+
 void MTLCommandEncoder_setLabel(struct MTLCommandEncoder *self, struct NSString *label)
 {
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
