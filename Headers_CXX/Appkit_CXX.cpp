@@ -1,4 +1,5 @@
 #include "AppKit_CXX.h"
+#include "AppKit_CXX_IMPL.h"
 
 #include <objc/objc.h>
 #include <objc/objc-runtime.h>
@@ -11,14 +12,14 @@ struct NSScreen *NSScreen_mainScreen()
         objc_getClass("NSScreen"),
         sel_registerName("mainScreen"));
 
-    return reinterpret_cast<struct NSScreen *>(screen);
+    return static_cast<struct NSScreen *>(screen);
 }
 
 NSRect NSScreen_frame(struct NSScreen *self)
 {
     assert(sizeof(NSRect) != 1 && sizeof(NSRect) != 2 && sizeof(NSRect) != 4 && sizeof(NSRect) != 8);
     NSRect _frame = reinterpret_cast<NSRect (*)(struct objc_object *, struct objc_selector *)>(objc_msgSend_stret)(
-        reinterpret_cast<struct objc_object *>(self),
+        self,
         sel_registerName("frame"));
     return _frame;
 }
@@ -29,33 +30,33 @@ struct NSWindow *NSWindow_alloc()
         objc_getClass("NSWindow"),
         sel_registerName("alloc"));
 
-    return reinterpret_cast<struct NSWindow *>(window);
+    return static_cast<struct NSWindow *>(window);
 }
 
 struct NSWindow *NSWindow_initWithContentRect(struct NSWindow *self, NSRect rect, NSWindowStyleMask styleMask, NSBackingStoreType backing, bool defer)
 {
     struct objc_object *window = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, NSRect, NSWindowStyleMask, NSBackingStoreType, BOOL)>(objc_msgSend)(
-        reinterpret_cast<struct objc_object *>(self),
+        self,
         sel_registerName("initWithContentRect:styleMask:backing:defer:"),
         rect,
         styleMask,
         backing,
         (defer != false) ? YES : NO);
-    return reinterpret_cast<struct NSWindow *>(window);
+    return static_cast<struct NSWindow *>(window);
 }
 
 void NSWindow_setContentViewController(struct NSWindow *self, struct NSViewController *contentViewController)
 {
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
-        reinterpret_cast<struct objc_object *>(self),
+        self,
         sel_registerName("setContentViewController:"),
-        reinterpret_cast<struct objc_object *>(contentViewController));
+        contentViewController);
 }
 
 void NSWindow_makeKeyAndOrderFront(struct NSWindow *self, void *sender)
 {
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
-        reinterpret_cast<struct objc_object *>(self),
+        self,
         sel_registerName("makeKeyAndOrderFront:"),
         reinterpret_cast<struct objc_object *>(sender));
 }
@@ -65,16 +66,16 @@ struct NSView *NSView_alloc()
     struct objc_object *view = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
         objc_getClass("NSView"),
         sel_registerName("alloc"));
-    return reinterpret_cast<struct NSView *>(view);
+    return static_cast<struct NSView *>(view);
 }
 
 struct NSView *NSView_initWithFrame(NSView *self, NSRect frameRect)
 {
     struct objc_object *view = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, NSRect)>(objc_msgSend)(
-        reinterpret_cast<struct objc_object *>(self),
+        self,
         sel_registerName("initWithFrame:"),
         frameRect);
-    return reinterpret_cast<struct NSView *>(view);
+    return static_cast<struct NSView *>(view);
 }
 
 struct NSViewController_Class *NSViewController_allocClass(
@@ -119,33 +120,33 @@ struct NSViewController *NSViewController_alloc(struct NSViewController_Class *c
         reinterpret_cast<Class>(class_NSViewController_CXX),
         sel_registerName("alloc"));
 
-    return reinterpret_cast<struct NSViewController *>(viewcontroller);
+    return static_cast<struct NSViewController *>(viewcontroller);
 }
 
 struct NSViewController *NSViewController_initWithNibName(struct NSViewController *self, void *nibNameOrNil, void *nibBundleOrNil)
 {
     struct objc_object *viewcontroller = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, struct objc_object *, struct objc_object *)>(objc_msgSend)(
-        reinterpret_cast<struct objc_object *>(self),
+        self,
         sel_registerName("initWithNibName:bundle:"),
         reinterpret_cast<struct objc_object *>(nibNameOrNil),
         reinterpret_cast<struct objc_object *>(nibBundleOrNil));
 
-    return reinterpret_cast<struct NSViewController *>(viewcontroller);
+    return static_cast<struct NSViewController *>(viewcontroller);
 }
 
 void NSViewController_setView(struct NSViewController *self, NSView *view)
 {
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
-        reinterpret_cast<struct objc_object *>(self),
+        self,
         sel_registerName("setView:"),
-        reinterpret_cast<struct objc_object *>(view));
+        view);
 }
 
 void NSViewController_super_viewDidLoad(struct NSViewController *self, struct NSViewController_viewDidLoad *_cmd)
 {
     struct objc_super super = {
-        reinterpret_cast<struct objc_object *>(self),
-        class_getSuperclass(object_getClass(reinterpret_cast<struct objc_object *>(self)))};
+        self,
+        class_getSuperclass(object_getClass(self))};
 
     reinterpret_cast<void (*)(struct objc_super *, struct objc_selector *)>(objc_msgSendSuper)(
         &super,
@@ -155,8 +156,8 @@ void NSViewController_super_viewDidLoad(struct NSViewController *self, struct NS
 void NSViewController_super_setRepresentedObject_(struct NSViewController *self, struct NSViewController_setRepresentedObject_ *_cmd, void *representedObject)
 {
     struct objc_super super = {
-        reinterpret_cast<struct objc_object *>(self),
-        class_getSuperclass(object_getClass(reinterpret_cast<struct objc_object *>(self)))};
+        self,
+        class_getSuperclass(object_getClass(self))};
 
     reinterpret_cast<void (*)(struct objc_super *, struct objc_selector *, struct objc_object *)>(objc_msgSendSuper)(
         &super,
@@ -214,15 +215,15 @@ struct NSApplicationDelegate *NSApplicationDelegate_alloc(struct NSApplicationDe
         reinterpret_cast<Class>(class_NSApplicationDelegate_CXX),
         sel_registerName("alloc"));
 
-    return reinterpret_cast<struct NSApplicationDelegate *>(delegate);
+    return static_cast<struct NSApplicationDelegate *>(delegate);
 }
 
 struct NSApplicationDelegate *NSApplicationDelegate_init(struct NSApplicationDelegate *self)
 {
     struct objc_object *delegate = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
-        reinterpret_cast<struct objc_object *>(self),
+        self,
         sel_registerName("init"));
-    return reinterpret_cast<struct NSApplicationDelegate *>(delegate);
+    return static_cast<struct NSApplicationDelegate *>(delegate);
 }
 
 struct NSApplication *NSApplication_sharedApplication()
@@ -231,13 +232,13 @@ struct NSApplication *NSApplication_sharedApplication()
         objc_getClass("NSApplication"),
         sel_registerName("sharedApplication"));
 
-    return reinterpret_cast<struct NSApplication *>(application);
+    return static_cast<struct NSApplication *>(application);
 }
 
 void NSApplication_setDelegate(struct NSApplication *self, struct NSApplicationDelegate *delegate)
 {
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
-        reinterpret_cast<struct objc_object *>(self),
+        self,
         sel_registerName("setDelegate:"),
-        reinterpret_cast<struct objc_object *>(delegate));
+        delegate);
 }

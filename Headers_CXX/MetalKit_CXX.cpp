@@ -11,17 +11,17 @@ struct MTKView *MTKView_alloc()
     struct objc_object *view = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
         objc_getClass("MTKView"),
         sel_registerName("alloc"));
-    return reinterpret_cast<struct MTKView *>(view);
+    return static_cast<struct MTKView *>(view);
 }
 
 struct MTKView *MTKView_initWithFrame(MTKView *self, CGRect frameRect, struct MTLDevice *device)
 {
     struct objc_object *view = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, CGRect, struct objc_object *)>(objc_msgSend)(
-        reinterpret_cast<struct objc_object *>(self),
+        self,
         sel_registerName("initWithFrame:device:"),
         frameRect,
-        reinterpret_cast<struct objc_object *>(device));
-    return reinterpret_cast<struct MTKView *>(view);
+        device);
+    return static_cast<struct MTKView *>(view);
 }
 
 struct MTKViewDelegate_Class *MTKViewDelegate_allocClass(
@@ -61,29 +61,29 @@ struct MTKViewDelegate *MTKViewDelegate_alloc(struct MTKViewDelegate_Class *clas
         reinterpret_cast<Class>(class_MTKViewDelegate_CXX),
         sel_registerName("alloc"));
 
-    return reinterpret_cast<struct MTKViewDelegate *>(delegate);
+    return static_cast<struct MTKViewDelegate *>(delegate);
 }
 
 struct MTKViewDelegate *MTKViewDelegate_init(struct MTKViewDelegate *self)
 {
     struct objc_object *delegate = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
-        reinterpret_cast<struct objc_object *>(self),
+        self,
         sel_registerName("init"));
-    return reinterpret_cast<struct MTKViewDelegate *>(delegate);
+    return static_cast<struct MTKViewDelegate *>(delegate);
 }
 
 void MTKView_setDelegate(struct MTKView *self, struct MTKViewDelegate *delegate)
 {
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
-        reinterpret_cast<struct objc_object *>(self),
+        self,
         sel_registerName("setDelegate:"),
-        reinterpret_cast<struct objc_object *>(delegate));
+        delegate);
 }
 
 void MTKView_setColorPixelFormat(struct MTKView *self, MTLPixelFormat colorPixelFormat)
 {
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, MTLPixelFormat)>(objc_msgSend)(
-        reinterpret_cast<struct objc_object *>(self),
+        self,
         sel_registerName("setColorPixelFormat:"),
         colorPixelFormat);
 }
@@ -91,7 +91,7 @@ void MTKView_setColorPixelFormat(struct MTKView *self, MTLPixelFormat colorPixel
 void MTKView_setDepthStencilPixelFormat(struct MTKView *self, MTLPixelFormat depthStencilPixelFormat)
 {
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, MTLPixelFormat)>(objc_msgSend)(
-        reinterpret_cast<struct objc_object *>(self),
+        self,
         sel_registerName("setDepthStencilPixelFormat:"),
         depthStencilPixelFormat);
 }
@@ -99,7 +99,7 @@ void MTKView_setDepthStencilPixelFormat(struct MTKView *self, MTLPixelFormat dep
 void MTKView_setSampleCount(struct MTKView *self, NSUInteger sampleCount)
 {
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, NSUInteger)>(objc_msgSend)(
-        reinterpret_cast<struct objc_object *>(self),
+        self,
         sel_registerName("setSampleCount:"),
         sampleCount);
 }
@@ -122,7 +122,7 @@ struct CAMetalDrawable * MTKView_currentDrawable(struct MTKView *self)
 
 void NSViewController_setView(struct NSViewController *self, struct MTKView *view)
 {
-    NSViewController_setView(self, reinterpret_cast<struct NSView *>(view));
+    NSViewController_setView(self, static_cast<struct NSView *>(view));
 }
 
 void MTLCommandBuffer_presentDrawable(struct MTLCommandBuffer *self, struct CAMetalDrawable *drawable)
