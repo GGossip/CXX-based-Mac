@@ -25,6 +25,10 @@ void MTKView_setDepthStencilPixelFormat(struct MTKView *self, MTLPixelFormat dep
 
 void MTKView_setSampleCount(struct MTKView *self, NSUInteger sampleCount);
 
+struct MTLRenderPassDescriptor *MTKView_currentRenderPassDescriptor(struct MTKView *self);
+
 void NSViewController_setView(struct NSViewController *self, struct MTKView *view);
+
+void MTLCommandBuffer_presentDrawable(struct MTLCommandBuffer *self, struct MTLDrawable *drawable);
 
 #endif

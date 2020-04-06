@@ -1,4 +1,5 @@
 #include "MetalKit_CXX.h"
+#include "MetalKit_CXX_IMPL.h"
 
 #include <objc/objc.h>
 #include <objc/objc-runtime.h>
@@ -103,8 +104,28 @@ void MTKView_setSampleCount(struct MTKView *self, NSUInteger sampleCount)
         sampleCount);
 }
 
+struct MTLRenderPassDescriptor *MTKView_currentRenderPassDescriptor(struct MTKView *self)
+{
+    struct objc_object *renderpassdescriptor = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+        self,
+        sel_registerName("currentRenderPassDescriptor"));
+    return static_cast<struct MTLRenderPassDescriptor *>(renderpassdescriptor);
+}
+
+struct CAMetalDrawable * MTKView_currentDrawable(struct MTKView *self)
+{
+     struct objc_object *drawable = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+        self,
+        sel_registerName("currentDrawable"));
+    return static_cast<struct CAMetalDrawable *>(drawable);
+}
+
 void NSViewController_setView(struct NSViewController *self, struct MTKView *view)
 {
     NSViewController_setView(self, reinterpret_cast<struct NSView *>(view));
 }
 
+void MTLCommandBuffer_presentDrawable(struct MTLCommandBuffer *self, struct CAMetalDrawable *drawable)
+{
+    return MTLCommandBuffer_presentDrawable(self, drawable);
+}

@@ -418,6 +418,7 @@ void MTLResource_setLabel(struct MTLResource *self, struct NSString *label);
 
 struct MTLBuffer *MTLDevice_newBufferWithLength(struct MTLDevice *self, NSUInteger length, MTLResourceOptions options);
 void MTLBuffer_setLabel(struct MTLBuffer *self, struct NSString *label);
+void *MTLBuffer_contents(struct MTLBuffer *self);
 void MTLBuffer_release(struct MTLBuffer *self);
 NSUInteger MTLBuffer_retainCount(struct MTLBuffer *self);
 static inline void MTLBuffer_setLabel(struct MTLBuffer *self, char const *label)
@@ -430,8 +431,70 @@ static inline void MTLBuffer_setLabel(struct MTLBuffer *self, char const *label)
 struct MTLCommandQueue *MTLDevice_newCommandQueue(struct MTLDevice *self);
 
 struct MTLCommandBuffer *MTLCommandQueue_commandBuffer(struct MTLCommandQueue *self);
+void MTLCommandBuffer_setLabel(struct MTLCommandBuffer *self, struct NSString *label);
 void MTLCommandBuffer_addCompletedHandler(struct MTLCommandBuffer *self, void *pUserData, void (*pfnCallback)(void *, struct MTLCommandBuffer *));
+void MTLCommandBuffer_presentDrawable(struct MTLCommandBuffer *self, struct MTLDrawable *drawable);
 void MTLCommandBuffer_commit(struct MTLCommandBuffer *self);
+static inline void MTLCommandBuffer_setLabel(struct MTLCommandBuffer *self, char const *label)
+{
+    struct NSString *string = NSString_stringWithUTF8String(label);
+    MTLCommandBuffer_setLabel(self, string);
+    NSString_release(string);
+}
+
+void MTLCommandEncoder_setLabel(struct MTLCommandEncoder *self, struct NSString *label);
+void MTLCommandEncoder_pushDebugGroup(struct MTLCommandEncoder *self, struct NSString *label);
+void MTLCommandEncoder_popDebugGroup(struct MTLCommandEncoder *self);
+
+typedef NSUInteger MTLPrimitiveType;
+enum
+{
+    MTLPrimitiveTypePoint __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 0,
+    MTLPrimitiveTypeLine __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 1,
+    MTLPrimitiveTypeLineStrip __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 2,
+    MTLPrimitiveTypeTriangle __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 3,
+    MTLPrimitiveTypeTriangleStrip __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 4
+};
+
+typedef NSUInteger MTLCullMode;
+enum
+{
+    MTLCullModeNone __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 0,
+    MTLCullModeFront __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 1,
+    MTLCullModeBack __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 2
+};
+
+typedef NSUInteger MTLWinding;
+enum
+{
+    MTLWindingClockwise __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 0,
+    MTLWindingCounterClockwise __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 1
+};
+
+struct MTLRenderCommandEncoder *MTLCommandBuffer_renderCommandEncoderWithDescriptor(struct MTLCommandBuffer *self, struct MTLRenderPassDescriptor *renderPassDescriptor);
+void MTLRenderCommandEncoder_setLabel(struct MTLRenderCommandEncoder *self, struct NSString *label);
+void MTLRenderCommandEncoder_pushDebugGroup(struct MTLRenderCommandEncoder *self, struct NSString *label);
+void MTLRenderCommandEncoder_popDebugGroup(struct MTLRenderCommandEncoder *self);
+void MTLRenderCommandEncoder_setCullMode(struct MTLRenderCommandEncoder *self, MTLCullMode cullMode);
+void MTLRenderCommandEncoder_setFrontFacingWinding(struct MTLRenderCommandEncoder *self, MTLWinding frontFacingWinding);
+void MTLRenderCommandEncoder_setRenderPipelineState(struct MTLRenderCommandEncoder *self, struct MTLRenderPipelineState *pipelineState);
+void MTLRenderCommandEncoder_setDepthStencilState(struct MTLRenderCommandEncoder *self, struct MTLDepthStencilState *depthStencilState);
+void MTLRenderCommandEncoder_setVertexBuffer(struct MTLRenderCommandEncoder *self, struct MTLBuffer *buffer, NSUInteger offset, NSUInteger index);
+void MTLRenderCommandEncoder_setFragmentBuffer(struct MTLRenderCommandEncoder *self, struct MTLBuffer *buffer, NSUInteger offset, NSUInteger index);
+void MTLRenderCommandEncoder_drawPrimitives(struct MTLRenderCommandEncoder *self, MTLPrimitiveType primitiveType, NSUInteger vertexStart, NSUInteger vertexCount, NSUInteger instanceCount, NSUInteger baseInstance);
+void MTLRenderCommandEncoder_endEncoding(struct MTLRenderCommandEncoder *self);
+static inline void MTLRenderCommandEncoder_setLabel(struct MTLRenderCommandEncoder *self, char const *label)
+{
+    struct NSString *string = NSString_stringWithUTF8String(label);
+    MTLRenderCommandEncoder_setLabel(self, string);
+    NSString_release(string);
+}
+static inline void MTLRenderCommandEncoder_pushDebugGroup(struct MTLRenderCommandEncoder *self, char const *label)
+{
+    struct NSString *string = NSString_stringWithUTF8String(label);
+    MTLRenderCommandEncoder_pushDebugGroup(self, string);
+    NSString_release(string);
+}
 
 struct MTLLibrary *MTLDevice_newDefaultLibrary(struct MTLDevice *self);
 struct MTLFunction *MTLLibrary_newFunctionWithName(struct MTLLibrary *self, struct NSString *functionName);

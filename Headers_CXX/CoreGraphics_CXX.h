@@ -3,19 +3,19 @@
 
 typedef double CGFloat;
 
-typedef struct __attribute__((objc_boxable))
+typedef struct 
 {
     CGFloat width;
     CGFloat height;
 } CGSize;
 
-typedef struct __attribute__((objc_boxable))
+typedef struct 
 {
     CGFloat x;
     CGFloat y;
 } CGPoint;
 
-typedef struct __attribute__((objc_boxable))
+typedef struct
 {
     CGPoint origin;
     CGSize size;

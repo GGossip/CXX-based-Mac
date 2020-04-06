@@ -1,98 +1,8 @@
 #include "Metal_CXX.h"
-#include "NSRuntime_CXX_IMPL.h"
+#include "Metal_CXX_IMPL.h"
 
 #include <objc/objc.h>
 #include <objc/objc-runtime.h>
-
-struct MTLDevice : public NSObject
-{
-    MTLDevice() = delete;
-};
-
-struct MTLVertexDescriptor : public NSObject
-{
-    MTLVertexDescriptor() = delete;
-};
-
-struct MTLVertexBufferLayoutDescriptorArray : public NSObject
-{
-    MTLVertexBufferLayoutDescriptorArray() = delete;
-};
-
-struct MTLVertexBufferLayoutDescriptor : public NSObject
-{
-    MTLVertexBufferLayoutDescriptor() = delete;
-};
-
-struct MTLVertexAttributeDescriptorArray : public NSObject
-{
-    MTLVertexAttributeDescriptorArray() = delete;
-};
-
-struct MTLVertexAttributeDescriptor : public NSObject
-{
-    MTLVertexAttributeDescriptor() = delete;
-};
-
-struct MTLRenderPipelineColorAttachmentDescriptorArray : public NSObject
-{
-    MTLRenderPipelineColorAttachmentDescriptorArray() = delete;
-};
-
-struct MTLRenderPipelineColorAttachmentDescriptor : public NSObject
-{
-    MTLRenderPipelineColorAttachmentDescriptor() = delete;
-};
-
-struct MTLRenderPipelineDescriptor : public NSObject
-{
-    MTLRenderPipelineDescriptor() = delete;
-};
-
-struct MTLRenderPipelineState : public NSObject
-{
-    MTLRenderPipelineState() = delete;
-};
-
-struct MTLDepthStencilDescriptor : public NSObject
-{
-    MTLDepthStencilDescriptor() = delete;
-};
-
-struct MTLDepthStencilState : public NSObject
-{
-    MTLDepthStencilState() = delete;
-};
-
-struct MTLResource : public NSObject
-{
-    MTLResource() = delete;
-};
-
-struct MTLBuffer : public MTLResource
-{
-    MTLBuffer() = delete;
-};
-
-struct MTLCommandQueue : public MTLResource
-{
-    MTLCommandQueue() = delete;
-};
-
-struct MTLCommandBuffer : public MTLResource
-{
-    MTLCommandBuffer() = delete;
-};
-
-struct MTLLibrary : public NSObject
-{
-    MTLLibrary() = delete;
-};
-
-struct MTLFunction : public NSObject
-{
-    MTLFunction() = delete;
-};
 
 struct MTLVertexDescriptor *MTLVertexDescriptor_alloc()
 {
@@ -387,6 +297,14 @@ void MTLBuffer_setLabel(struct MTLBuffer *self, struct NSString *label)
     return MTLResource_setLabel(self, label);
 }
 
+void *MTLBuffer_contents(struct MTLBuffer *self)
+{
+    void *contents = reinterpret_cast<void *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+        self,
+        sel_registerName("contents"));
+    return contents;
+}
+
 void MTLBuffer_release(struct MTLBuffer *self)
 {
     return NSObject_release(self);
@@ -411,6 +329,14 @@ struct MTLCommandBuffer *MTLCommandQueue_commandBuffer(struct MTLCommandQueue *s
         self,
         sel_registerName("commandBuffer"));
     return static_cast<struct MTLCommandBuffer *>(commandBuffer);
+}
+
+void MTLCommandBuffer_setLabel(struct MTLCommandBuffer *self, struct NSString *label)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
+        self,
+        sel_registerName("setLabel:"),
+        label);
 }
 
 struct __block_literal_MTLCommandBufferHandler
@@ -452,11 +378,137 @@ void MTLCommandBuffer_addCompletedHandler(struct MTLCommandBuffer *self, void *p
         reinterpret_cast<struct objc_object *>(&__block_literal_MTLCommandBufferHandler));
 }
 
+void MTLCommandBuffer_presentDrawable(struct MTLCommandBuffer *self, struct MTLDrawable *drawable)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
+        self,
+        sel_registerName("presentDrawable:"),
+        drawable);
+}
+
 void MTLCommandBuffer_commit(struct MTLCommandBuffer *self)
 {
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
         self,
         sel_registerName("commit"));
+}
+
+void MTLCommandEncoder_setLabel(struct MTLCommandEncoder *self, struct NSString *label)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
+        self,
+        sel_registerName("setLabel:"),
+        label);
+}
+
+void MTLCommandEncoder_pushDebugGroup(struct MTLCommandEncoder *self, struct NSString *label)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
+        self,
+        sel_registerName("pushDebugGroup:"),
+        label);
+}
+
+void MTLCommandEncoder_popDebugGroup(struct MTLCommandEncoder *self)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+        self,
+        sel_registerName("popDebugGroup"));
+}
+
+void MTLRenderCommandEncoder_setLabel(struct MTLRenderCommandEncoder *self, struct NSString *label)
+{
+    return MTLCommandEncoder_setLabel(self, label);
+}
+
+void MTLRenderCommandEncoder_pushDebugGroup(struct MTLRenderCommandEncoder *self, struct NSString *label)
+{
+    return MTLCommandEncoder_pushDebugGroup(self, label);
+}
+
+void MTLRenderCommandEncoder_popDebugGroup(struct MTLRenderCommandEncoder *self)
+{
+    return MTLCommandEncoder_popDebugGroup(self);
+}
+
+struct MTLRenderCommandEncoder *MTLCommandBuffer_renderCommandEncoderWithDescriptor(struct MTLCommandBuffer *self, struct MTLRenderPassDescriptor *renderPassDescriptor)
+{
+    struct objc_object *renderCommandEncoder = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
+        self,
+        sel_registerName("renderCommandEncoderWithDescriptor:"),
+        renderPassDescriptor);
+    return static_cast<struct MTLRenderCommandEncoder *>(renderCommandEncoder);
+}
+
+void MTLRenderCommandEncoder_setCullMode(struct MTLRenderCommandEncoder *self, MTLCullMode cullMode)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, MTLCullMode)>(objc_msgSend)(
+        self,
+        sel_registerName("setCullMode:"),
+        cullMode);
+}
+
+void MTLRenderCommandEncoder_setFrontFacingWinding(struct MTLRenderCommandEncoder *self, MTLWinding frontFacingWinding)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, MTLWinding)>(objc_msgSend)(
+        self,
+        sel_registerName("setFrontFacingWinding:"),
+        frontFacingWinding);
+}
+
+void MTLRenderCommandEncoder_setRenderPipelineState(struct MTLRenderCommandEncoder *self, struct MTLRenderPipelineState *pipelineState)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
+        self,
+        sel_registerName("setRenderPipelineState:"),
+        pipelineState);
+}
+
+void MTLRenderCommandEncoder_setDepthStencilState(struct MTLRenderCommandEncoder *self, struct MTLDepthStencilState *depthStencilState)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
+        self,
+        sel_registerName("setDepthStencilState:"),
+        depthStencilState);
+}
+
+void MTLRenderCommandEncoder_setVertexBuffer(struct MTLRenderCommandEncoder *self, struct MTLBuffer *buffer, NSUInteger offset, NSUInteger index)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *, NSUInteger, NSUInteger)>(objc_msgSend)(
+        self,
+        sel_registerName("setVertexBuffer:offset:atIndex:"),
+        buffer,
+        offset,
+        index);
+}
+
+void MTLRenderCommandEncoder_setFragmentBuffer(struct MTLRenderCommandEncoder *self, struct MTLBuffer *buffer, NSUInteger offset, NSUInteger index)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *, NSUInteger, NSUInteger)>(objc_msgSend)(
+        self,
+        sel_registerName("setFragmentBuffer:offset:atIndex:"),
+        buffer,
+        offset,
+        index);
+}
+
+void MTLRenderCommandEncoder_drawPrimitives(struct MTLRenderCommandEncoder *self, MTLPrimitiveType primitiveType, NSUInteger vertexStart, NSUInteger vertexCount, NSUInteger instanceCount, NSUInteger baseInstance)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, MTLPrimitiveType, NSUInteger, NSUInteger, NSUInteger, NSUInteger)>(objc_msgSend)(
+        self,
+        sel_registerName("setFragmentBuffer:offset:atIndex:"),
+        primitiveType,
+        vertexStart,
+        vertexCount,
+        instanceCount,
+        baseInstance);
+}
+
+void MTLRenderCommandEncoder_endEncoding(struct MTLRenderCommandEncoder *self)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+        self,
+        sel_registerName("endEncoding"));
 }
 
 struct MTLLibrary *MTLDevice_newDefaultLibrary(struct MTLDevice *self)
