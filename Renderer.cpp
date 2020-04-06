@@ -278,7 +278,7 @@ static void demo_draw(struct MTKView *view)
     g_rotation += .01;
 
     struct MTLCommandBuffer *commandBuffer = MTLCommandQueue_commandBuffer(g_commandQueue);
-    MTLCommandBuffer_setLabel(commandBuffer, "MyCommand");
+    //MTLCommandBuffer_setLabel(commandBuffer, "MyCommand");
 
     MTLCommandBuffer_addCompletedHandler(commandBuffer, NULL, [](void *pUserData, struct MTLCommandBuffer *buffer) -> void {
         int huhu = MTLCommandBuffer_retainCount(buffer);
@@ -289,7 +289,7 @@ static void demo_draw(struct MTKView *view)
     if (NULL != renderPassDescriptor)
     {
         struct MTLRenderCommandEncoder *renderEncoder = MTLCommandBuffer_renderCommandEncoderWithDescriptor(commandBuffer, renderPassDescriptor);
-        MTLRenderCommandEncoder_setLabel(renderEncoder, "MyRenderEncoder");
+        //MTLRenderCommandEncoder_setLabel(renderEncoder, "MyRenderEncoder");
 
         MTLRenderCommandEncoder_pushDebugGroup(renderEncoder, "DrawBox");
 
