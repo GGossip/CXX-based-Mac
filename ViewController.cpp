@@ -7,7 +7,7 @@ void _I_Renderer_drawInMTKView_(struct NSApplicationDelegate *, struct MTKViewDe
 
 extern struct MTLDevice *g_device;
 extern struct MTKView *g_view;
-extern void demo_init();
+extern void demo_init(struct MTKView *view);
 
 void _I_AppViewController_loadView(struct NSViewController *self, struct NSViewController_loadView *_cmd)
 {
@@ -32,8 +32,7 @@ void _I_AppViewController_loadView(struct NSViewController *self, struct NSViewC
 void _I_AppViewController_viewDidLoad(struct NSViewController *self, struct NSViewController_viewDidLoad *_cmd)
 {
     NSViewController_super_viewDidLoad(self, _cmd);
-
-    demo_init();
+    demo_init(g_view);
 }
 
 void _I_AppViewController_setRepresentedObject_(struct NSViewController *self, struct NSViewController_setRepresentedObject_ *_cmd, void *representedObject)

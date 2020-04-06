@@ -127,5 +127,5 @@ void NSViewController_setView(struct NSViewController *self, struct MTKView *vie
 
 void MTLCommandBuffer_presentDrawable(struct MTLCommandBuffer *self, struct CAMetalDrawable *drawable)
 {
-    return MTLCommandBuffer_presentDrawable(self, drawable);
+    return MTLCommandBuffer_presentDrawable(self, static_cast<MTLDrawable *>(drawable));
 }

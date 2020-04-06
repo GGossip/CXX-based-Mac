@@ -27,8 +27,10 @@ void MTKView_setSampleCount(struct MTKView *self, NSUInteger sampleCount);
 
 struct MTLRenderPassDescriptor *MTKView_currentRenderPassDescriptor(struct MTKView *self);
 
+struct CAMetalDrawable * MTKView_currentDrawable(struct MTKView *self);
+
 void NSViewController_setView(struct NSViewController *self, struct MTKView *view);
 
-void MTLCommandBuffer_presentDrawable(struct MTLCommandBuffer *self, struct MTLDrawable *drawable);
+void MTLCommandBuffer_presentDrawable(struct MTLCommandBuffer *self, struct CAMetalDrawable *drawable);
 
 #endif

@@ -496,7 +496,7 @@ void MTLRenderCommandEncoder_drawPrimitives(struct MTLRenderCommandEncoder *self
 {
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, MTLPrimitiveType, NSUInteger, NSUInteger, NSUInteger, NSUInteger)>(objc_msgSend)(
         self,
-        sel_registerName("setFragmentBuffer:offset:atIndex:"),
+        sel_registerName("drawPrimitives:vertexStart:vertexCount:instanceCount:baseInstance:"),
         primitiveType,
         vertexStart,
         vertexCount,

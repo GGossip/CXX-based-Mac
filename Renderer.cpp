@@ -2,10 +2,12 @@
 
 #include "Headers_CXX/MetalKit_CXX.h"
 
+static void demo_resize(struct MTKView *view, CGSize size);
 static void demo_draw(struct MTKView *view);
 
 void _I_Renderer_drawableSizeWillChange_(struct NSApplicationDelegate *, struct MTKViewDelegate_drawableSizeWillChange_ *, struct MTKView *view, CGSize size)
 {
+    demo_resize(view, size);
 }
 
 void _I_Renderer_drawInMTKView_(struct NSApplicationDelegate *, struct MTKViewDelegate_drawInMTKView_ *, struct MTKView *view)
@@ -18,6 +20,7 @@ void _I_Renderer_drawInMTKView_(struct NSApplicationDelegate *, struct MTKViewDe
 #include <pthread.h>
 #include <stdint.h>
 #include <string.h>
+#include <semaphore.h>
 
 struct MTLDevice *g_device = NULL;
 struct MTKView *g_view = NULL;
@@ -29,6 +32,10 @@ static struct MTLCommandQueue *g_commandQueue = NULL;
 static matrix_float4x4 g_projectionMatrix;
 static uint8_t g_uniformBufferIndex = 0;
 static struct MTLBuffer *g_dynamicUniformBuffer = NULL;
+static struct MTLRenderPipelineState *g_pipelineState = NULL;
+static struct MTLDepthStencilState *g_depthState = NULL;
+static struct MTLBuffer *g_meshvertexBuffer = NULL;
+static struct MTLBuffer *g_meshvertexBuffer_Addition = NULL;
 float g_rotation = 0.0f;
 
 static inline matrix_float4x4 matrix4x4_translation(float tx, float ty, float tz)
@@ -65,8 +72,12 @@ static inline matrix_float4x4 matrix_perspective_right_hand(float fovyRadians, f
                               {0, 0, nearZ * zs, 0}}};
 }
 
-void demo_init()
+void demo_init(struct MTKView *view)
 {
+    MTKView_setColorPixelFormat(view, MTLPixelFormatBGRA8Unorm_sRGB);
+    MTKView_setDepthStencilPixelFormat(view, MTLPixelFormatDepth32Float_Stencil8);
+    MTKView_setSampleCount(view, 1);
+    
     struct MTLVertexDescriptor *vertexdescriptor = MTLVertexDescriptor_init(MTLVertexDescriptor_alloc());
 
     struct MTLVertexBufferLayoutDescriptor *layout_tmp = MTLVertexDescriptor_layoutAt(vertexdescriptor, BufferIndexMeshPositions);
@@ -95,10 +106,10 @@ void demo_init()
 
     struct MTLRenderPipelineDescriptor *pipelineStateDescriptor = MTLRenderPipelineDescriptor_init(MTLRenderPipelineDescriptor_alloc());
     MTLRenderPipelineDescriptor_setLabel(pipelineStateDescriptor, "MyPipeline");
+    MTLRenderPipelineDescriptor_setSampleCount(pipelineStateDescriptor, 1);
     MTLRenderPipelineDescriptor_setVertexFunction(pipelineStateDescriptor, vertexFunction);
     MTLRenderPipelineDescriptor_setFragmentFunction(pipelineStateDescriptor, fragmentFunction);
     MTLRenderPipelineDescriptor_setVertexDescriptor(pipelineStateDescriptor, vertexdescriptor);
-    MTLRenderPipelineDescriptor_setSampleCount(pipelineStateDescriptor, 1);
     MTLRenderPipelineColorAttachmentDescriptor_setPixelFormat(MTLRenderPipelineDescriptor_colorAttachmentAt(pipelineStateDescriptor, 0), MTLPixelFormatBGRA8Unorm_sRGB);
     MTLRenderPipelineDescriptor_setDepthAttachmentPixelFormat(pipelineStateDescriptor, MTLPixelFormatDepth32Float_Stencil8);
     MTLRenderPipelineDescriptor_setStencilAttachmentPixelFormat(pipelineStateDescriptor, MTLPixelFormatDepth32Float_Stencil8);
@@ -107,14 +118,14 @@ void demo_init()
     MTLVertexDescriptor_release(vertexdescriptor);
 
     struct NSError *error = (struct NSError *)(1);
-    struct MTLRenderPipelineState *pipelineState = MTLDevice_newRenderPipelineStateWithDescriptor(g_device, pipelineStateDescriptor, &error);
+    g_pipelineState = MTLDevice_newRenderPipelineStateWithDescriptor(g_device, pipelineStateDescriptor, &error);
     MTLRenderPipelineDescriptor_release(pipelineStateDescriptor);
 
     struct MTLDepthStencilDescriptor *depthStateDesc = MTLDepthStencilDescriptor_init(MTLDepthStencilDescriptor_alloc());
     MTLDepthStencilDescriptor_setDepthCompareFunction(depthStateDesc, MTLCompareFunctionLess);
     MTLDepthStencilDescriptor_setDepthWriteEnabled(depthStateDesc, true);
 
-    struct MTLDepthStencilState *depthState = MTLDevice_newDepthStencilStateWithDescriptor(g_device, depthStateDesc);
+    g_depthState = MTLDevice_newDepthStencilStateWithDescriptor(g_device, depthStateDesc);
     MTLDepthStencilDescriptor_release(depthStateDesc);
 
     NSUInteger uniformBufferSize = kAlignedUniformsSize * kMaxBuffersInFlight;
@@ -124,6 +135,8 @@ void demo_init()
     g_commandQueue = MTLDevice_newCommandQueue(g_device);
 
     g_projectionMatrix = matrix_perspective_right_hand(65.0f * (M_PI / 180.0f), 1.0f, 0.1f, 100.0f);
+    
+    //sem
 
     //--------------------------------------------------------------------------------------
     // Mesh and VertexFormat Data
@@ -218,11 +231,17 @@ void demo_init()
     };
     // clang-format on
 
-    struct MTLBuffer *meshvertexBuffer = MTLDevice_newBufferWithLength(g_device, sizeof(g_vertex_buffer_data), MTLResourceStorageModeShared);
-    memcpy(MTLBuffer_contents(meshvertexBuffer), g_vertex_buffer_data, sizeof(g_vertex_buffer_data));
+    g_meshvertexBuffer = MTLDevice_newBufferWithLength(g_device, sizeof(g_vertex_buffer_data), MTLResourceStorageModeShared);
+    memcpy(MTLBuffer_contents(g_meshvertexBuffer), g_vertex_buffer_data, sizeof(g_vertex_buffer_data));
 
-    struct MTLBuffer *meshvertexBuffer_Addition = MTLDevice_newBufferWithLength(g_device, sizeof(g_uv_buffer_data), MTLResourceStorageModeShared);
-    memcpy(MTLBuffer_contents(meshvertexBuffer_Addition), g_uv_buffer_data, sizeof(g_uv_buffer_data));
+    g_meshvertexBuffer_Addition = MTLDevice_newBufferWithLength(g_device, sizeof(g_uv_buffer_data), MTLResourceStorageModeShared);
+    memcpy(MTLBuffer_contents(g_meshvertexBuffer_Addition), g_uv_buffer_data, sizeof(g_uv_buffer_data));
+}
+
+static void demo_resize(struct MTKView *view, CGSize size)
+{
+    float aspect = size.width / (float)size.height;
+    g_projectionMatrix = matrix_perspective_right_hand(65.0f * (M_PI / 180.0f), aspect, 0.1f, 100.0f);
 }
 
 static void demo_draw(struct MTKView *view)
@@ -245,10 +264,10 @@ static void demo_draw(struct MTKView *view)
     struct MTLCommandBuffer *commandBuffer = MTLCommandQueue_commandBuffer(g_commandQueue);
     MTLCommandBuffer_setLabel(commandBuffer, "MyCommand");
 
-    MTLCommandBuffer_addCompletedHandler(commandBuffer, NULL, [](void *pUserData, struct MTLCommandBuffer *buffer) -> void {
-        //int huhu = 0;
+    //MTLCommandBuffer_addCompletedHandler(commandBuffer, NULL, [](void *pUserData, struct MTLCommandBuffer *buffer) -> void {
+    //    int huhu = 0;
         //signal
-    });
+    //});
 
     struct MTLRenderPassDescriptor *renderPassDescriptor = MTKView_currentRenderPassDescriptor(view);
     if (NULL != renderPassDescriptor)
@@ -257,6 +276,24 @@ static void demo_draw(struct MTKView *view)
         MTLRenderCommandEncoder_setLabel(renderEncoder, "MyRenderEncoder");
 
         MTLRenderCommandEncoder_pushDebugGroup(renderEncoder, "DrawBox");
+
+        MTLRenderCommandEncoder_setFrontFacingWinding(renderEncoder, MTLWindingCounterClockwise);
+        MTLRenderCommandEncoder_setCullMode(renderEncoder, MTLCullModeBack);
+        MTLRenderCommandEncoder_setRenderPipelineState(renderEncoder, g_pipelineState);
+        MTLRenderCommandEncoder_setDepthStencilState(renderEncoder, g_depthState);
+
+        MTLRenderCommandEncoder_setVertexBuffer(renderEncoder, g_dynamicUniformBuffer, uniformBufferOffset, BufferIndexUniforms);
+        MTLRenderCommandEncoder_setFragmentBuffer(renderEncoder, g_dynamicUniformBuffer, uniformBufferOffset, BufferIndexUniforms);
+
+        MTLRenderCommandEncoder_setVertexBuffer(renderEncoder, g_meshvertexBuffer, 0, BufferIndexMeshPositions);
+        MTLRenderCommandEncoder_setVertexBuffer(renderEncoder, g_meshvertexBuffer_Addition, 0, BufferIndexMeshGenerics);
+
+        MTLRenderCommandEncoder_drawPrimitives(renderEncoder, MTLPrimitiveTypeTriangle, 0, 12 * 3, 1, 0);
+
+        MTLRenderCommandEncoder_popDebugGroup(renderEncoder);
+        MTLRenderCommandEncoder_endEncoding(renderEncoder);
+
+        MTLCommandBuffer_presentDrawable(commandBuffer, MTKView_currentDrawable(view));
     }
 
     MTLCommandBuffer_commit(commandBuffer);
