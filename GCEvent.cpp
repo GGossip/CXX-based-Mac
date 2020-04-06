@@ -13,6 +13,9 @@
 #define HAVE_PTHREAD_CONDATTR_SETCLOCK 1
 #define HAVE_MACH_ABSOLUTE_TIME 1
 
+// The number of nanoseconds in a second.
+const int tccSecondsToNanoSeconds = 1000000000;
+
 // The number of nanoseconds in a millisecond.
 const int tccMilliSecondsToNanoSeconds = 1000000;
 
