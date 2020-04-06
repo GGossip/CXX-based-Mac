@@ -10,9 +10,46 @@
 #include <assert.h>
 #include <memory>
 
-
 #define HAVE_PTHREAD_CONDATTR_SETCLOCK 1
 #define HAVE_MACH_ABSOLUTE_TIME 1
+
+// The number of nanoseconds in a millisecond.
+const int tccMilliSecondsToNanoSeconds = 1000000;
+
+#if HAVE_MACH_ABSOLUTE_TIME
+static mach_timebase_info_data_t g_TimebaseInfo;
+#endif // MACH_ABSOLUTE_TIME
+
+namespace
+{
+
+#if HAVE_PTHREAD_CONDATTR_SETCLOCK
+void TimeSpecAdd(timespec* time, uint32_t milliseconds)
+{
+    uint64_t nsec = time->tv_nsec + (uint64_t)milliseconds * tccMilliSecondsToNanoSeconds;
+    if (nsec >= tccSecondsToNanoSeconds)
+    {
+        time->tv_sec += nsec / tccSecondsToNanoSeconds;
+        nsec %= tccSecondsToNanoSeconds;
+    }
+
+    time->tv_nsec = nsec;
+}
+#endif // HAVE_PTHREAD_CONDATTR_SETCLOCK
+
+#if HAVE_MACH_ABSOLUTE_TIME
+// Convert nanoseconds to the timespec structure
+// Parameters:
+//  nanoseconds - time in nanoseconds to convert
+//  t           - the target timespec structure
+void NanosecondsToTimeSpec(uint64_t nanoseconds, timespec* t)
+{
+    t->tv_sec = nanoseconds / tccSecondsToNanoSeconds;
+    t->tv_nsec = nanoseconds % tccSecondsToNanoSeconds;
+}
+#endif // HAVE_PTHREAD_CONDATTR_SETCLOCK
+
+} // anonymous namespace
 
 class Impl
 {
