@@ -11,6 +11,8 @@
 
 #define INFINITE 0xFFFFFFFF
 
+#define UNREFERENCED_PARAMETER(P)          (void)(P)
+
 #define WAIT_OBJECT_0           0
 #define WAIT_TIMEOUT            258
 #define WAIT_FAILED             0xFFFFFFFF
