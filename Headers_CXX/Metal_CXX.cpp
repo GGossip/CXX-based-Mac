@@ -347,12 +347,13 @@ struct __block_literal_MTLCommandBufferHandler
     void (*invoke)(struct __block_literal_MTLCommandBufferHandler *, struct MTLCommandBuffer *buffer);
     struct __block_descriptor_MTLCommandBufferHandler *descriptor;
     void *pUserData;
-    void (*pfnCallback)(void *, struct MTLCommandBuffer *);
+    NSUInteger throttlingIndex;
+    void (*pfnCallback)(void *, NSUInteger, struct MTLCommandBuffer *);
 };
 
 static void __block_invoke_MTLCommandBufferHandler(struct __block_literal_MTLCommandBufferHandler *_block, struct MTLCommandBuffer *buffer)
 {
-    _block->pfnCallback(_block->pUserData, buffer);
+    _block->pfnCallback(_block->pUserData, _block->throttlingIndex, buffer);
 }
 
 static struct __block_descriptor_MTLCommandBufferHandler
@@ -361,7 +362,7 @@ static struct __block_descriptor_MTLCommandBufferHandler
     unsigned long int Block_size;
 } __block_descriptor_MTLCommandBufferHandler = {0, sizeof(struct __block_literal_MTLCommandBufferHandler)};
 
-void MTLCommandBuffer_addCompletedHandler(struct MTLCommandBuffer *self, void *pUserData, void (*pfnCallback)(void *, struct MTLCommandBuffer *))
+void MTLCommandBuffer_addCompletedHandler(struct MTLCommandBuffer *self, void *pUserData, NSUInteger throttlingIndex, void (*pfnCallback)(void *, NSUInteger, struct MTLCommandBuffer *))
 {
     struct __block_literal_MTLCommandBufferHandler __block_literal_MTLCommandBufferHandler = {
         &_NSConcreteStackBlock,
@@ -370,6 +371,7 @@ void MTLCommandBuffer_addCompletedHandler(struct MTLCommandBuffer *self, void *p
         __block_invoke_MTLCommandBufferHandler,
         &__block_descriptor_MTLCommandBufferHandler,
         pUserData,
+        throttlingIndex,
         pfnCallback};
 
     reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(

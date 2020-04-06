@@ -272,8 +272,8 @@ static void demo_draw(struct MTKView *view)
     struct MTLCommandBuffer *commandBuffer = MTLCommandQueue_commandBuffer(g_commandQueue);
     MTLCommandBuffer_setLabel(commandBuffer, "MyCommand");
 
-    MTLCommandBuffer_addCompletedHandler(commandBuffer, reinterpret_cast<void *>(g_uniformBufferIndex), [](void *pUserData, struct MTLCommandBuffer *buffer) -> void {
-        g_inFlightSemaphore[reinterpret_cast<uintptr_t>(pUserData)].Set();
+    MTLCommandBuffer_addCompletedHandler(commandBuffer, NULL, g_uniformBufferIndex, [](void *pUserData, NSUInteger throttlingIndex, struct MTLCommandBuffer *buffer) -> void {
+        g_inFlightSemaphore[throttlingIndex].Set();
     });
 
     /// Delay getting the currentRenderPassDescriptor until we absolutely need it to avoid
