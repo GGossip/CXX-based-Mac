@@ -14,7 +14,8 @@ struct NSObject *NSObject_init(struct NSObject *self);
 void NSObject_release(struct NSObject *self);
 NSUInteger NSObject_retainCount(struct NSObject *self);
 
-struct NSString *NSString_stringWithUTF8String(char const *nullTerminatedCString);
+struct NSString *NSString_alloc();
+struct NSString *NSString_initWithUTF8String(struct NSString *self, char const *nullTerminatedCString);
 void NSString_release(struct NSString *self);
 NSUInteger NSString_retainCount(struct NSString *self);
 

@@ -328,7 +328,7 @@ void MTLRenderPipelineDescriptor_release(struct MTLRenderPipelineDescriptor *sel
 NSUInteger MTLRenderPipelineDescriptor_retainCount(struct MTLRenderPipelineDescriptor *self);
 static inline void MTLRenderPipelineDescriptor_setLabel(struct MTLRenderPipelineDescriptor *self, char const *label)
 {
-    struct NSString *string = NSString_stringWithUTF8String(label);
+    struct NSString *string = NSString_initWithUTF8String(NSString_alloc(),label);
     MTLRenderPipelineDescriptor_setLabel(self, string);
     NSString_release(string);
 }
@@ -423,7 +423,7 @@ void MTLBuffer_release(struct MTLBuffer *self);
 NSUInteger MTLBuffer_retainCount(struct MTLBuffer *self);
 static inline void MTLBuffer_setLabel(struct MTLBuffer *self, char const *label)
 {
-    struct NSString *string = NSString_stringWithUTF8String(label);
+    struct NSString *string = NSString_initWithUTF8String(NSString_alloc(),label);
     MTLBuffer_setLabel(self, string);
     NSString_release(string);
 }
@@ -438,10 +438,10 @@ void MTLCommandBuffer_commit(struct MTLCommandBuffer *self);
 NSUInteger MTLCommandBuffer_retainCount(struct MTLCommandBuffer *self);
 static inline void MTLCommandBuffer_setLabel(struct MTLCommandBuffer *self, char const *label)
 {
-    struct NSString *string = NSString_stringWithUTF8String(label);
+    struct NSString *string = NSString_initWithUTF8String(NSString_alloc(),label);
     MTLCommandBuffer_setLabel(self, string);
     NSString_release(string);
-}
+} 
 
 void MTLCommandEncoder_setLabel(struct MTLCommandEncoder *self, struct NSString *label);
 void MTLCommandEncoder_pushDebugGroup(struct MTLCommandEncoder *self, struct NSString *string);
@@ -486,13 +486,13 @@ void MTLRenderCommandEncoder_drawPrimitives(struct MTLRenderCommandEncoder *self
 void MTLRenderCommandEncoder_endEncoding(struct MTLRenderCommandEncoder *self);
 static inline void MTLRenderCommandEncoder_setLabel(struct MTLRenderCommandEncoder *self, char const *label)
 {
-    struct NSString *string = NSString_stringWithUTF8String(label);
+    struct NSString *string = NSString_initWithUTF8String(NSString_alloc(),label);
     MTLRenderCommandEncoder_setLabel(self, string);
     NSString_release(string);
 }
 static inline void MTLRenderCommandEncoder_pushDebugGroup(struct MTLRenderCommandEncoder *self, char const *label)
 {
-    struct NSString *string = NSString_stringWithUTF8String(label);
+    struct NSString *string = NSString_initWithUTF8String(NSString_alloc(),label);
     MTLRenderCommandEncoder_pushDebugGroup(self, string);
     NSString_release(string);
 }
@@ -503,7 +503,7 @@ void MTLFunction_release(struct MTLFunction *self);
 NSUInteger MTLFunction_retainCount(struct MTLFunction *self);
 static inline struct MTLFunction *MTLLibrary_newFunctionWithName(struct MTLLibrary *self, char const *functionName)
 {
-    struct NSString *string = NSString_stringWithUTF8String(functionName);
+    struct NSString *string = NSString_initWithUTF8String(NSString_alloc(),functionName);
     struct MTLFunction *function = MTLLibrary_newFunctionWithName(self, string);
     NSString_release(string);
     return function;

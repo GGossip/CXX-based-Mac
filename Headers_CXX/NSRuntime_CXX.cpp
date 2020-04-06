@@ -26,11 +26,19 @@ NSUInteger NSObject_retainCount(struct NSObject *self)
     return retaincount;
 }
 
-struct NSString *NSString_stringWithUTF8String(char const *nullTerminatedCString)
+struct NSString *NSString_alloc()
 {
-    struct objc_object *string = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *, char const *)>(objc_msgSend)(
+    struct objc_object *string = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
         objc_getClass("NSString"),
-        sel_registerName("stringWithUTF8String:"),
+        sel_registerName("alloc"));
+    return reinterpret_cast<struct NSString *>(string);
+}
+
+struct NSString *NSString_initWithUTF8String(struct NSString *self, char const *nullTerminatedCString)
+{
+      struct objc_object *string = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, char const *)>(objc_msgSend)(
+        self,
+        sel_registerName("initWithUTF8String:"),
         nullTerminatedCString);
     return static_cast<struct NSString *>(string);
 }
