@@ -15,6 +15,8 @@ void _I_Renderer_drawInMTKView_(struct NSApplicationDelegate *, struct MTKViewDe
 
 #include "ShaderTypes.h"
 
+#include <pthread.h>
+
 static const NSUInteger kMaxBuffersInFlight = 3;
 
 static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
@@ -76,4 +78,10 @@ void demo_init()
     MTLBuffer_setLabel(dynamicUniformBuffer, "UniformBuffer");
 
     struct MTLCommandQueue *commandQueue = MTLDevice_newCommandQueue(g_device);
+
+    struct MTLCommandBuffer *commandBuffer = MTLCommandQueue_commandBuffer(commandQueue);
+    MTLCommandBuffer_addCompletedHandler(commandBuffer, NULL, [](void *pUserData,struct MTLCommandBuffer *buffer) -> void {
+        int huhu = 0;
+    });
+    MTLCommandBuffer_commit(commandBuffer);
 }

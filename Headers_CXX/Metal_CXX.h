@@ -428,7 +428,10 @@ static inline void MTLBuffer_setLabel(struct MTLBuffer *self, char const *label)
 }
 
 struct MTLCommandQueue *MTLDevice_newCommandQueue(struct MTLDevice *self);
-void MTLCommandQueue_addCompletedHandler(struct MTLCommandQueue *self, void *pUserData, void (*pfnCallback)(void *));
+
+struct MTLCommandBuffer *MTLCommandQueue_commandBuffer(struct MTLCommandQueue *self);
+void MTLCommandBuffer_addCompletedHandler(struct MTLCommandBuffer *self, void *pUserData, void (*pfnCallback)(void *, struct MTLCommandBuffer *));
+void MTLCommandBuffer_commit(struct MTLCommandBuffer *self);
 
 struct MTLLibrary *MTLDevice_newDefaultLibrary(struct MTLDevice *self);
 struct MTLFunction *MTLLibrary_newFunctionWithName(struct MTLLibrary *self, struct NSString *functionName);

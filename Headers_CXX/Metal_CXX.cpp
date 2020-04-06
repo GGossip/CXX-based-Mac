@@ -79,6 +79,11 @@ struct MTLCommandQueue : public MTLResource
     MTLCommandQueue() = delete;
 };
 
+struct MTLCommandBuffer : public MTLResource
+{
+    MTLCommandBuffer() = delete;
+};
+
 struct MTLLibrary : public NSObject
 {
     MTLLibrary() = delete;
@@ -88,28 +93,6 @@ struct MTLFunction : public NSObject
 {
     MTLFunction() = delete;
 };
-
-struct __block_literal_userdata_callback
-{
-    void *isa;
-    int flags;
-    int reserved;
-    void (*invoke)(struct __block_literal_userdata_callback *);
-    struct __block_descriptor_userdata_callback *descriptor;
-    void *pUserData;
-    void (*pfnCallback)(void *);
-};
-
-static void __block_invoke_userdata_callback(struct __block_literal_userdata_callback *_block)
-{
-    _block->pfnCallback(_block->pUserData);
-}
-
-static struct __block_descriptor_userdata_callback
-{
-    unsigned long int reserved;
-    unsigned long int Block_size;
-} __block_descriptor_userdata_callback = {0, sizeof(struct __block_literal_userdata_callback)};
 
 struct MTLVertexDescriptor *MTLVertexDescriptor_alloc()
 {
@@ -422,21 +405,58 @@ struct MTLCommandQueue *MTLDevice_newCommandQueue(struct MTLDevice *self)
     return static_cast<struct MTLCommandQueue *>(commandQueue);
 }
 
-void MTLCommandQueue_addCompletedHandler(struct MTLCommandQueue *self, void *pUserData, void (*pfnCallback)(void *))
+struct MTLCommandBuffer *MTLCommandQueue_commandBuffer(struct MTLCommandQueue *self)
 {
-    struct __block_literal_userdata_callback __block_literal_userdata_callback = {
+    struct objc_object *commandBuffer = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+        self,
+        sel_registerName("commandBuffer"));
+    return static_cast<struct MTLCommandBuffer *>(commandBuffer);
+}
+
+struct __block_literal_MTLCommandBufferHandler
+{
+    void *isa;
+    int flags;
+    int reserved;
+    void (*invoke)(struct __block_literal_MTLCommandBufferHandler *, struct MTLCommandBuffer *buffer);
+    struct __block_descriptor_MTLCommandBufferHandler *descriptor;
+    void *pUserData;
+    void (*pfnCallback)(void *, struct MTLCommandBuffer *);
+};
+
+static void __block_invoke_MTLCommandBufferHandler(struct __block_literal_MTLCommandBufferHandler *_block, struct MTLCommandBuffer *buffer)
+{
+    _block->pfnCallback(_block->pUserData, buffer);
+}
+
+static struct __block_descriptor_MTLCommandBufferHandler
+{
+    unsigned long int reserved;
+    unsigned long int Block_size;
+} __block_descriptor_MTLCommandBufferHandler = {0, sizeof(struct __block_literal_MTLCommandBufferHandler)};
+
+void MTLCommandBuffer_addCompletedHandler(struct MTLCommandBuffer *self, void *pUserData, void (*pfnCallback)(void *, struct MTLCommandBuffer *))
+{
+    struct __block_literal_MTLCommandBufferHandler __block_literal_MTLCommandBufferHandler = {
         &_NSConcreteStackBlock,
         BLOCK_HAS_STRET,
         0, //<uninitialized>
-        __block_invoke_userdata_callback,
-        &__block_descriptor_userdata_callback,
+        __block_invoke_MTLCommandBufferHandler,
+        &__block_descriptor_MTLCommandBufferHandler,
         pUserData,
         pfnCallback};
 
     reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
         self,
         sel_registerName("addCompletedHandler:"),
-        reinterpret_cast<struct objc_object *>(&__block_literal_userdata_callback));
+        reinterpret_cast<struct objc_object *>(&__block_literal_MTLCommandBufferHandler));
+}
+
+void MTLCommandBuffer_commit(struct MTLCommandBuffer *self)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+        self,
+        sel_registerName("commit"));
 }
 
 struct MTLLibrary *MTLDevice_newDefaultLibrary(struct MTLDevice *self)
