@@ -8,26 +8,13 @@ void _I_Renderer_drawableSizeWillChange_(struct MTKViewDelegate *, struct MTKVie
 
 void _I_Renderer_drawInMTKView_(struct MTKViewDelegate *, struct MTKViewDelegate_drawInMTKView_ *, struct MTKView *view);
 
-extern struct MTLDevice *g_device;
-extern struct MTKView *g_view;
-extern void demo_init(struct MTKView *view);
-
-struct demo
-{
-    struct MTLDevice *_device;
-    struct MTKView *_view;
-};
+#include "Renderer.h"
 
 void _I_AppViewController_loadView(struct NSViewController *self, struct NSViewController_loadView *_cmd)
 {
-    NSRect rect = NSMakeRect(0, 0, 800, 600);
-    g_device = MTLCreateSystemDefaultDevice();
-    g_view = MTKView_initWithFrame(
-        MTKView_alloc(),
-        rect,
-        g_device);
 
     struct demo *demo = new (malloc(sizeof(struct demo))) struct demo();
+    demo->_init();
 
     MTKViewDelegate_Class *renderer_Class = MTKViewDelegate_allocClass(
         "Renderer",
@@ -36,15 +23,15 @@ void _I_AppViewController_loadView(struct NSViewController *self, struct NSViewC
 
     MTKViewDelegate *renderer = MTKViewDelegate_init(MTKViewDelegate_alloc(renderer_Class));
     MTKViewDelegate_setUserData(renderer, demo);
-    MTKView_setDelegate(g_view, renderer);
+    MTKView_setDelegate(demo->_view, renderer);
 
-    NSViewController_setView(self, g_view);
+    NSViewController_setView(self, demo->_view);
 }
 
 void _I_AppViewController_viewDidLoad(struct NSViewController *self, struct NSViewController_viewDidLoad *_cmd)
 {
     NSViewController_super_viewDidLoad(self, _cmd);
-    demo_init(g_view);
+    //demo->_init
 }
 
 void _I_AppViewController_setRepresentedObject_(struct NSViewController *self, struct NSViewController_setRepresentedObject_ *_cmd, void *representedObject)

@@ -50,6 +50,7 @@
 		92806A91243CBD5400EB0099 /* NSRuntime_CXX_IMPL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSRuntime_CXX_IMPL.h; path = Headers_CXX/NSRuntime_CXX_IMPL.h; sourceTree = "<group>"; };
 		92806A92243CBD5400EB0099 /* AppKit_CXX_IMPL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppKit_CXX_IMPL.h; path = Headers_CXX/AppKit_CXX_IMPL.h; sourceTree = "<group>"; };
 		92806A93243CC03200EB0099 /* Foundation_CXX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Foundation_CXX.cpp; path = Headers_CXX/Foundation_CXX.cpp; sourceTree = "<group>"; };
+		92806A95243CFA0600EB0099 /* Renderer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Renderer.h; sourceTree = "<group>"; };
 		92F977E42439099000C5F3C5 /* CXXBasedMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CXXBasedMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		92F977ED2439099100C5F3C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		92F977F22439099100C5F3C5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -95,6 +96,7 @@
 		9202E2162439EE2C00FEC77B /* CXX_Demos */ = {
 			isa = PBXGroup;
 			children = (
+				92806A95243CFA0600EB0099 /* Renderer.h */,
 				92806A8B243BC99200EB0099 /* GCEvent.cpp */,
 				92806A8A243BC99200EB0099 /* GCEvent.h */,
 				9202E21D243A2B2C00FEC77B /* Shaders.metal */,
