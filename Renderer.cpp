@@ -85,26 +85,27 @@ void demo_init(struct MTKView *view)
     MTKView_setSampleCount(view, 1);
 
     struct MTLVertexDescriptor *vertexdescriptor = MTLVertexDescriptor_init(MTLVertexDescriptor_alloc());
+    MTLVertexBufferLayoutDescriptor_setStride( MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_layouts(vertexdescriptor),BufferIndexMeshPositions), 12);
+    MTLVertexBufferLayoutDescriptor_setStepFunction(MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_layouts(vertexdescriptor),BufferIndexMeshPositions), MTLVertexStepFunctionPerVertex);
+    MTLVertexBufferLayoutDescriptor_setStepRate(MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_layouts(vertexdescriptor),BufferIndexMeshPositions), 1);
 
-    struct MTLVertexBufferLayoutDescriptor *layout_tmp = MTLVertexDescriptor_layoutAt(vertexdescriptor, BufferIndexMeshPositions);
-    MTLVertexBufferLayoutDescriptor_setStride(layout_tmp, 12);
-    MTLVertexBufferLayoutDescriptor_setStepFunction(layout_tmp, MTLVertexStepFunctionPerVertex);
-    MTLVertexBufferLayoutDescriptor_setStepRate(layout_tmp, 1);
+    MTLVertexBufferLayoutDescriptor_setStride(MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_layouts(vertexdescriptor),BufferIndexMeshPositions), 12);
+    MTLVertexBufferLayoutDescriptor_setStepFunction(MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_layouts(vertexdescriptor),BufferIndexMeshPositions), MTLVertexStepFunctionPerVertex);
+    MTLVertexBufferLayoutDescriptor_setStepRate(MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_layouts(vertexdescriptor),BufferIndexMeshPositions), 1);
 
-    layout_tmp = MTLVertexDescriptor_layoutAt(vertexdescriptor, BufferIndexMeshGenerics);
-    MTLVertexBufferLayoutDescriptor_setStride(layout_tmp, 8);
-    MTLVertexBufferLayoutDescriptor_setStepFunction(layout_tmp, MTLVertexStepFunctionPerVertex);
-    MTLVertexBufferLayoutDescriptor_setStepRate(layout_tmp, 1);
+   
+    MTLVertexBufferLayoutDescriptor_setStride(MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_layouts(vertexdescriptor),BufferIndexMeshGenerics), 8);
+    MTLVertexBufferLayoutDescriptor_setStepFunction(MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_layouts(vertexdescriptor),BufferIndexMeshGenerics), MTLVertexStepFunctionPerVertex);
+    MTLVertexBufferLayoutDescriptor_setStepRate(MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_layouts(vertexdescriptor),BufferIndexMeshGenerics), 1);
 
-    struct MTLVertexAttributeDescriptor *attribute_tmp = MTLVertexDescriptor_attributeAt(vertexdescriptor, VertexAttributePosition);
-    MTLVertexAttributeDescriptor_setFormat(attribute_tmp, MTLVertexFormatFloat3);
-    MTLVertexAttributeDescriptor_setOffset(attribute_tmp, 0);
-    MTLVertexAttributeDescriptor_setBufferIndex(attribute_tmp, BufferIndexMeshPositions);
+    
+    MTLVertexAttributeDescriptor_setFormat(MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_attributes(vertexdescriptor), VertexAttributePosition), MTLVertexFormatFloat3);
+    MTLVertexAttributeDescriptor_setOffset(MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_attributes(vertexdescriptor), VertexAttributePosition), 0);
+    MTLVertexAttributeDescriptor_setBufferIndex(MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_attributes(vertexdescriptor), VertexAttributePosition), BufferIndexMeshPositions);
 
-    attribute_tmp = MTLVertexDescriptor_attributeAt(vertexdescriptor, VertexAttributeTexcoord);
-    MTLVertexAttributeDescriptor_setFormat(attribute_tmp, MTLVertexFormatFloat2);
-    MTLVertexAttributeDescriptor_setOffset(attribute_tmp, 0);
-    MTLVertexAttributeDescriptor_setBufferIndex(attribute_tmp, BufferIndexMeshGenerics);
+    MTLVertexAttributeDescriptor_setFormat(MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_attributes(vertexdescriptor), VertexAttributeTexcoord), MTLVertexFormatFloat2);
+    MTLVertexAttributeDescriptor_setOffset(MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_attributes(vertexdescriptor), VertexAttributeTexcoord), 0);
+    MTLVertexAttributeDescriptor_setBufferIndex(MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_attributes(vertexdescriptor), VertexAttributeTexcoord), BufferIndexMeshGenerics);
 
     struct MTLLibrary *defaultLibrary = MTLDevice_newDefaultLibrary(g_device);
     struct MTLFunction *vertexFunction = MTLLibrary_newFunctionWithName(defaultLibrary, "vertexShader");

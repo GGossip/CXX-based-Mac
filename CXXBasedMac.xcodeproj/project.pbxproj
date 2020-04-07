@@ -19,6 +19,7 @@
 		92806A87243BBCA400EB0099 /* AppKit in Frameworks */ = {isa = PBXBuildFile; fileRef = 92806A86243BBCA400EB0099 /* AppKit */; };
 		92806A89243BBCF500EB0099 /* Metal in Frameworks */ = {isa = PBXBuildFile; fileRef = 92806A88243BBCF500EB0099 /* Metal */; };
 		92806A8C243BC99200EB0099 /* GCEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92806A8B243BC99200EB0099 /* GCEvent.cpp */; };
+		92806A94243CC03200EB0099 /* Foundation_CXX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92806A93243CC03200EB0099 /* Foundation_CXX.cpp */; };
 		92F977EE2439099100C5F3C5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 92F977ED2439099100C5F3C5 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
@@ -42,6 +43,13 @@
 		92806A88243BBCF500EB0099 /* Metal */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = Metal; path = /System/Library/Frameworks/Metal.framework/Versions/Current/Metal; sourceTree = "<group>"; };
 		92806A8A243BC99200EB0099 /* GCEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCEvent.h; sourceTree = "<group>"; };
 		92806A8B243BC99200EB0099 /* GCEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GCEvent.cpp; sourceTree = "<group>"; };
+		92806A8D243CBD5400EB0099 /* Foundation_CXX_IMPL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Foundation_CXX_IMPL.h; path = Headers_CXX/Foundation_CXX_IMPL.h; sourceTree = "<group>"; };
+		92806A8E243CBD5400EB0099 /* Metal_CXX_IMPL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Metal_CXX_IMPL.h; path = Headers_CXX/Metal_CXX_IMPL.h; sourceTree = "<group>"; };
+		92806A8F243CBD5400EB0099 /* MetalKit_CXX_IMPL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetalKit_CXX_IMPL.h; path = Headers_CXX/MetalKit_CXX_IMPL.h; sourceTree = "<group>"; };
+		92806A90243CBD5400EB0099 /* Foundation_CXX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Foundation_CXX.h; path = Headers_CXX/Foundation_CXX.h; sourceTree = "<group>"; };
+		92806A91243CBD5400EB0099 /* NSRuntime_CXX_IMPL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSRuntime_CXX_IMPL.h; path = Headers_CXX/NSRuntime_CXX_IMPL.h; sourceTree = "<group>"; };
+		92806A92243CBD5400EB0099 /* AppKit_CXX_IMPL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppKit_CXX_IMPL.h; path = Headers_CXX/AppKit_CXX_IMPL.h; sourceTree = "<group>"; };
+		92806A93243CC03200EB0099 /* Foundation_CXX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Foundation_CXX.cpp; path = Headers_CXX/Foundation_CXX.cpp; sourceTree = "<group>"; };
 		92F977E42439099000C5F3C5 /* CXXBasedMac.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CXXBasedMac.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		92F977ED2439099100C5F3C5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		92F977F22439099100C5F3C5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -64,6 +72,13 @@
 		9202E20C2439E92400FEC77B /* CXX_Headers */ = {
 			isa = PBXGroup;
 			children = (
+				92806A93243CC03200EB0099 /* Foundation_CXX.cpp */,
+				92806A92243CBD5400EB0099 /* AppKit_CXX_IMPL.h */,
+				92806A8D243CBD5400EB0099 /* Foundation_CXX_IMPL.h */,
+				92806A90243CBD5400EB0099 /* Foundation_CXX.h */,
+				92806A8E243CBD5400EB0099 /* Metal_CXX_IMPL.h */,
+				92806A8F243CBD5400EB0099 /* MetalKit_CXX_IMPL.h */,
+				92806A91243CBD5400EB0099 /* NSRuntime_CXX_IMPL.h */,
 				9202E220243A32C300FEC77B /* NSRuntime_CXX.cpp */,
 				9202E21F243A32C300FEC77B /* NSRuntime_CXX.h */,
 				9202E2172439FF7F00FEC77B /* MetalKit_CXX.cpp */,
@@ -192,6 +207,7 @@
 			files = (
 				9202E21E243A2B2C00FEC77B /* Shaders.metal in Sources */,
 				9202E2022439B9AC00FEC77B /* ViewController.cpp in Sources */,
+				92806A94243CC03200EB0099 /* Foundation_CXX.cpp in Sources */,
 				9202E2002439B9A500FEC77B /* AppDelegate.cpp in Sources */,
 				9202E221243A32C300FEC77B /* NSRuntime_CXX.cpp in Sources */,
 				9279CC2024390AB900DACBD7 /* main.cpp in Sources */,

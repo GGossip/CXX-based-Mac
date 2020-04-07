@@ -44,7 +44,7 @@ struct NSString : public NSObject
 //     // imported variables
 // };
 
-extern "C" void *_NSConcreteGlobalBlock[32];
+// extern "C" void *_NSConcreteGlobalBlock[32];
 extern "C" void *_NSConcreteStackBlock[32];
 
 // The following flags bits are in use thusly for a possible ABI.2010.3.16:

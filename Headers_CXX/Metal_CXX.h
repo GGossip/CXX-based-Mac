@@ -303,14 +303,6 @@ void MTLVertexAttributeDescriptor_setOffset(struct MTLVertexAttributeDescriptor 
 void MTLVertexAttributeDescriptor_setBufferIndex(struct MTLVertexAttributeDescriptor *self, NSUInteger bufferIndex);
 void MTLVertexDescriptor_release(struct MTLVertexDescriptor *self);
 NSUInteger MTLVertexDescriptor_retainCount(struct MTLVertexDescriptor *self);
-static inline struct MTLVertexBufferLayoutDescriptor *MTLVertexDescriptor_layoutAt(struct MTLVertexDescriptor *self, NSUInteger index)
-{
-    return MTLVertexBufferLayoutDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_layouts(self), index);
-}
-static inline struct MTLVertexAttributeDescriptor *MTLVertexDescriptor_attributeAt(struct MTLVertexDescriptor *self, NSUInteger index)
-{
-    return MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_attributes(self), index);
-}
 
 struct MTLRenderPipelineDescriptor *MTLRenderPipelineDescriptor_alloc();
 struct MTLRenderPipelineDescriptor *MTLRenderPipelineDescriptor_init(struct MTLRenderPipelineDescriptor *self);
