@@ -26,8 +26,8 @@ struct MTKView *MTKView_initWithFrame(MTKView *self, CGRect frameRect, struct MT
 
 struct MTKViewDelegate_Class *MTKViewDelegate_allocClass(
     char const *classname,
-    void (*_I_MTKViewDelegate_drawableSizeWillChange_)(struct NSApplicationDelegate *, struct MTKViewDelegate_drawableSizeWillChange_ *, struct MTKView *view, CGSize size),
-    void (*_I_MTKViewDelegate_drawInMTKView_)(struct NSApplicationDelegate *, struct MTKViewDelegate_drawInMTKView_ *, struct MTKView *view))
+    void (*_I_MTKViewDelegate_drawableSizeWillChange_)(struct MTKViewDelegate *, struct MTKViewDelegate_drawableSizeWillChange_ *, struct MTKView *view, CGSize size),
+    void (*_I_MTKViewDelegate_drawInMTKView_)(struct MTKViewDelegate *, struct MTKViewDelegate_drawInMTKView_ *, struct MTKView *view))
 {
     Class class_MTKViewDelegate_CXX;
     {
@@ -37,19 +37,27 @@ struct MTKViewDelegate_Class *MTKViewDelegate_allocClass(
             0);
         assert(class_MTKViewDelegate_CXX != NULL);
 
-        BOOL result_1 = class_addMethod(
+        BOOL result_1 = class_addIvar(
             class_MTKViewDelegate_CXX,
-            sel_registerName("mtkView:drawableSizeWillChange:"),
-            reinterpret_cast<IMP>(_I_MTKViewDelegate_drawableSizeWillChange_),
-            "v@:@{CGSize=dd}");
+            "pUserData",
+            sizeof(void *),
+            alignof(void *),
+            "^v");
         assert(result_1 != NO);
 
         BOOL result_2 = class_addMethod(
             class_MTKViewDelegate_CXX,
+            sel_registerName("mtkView:drawableSizeWillChange:"),
+            reinterpret_cast<IMP>(_I_MTKViewDelegate_drawableSizeWillChange_),
+            "v@:@{CGSize=dd}");
+        assert(result_2 != NO);
+
+        BOOL result_3 = class_addMethod(
+            class_MTKViewDelegate_CXX,
             sel_registerName("drawInMTKView:"),
             reinterpret_cast<IMP>(_I_MTKViewDelegate_drawInMTKView_),
             "v@:@");
-        assert(result_2 != NO);
+        assert(result_3 != NO);
     }
 
     return reinterpret_cast<struct MTKViewDelegate_Class *>(class_MTKViewDelegate_CXX);
@@ -68,6 +76,20 @@ struct MTKViewDelegate *MTKViewDelegate_init(struct MTKViewDelegate *self)
 {
     struct objc_object *delegate = NSObject_init(self);
     return static_cast<struct MTKViewDelegate *>(delegate);
+}
+
+void MTKViewDelegate_setUserData(struct MTKViewDelegate *self, void *pUserData)
+{
+    Ivar ivar_pUserData = class_getInstanceVariable(object_getClass(self), "pUserData");
+    assert(ivar_pUserData != NULL);
+    (*reinterpret_cast<void **>(reinterpret_cast<uintptr_t>(self) + ivar_getOffset(ivar_pUserData))) = pUserData;
+}
+
+void *MTKViewDelegate_getUserData(struct MTKViewDelegate *self)
+{
+    Ivar ivar_pUserData = class_getInstanceVariable(object_getClass(self), "pUserData");
+    assert(ivar_pUserData != NULL);
+    return (*reinterpret_cast<void **>(reinterpret_cast<uintptr_t>(self) + ivar_getOffset(ivar_pUserData)));
 }
 
 void MTKView_setDelegate(struct MTKView *self, struct MTKViewDelegate *delegate)
@@ -110,9 +132,9 @@ struct MTLRenderPassDescriptor *MTKView_currentRenderPassDescriptor(struct MTKVi
     return static_cast<struct MTLRenderPassDescriptor *>(renderpassdescriptor);
 }
 
-struct CAMetalDrawable * MTKView_currentDrawable(struct MTKView *self)
+struct CAMetalDrawable *MTKView_currentDrawable(struct MTKView *self)
 {
-     struct objc_object *drawable = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+    struct objc_object *drawable = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
         self,
         sel_registerName("currentDrawable"));
     return static_cast<struct CAMetalDrawable *>(drawable);

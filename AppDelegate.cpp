@@ -46,4 +46,5 @@ void _I_AppDelegate_applicationDidFinishLaunching_(struct NSApplicationDelegate 
 
 void _I_AppDelegate_applicationWillTerminate_(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationWillTerminate_ *, void *aNotification)
 {
+    
 }
