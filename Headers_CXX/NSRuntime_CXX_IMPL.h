@@ -195,6 +195,6 @@ enum
 // https://clang.llvm.org/docs/AutomaticReferenceCounting.html
 
 // Using Autorelease Pool Blocks
-// 
+// https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmAutoreleasePools.html
 
 #endif
