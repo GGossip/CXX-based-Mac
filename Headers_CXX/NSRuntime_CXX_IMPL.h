@@ -188,5 +188,13 @@ enum
 
 // In summary, scalars, structures, unions, and function pointers are generally imported as const copies with no need for helper functions.
 
+// Memory Management Policy
+// https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/MemoryMgmt/Articles/mmRules.html
+
+// Objective-C Automatic Reference Counting (ARC)
+// https://clang.llvm.org/docs/AutomaticReferenceCounting.html
+
+// Using Autorelease Pool Blocks
+// 
 
 #endif
