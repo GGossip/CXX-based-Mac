@@ -5,6 +5,7 @@
 
 #include <stddef.h>
 #include <stdlib.h>
+#include <string.h>
 #include <new>
 
 #include "Renderer.h"
@@ -31,16 +32,6 @@ int main(int argc, const char *argv[])
 
         //Shall we wait return?
         isMultiThreaded = NSThread_isMultiThreaded();
-
-        objc_autoreleasePoolPop(__at_autoreleasepool_obj);
-    }
-
-    {
-        void *__at_autoreleasepool_obj = objc_autoreleasePoolPush();
-
-        char const *filename = NSURL_fileSystemRepresentation(NSArrayNSURL_objectAtIndexedSubscript(
-            NSFileManager_URLsForDirectory(NSFileManager_defaultManager(), NSCachesDirectory, NSUserDomainMask),
-            0));
 
         objc_autoreleasePoolPop(__at_autoreleasepool_obj);
     }

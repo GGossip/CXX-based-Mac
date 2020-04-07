@@ -1,9 +1,15 @@
+#include "Headers_CXX/Foundation_CXX.h"
+
 #include "Renderer.h"
 #include "ShaderTypes.h"
 
 #include <stddef.h>
 #include <stdint.h>
 #include <string.h>
+#include <assert.h>
+
+#include <sys/types.h>
+#include <sys/stat.h>
 
 static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
 
@@ -222,6 +228,11 @@ void demo::_init2()
 
     _meshvertexBuffer_Addition = MTLDevice_newBufferWithLength(_device, sizeof(g_uv_buffer_data), MTLResourceStorageModeShared);
     memcpy(MTLBuffer_contents(_meshvertexBuffer_Addition), g_uv_buffer_data, sizeof(g_uv_buffer_data));
+
+    //Load Texture
+    char const *filenameautorelease = NSURL_fileSystemRepresentation(NSArrayNSURL_objectAtIndexedSubscript(NSFileManager_URLsForDirectory(NSFileManager_defaultManager(), NSCachesDirectory, NSUserDomainMask), 0));
+    struct stat stbuf;
+    assert(stat(filenameautorelease, &stbuf) == 0 && S_ISDIR(stbuf.st_mode));
 }
 
 void demo::_resize(float width, float height)
