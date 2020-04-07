@@ -33,6 +33,7 @@ void _I_AppDelegate_applicationDidFinishLaunching_(struct NSApplicationDelegate 
         _I_AppViewController_loadView,
         _I_AppViewController_viewDidLoad,
         _I_AppViewController_setRepresentedObject_);
+    NSViewController_Class_addIvarVoidPointer(viewcontroller_Class, "pUserData");
 
     struct NSViewController *viewcontroller = NSViewController_initWithNibName(
         NSViewController_alloc(viewcontroller_Class),
@@ -46,5 +47,4 @@ void _I_AppDelegate_applicationDidFinishLaunching_(struct NSApplicationDelegate 
 
 void _I_AppDelegate_applicationWillTerminate_(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationWillTerminate_ *, void *aNotification)
 {
-    
 }

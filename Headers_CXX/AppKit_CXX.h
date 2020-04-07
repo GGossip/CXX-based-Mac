@@ -68,9 +68,15 @@ struct NSViewController_Class *NSViewController_allocClass(
     void (*_I_NSViewController_viewDidLoad)(struct NSViewController *, struct NSViewController_viewDidLoad *),
     void (*_I_NSViewController_setRepresentedObject_)(struct NSViewController *, struct NSViewController_setRepresentedObject_ *, void *representedObject));
 
+bool NSViewController_Class_addIvarVoidPointer(struct NSViewController_Class *self, char const *ivarname);
+
 struct NSViewController *NSViewController_alloc(struct NSViewController_Class *);
 
 struct NSViewController *NSViewController_initWithNibName(struct NSViewController *self, void *nibNameOrNil, void *nibBundleOrNil);
+
+void NSViewController_setIvarVoidPointer(struct NSViewController *self, char const *ivarname, void *pVoid);
+
+void *NSViewController_getIvarVoidPointer(struct NSViewController *self, char const *ivarname);
 
 void NSViewController_setView(struct NSViewController *self, struct NSView *view);
 

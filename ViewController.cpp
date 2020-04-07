@@ -10,11 +10,11 @@ void _I_Renderer_drawInMTKView_(struct MTKViewDelegate *, struct MTKViewDelegate
 
 #include "Renderer.h"
 
-static demo *g_demo;
-
 void _I_AppViewController_loadView(struct NSViewController *self, struct NSViewController_loadView *_cmd)
 {
     struct demo *_demo = new (malloc(sizeof(struct demo))) struct demo();
+    NSViewController_setIvarVoidPointer(self, "pUserData", _demo);
+
     _demo->_init();
 
     MTKViewDelegate_Class *renderer_Class = MTKViewDelegate_allocClass(
@@ -34,14 +34,13 @@ void _I_AppViewController_loadView(struct NSViewController *self, struct NSViewC
     MTKView_setDelegate(_demo->_view, renderer);
 
     NSViewController_setView(self, _demo->_view);
-
-    g_demo = _demo;
 }
 
 void _I_AppViewController_viewDidLoad(struct NSViewController *self, struct NSViewController_viewDidLoad *_cmd)
 {
     NSViewController_super_viewDidLoad(self, _cmd);
-    g_demo->_init2();
+    struct demo *_demo = static_cast<struct demo *>(NSViewController_getIvarVoidPointer(self, "pUserData"));
+    _demo->_init2();
 }
 
 void _I_AppViewController_setRepresentedObject_(struct NSViewController *self, struct NSViewController_setRepresentedObject_ *_cmd, void *representedObject)

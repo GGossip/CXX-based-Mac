@@ -114,6 +114,11 @@ struct NSViewController_Class *NSViewController_allocClass(
     return reinterpret_cast<struct NSViewController_Class *>(class_NSViewController_CXX);
 }
 
+bool NSViewController_Class_addIvarVoidPointer(struct NSViewController_Class *self, char const *ivarname)
+{
+    return OBJC_CLASS_addIvarVoidPointer(self, ivarname);
+}
+
 struct NSViewController *NSViewController_alloc(struct NSViewController_Class *class_NSViewController_CXX)
 {
     struct objc_object *viewcontroller = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
@@ -132,6 +137,16 @@ struct NSViewController *NSViewController_initWithNibName(struct NSViewControlle
         reinterpret_cast<struct objc_object *>(nibBundleOrNil));
 
     return static_cast<struct NSViewController *>(viewcontroller);
+}
+
+void NSViewController_setIvarVoidPointer(struct NSViewController *self, char const *ivarname, void *pVoid)
+{
+    return OBJC_OBJECT_setIvarVoidPointer(self, ivarname, pVoid);
+}
+
+void *NSViewController_getIvarVoidPointer(struct NSViewController *self, char const *ivarname)
+{
+    return OBJC_OBJECT_getIvarVoidPointer(self, ivarname);
 }
 
 void NSViewController_setView(struct NSViewController *self, NSView *view)
