@@ -55,4 +55,19 @@ struct NSURL *NSArrayNSURL_objectAtIndexedSubscript(struct NSArrayNSURL *self, N
 
 char const *NSURL_fileSystemRepresentation(struct NSURL *self);
 
+struct NSThreadDetachTarget_Class *NSThreadDetachTarget_allocClass(
+    char const *classname,
+    char const *selectorname,
+    void (*_I_NSThreadDetachSelector_)(struct NSThreadDetachTarget *, struct NSThreadDetachSelector_ *, void *argument));
+
+struct NSThreadDetachTarget *NSThreadDetachTarget_alloc(struct NSThreadDetachTarget_Class *);
+
+struct NSThreadDetachTarget *NSThreadDetachTarget_init(struct NSThreadDetachTarget *self);
+
+void NSThreadDetachTarget_release(struct NSThreadDetachTarget *self);
+
+void NSThread_detachNewThreadSelector(char const *selectorname, struct NSThreadDetachTarget *toTarget, void *argument);
+
+bool NSThread_isMultiThreaded();
+
 #endif

@@ -23,4 +23,9 @@ struct NSURL : public NSObject
     NSURL() = delete;
 };
 
+struct NSThreadDetachTarget : public NSObject
+{
+    NSThreadDetachTarget() = delete;
+};
+
 #endif

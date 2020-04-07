@@ -4,6 +4,8 @@
 #include <objc/objc.h>
 #include <objc/objc-runtime.h>
 
+#include <assert.h>
+
 struct NSObject *NSArrayNSObject_objectAtIndexedSubscript(struct NSArrayNSObject *self, NSUInteger idx)
 {
     struct objc_object *object = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, NSUInteger)>(objc_msgSend)(
@@ -44,4 +46,66 @@ char const *NSURL_fileSystemRepresentation(struct NSURL *self)
         self,
         sel_registerName("fileSystemRepresentation"));
     return filename;
+}
+
+struct NSThreadDetachTarget_Class *NSThreadDetachTarget_allocClass(
+    char const *classname,
+    char const *selectorname,
+    void (*_I_NSThreadDetachSelector_)(struct NSThreadDetachTarget *, struct NSThreadDetachSelector_ *, void *argument))
+{
+    Class class_NSThreadDetachTarget_CXX;
+    {
+        class_NSThreadDetachTarget_CXX = objc_allocateClassPair(
+            objc_getClass("NSObject"),
+            classname,
+            0);
+        assert(class_NSThreadDetachTarget_CXX != NULL);
+
+        BOOL result_1 = class_addMethod(
+            class_NSThreadDetachTarget_CXX,
+            sel_registerName(selectorname),
+            reinterpret_cast<IMP>(_I_NSThreadDetachSelector_),
+            "v@:@");
+        assert(result_1 != NO);
+    }
+
+    return reinterpret_cast<struct NSThreadDetachTarget_Class *>(class_NSThreadDetachTarget_CXX);
+}
+
+struct NSThreadDetachTarget *NSThreadDetachTarget_alloc(struct NSThreadDetachTarget_Class *class_NSThreadDetachTarget_CXX)
+{
+    struct objc_object *target = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
+        reinterpret_cast<Class>(class_NSThreadDetachTarget_CXX),
+        sel_registerName("alloc"));
+
+    return static_cast<struct NSThreadDetachTarget *>(target);
+}
+
+struct NSThreadDetachTarget *NSThreadDetachTarget_init(struct NSThreadDetachTarget *self)
+{
+    struct objc_object *target = NSObject_init(self);
+    return static_cast<struct NSThreadDetachTarget *>(target);
+}
+
+void NSThreadDetachTarget_release(struct NSThreadDetachTarget *self)
+{
+    return NSObject_release(self);
+}
+
+void NSThread_detachNewThreadSelector(char const *selectorname, struct NSThreadDetachTarget *toTarget, void *argument)
+{
+    reinterpret_cast<void (*)(Class, struct objc_selector *, struct objc_selector *, struct objc_object *, struct objc_object *)>(objc_msgSend)(
+        objc_getClass("NSThread"),
+        sel_registerName("detachNewThreadSelector:toTarget:withObject:"),
+        sel_registerName(selectorname),
+        toTarget,
+        static_cast<struct objc_object *>(argument));
+}
+
+bool NSThread_isMultiThreaded()
+{
+    BOOL isMultiThreaded = reinterpret_cast<BOOL (*)(Class, struct objc_selector *)>(objc_msgSend)(
+        objc_getClass("NSThread"),
+        sel_registerName("isMultiThreaded"));
+    return (isMultiThreaded != NO) ? true : false;
 }

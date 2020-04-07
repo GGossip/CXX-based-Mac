@@ -220,9 +220,7 @@ struct NSApplicationDelegate *NSApplicationDelegate_alloc(struct NSApplicationDe
 
 struct NSApplicationDelegate *NSApplicationDelegate_init(struct NSApplicationDelegate *self)
 {
-    struct objc_object *delegate = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
-        self,
-        sel_registerName("init"));
+    struct objc_object *delegate = NSObject_init(self);
     return static_cast<struct NSApplicationDelegate *>(delegate);
 }
 

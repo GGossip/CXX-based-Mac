@@ -66,9 +66,7 @@ struct MTKViewDelegate *MTKViewDelegate_alloc(struct MTKViewDelegate_Class *clas
 
 struct MTKViewDelegate *MTKViewDelegate_init(struct MTKViewDelegate *self)
 {
-    struct objc_object *delegate = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
-        self,
-        sel_registerName("init"));
+    struct objc_object *delegate = NSObject_init(self);
     return static_cast<struct MTKViewDelegate *>(delegate);
 }
 
