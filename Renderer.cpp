@@ -68,7 +68,10 @@ void demo::_init()
     MTKView_setColorPixelFormat(_view, MTLPixelFormatBGRA8Unorm_sRGB);
     MTKView_setDepthStencilPixelFormat(_view, MTLPixelFormatDepth32Float_Stencil8);
     MTKView_setSampleCount(_view, 1);
+}
 
+void demo::_init2()
+{
     _commandQueue = MTLDevice_newCommandQueue(_device);
 
     //pipelineState
@@ -141,93 +144,93 @@ void demo::_init()
     // Mesh and VertexFormat Data
     //--------------------------------------------------------------------------------------
     // clang-format off
-    float const g_vertex_buffer_data[] = {
-        -1.0f,-1.0f,-1.0f,  // -X side
-        -1.0f,-1.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f,-1.0f,
-        -1.0f,-1.0f,-1.0f,
-        
-        -1.0f,-1.0f,-1.0f,  // -Z side
-        1.0f, 1.0f,-1.0f,
-        1.0f,-1.0f,-1.0f,
-        -1.0f,-1.0f,-1.0f,
-        -1.0f, 1.0f,-1.0f,
-        1.0f, 1.0f,-1.0f,
-        
-        -1.0f,-1.0f,-1.0f,  // -Y side
-        1.0f,-1.0f,-1.0f,
-        1.0f,-1.0f, 1.0f,
-        -1.0f,-1.0f,-1.0f,
-        1.0f,-1.0f, 1.0f,
-        -1.0f,-1.0f, 1.0f,
-        
-        -1.0f, 1.0f,-1.0f,  // +Y side
-        -1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-        -1.0f, 1.0f,-1.0f,
-        1.0f, 1.0f, 1.0f,
-        1.0f, 1.0f,-1.0f,
-        
-        1.0f, 1.0f,-1.0f,  // +X side
-        1.0f, 1.0f, 1.0f,
-        1.0f,-1.0f, 1.0f,
-        1.0f,-1.0f, 1.0f,
-        1.0f,-1.0f,-1.0f,
-        1.0f, 1.0f,-1.0f,
-        
-        -1.0f, 1.0f, 1.0f,  // +Z side
-        -1.0f,-1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-        -1.0f,-1.0f, 1.0f,
-        1.0f,-1.0f, 1.0f,
-        1.0f, 1.0f, 1.0f,
-    };
-    
-    float const g_uv_buffer_data[] = {
-        0.0f, 1.0f,  // -X side
-        1.0f, 1.0f,
-        1.0f, 0.0f,
-        1.0f, 0.0f,
-        0.0f, 0.0f,
-        0.0f, 1.0f,
-        
-        1.0f, 1.0f,  // -Z side
-        0.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 1.0f,
-        1.0f, 0.0f,
-        0.0f, 0.0f,
-        
-        1.0f, 0.0f,  // -Y side
-        1.0f, 1.0f,
-        0.0f, 1.0f,
-        1.0f, 0.0f,
-        0.0f, 1.0f,
-        0.0f, 0.0f,
-        
-        1.0f, 0.0f,  // +Y side
-        0.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 1.0f,
-        
-        1.0f, 0.0f,  // +X side
-        0.0f, 0.0f,
-        0.0f, 1.0f,
-        0.0f, 1.0f,
-        1.0f, 1.0f,
-        1.0f, 0.0f,
-        
-        0.0f, 0.0f,  // +Z side
-        0.0f, 1.0f,
-        1.0f, 0.0f,
-        0.0f, 1.0f,
-        1.0f, 1.0f,
-        1.0f, 0.0f,
-    };
+      float const g_vertex_buffer_data[] = {
+          -1.0f,-1.0f,-1.0f,  // -X side
+          -1.0f,-1.0f, 1.0f,
+          -1.0f, 1.0f, 1.0f,
+          -1.0f, 1.0f, 1.0f,
+          -1.0f, 1.0f,-1.0f,
+          -1.0f,-1.0f,-1.0f,
+          
+          -1.0f,-1.0f,-1.0f,  // -Z side
+          1.0f, 1.0f,-1.0f,
+          1.0f,-1.0f,-1.0f,
+          -1.0f,-1.0f,-1.0f,
+          -1.0f, 1.0f,-1.0f,
+          1.0f, 1.0f,-1.0f,
+          
+          -1.0f,-1.0f,-1.0f,  // -Y side
+          1.0f,-1.0f,-1.0f,
+          1.0f,-1.0f, 1.0f,
+          -1.0f,-1.0f,-1.0f,
+          1.0f,-1.0f, 1.0f,
+          -1.0f,-1.0f, 1.0f,
+          
+          -1.0f, 1.0f,-1.0f,  // +Y side
+          -1.0f, 1.0f, 1.0f,
+          1.0f, 1.0f, 1.0f,
+          -1.0f, 1.0f,-1.0f,
+          1.0f, 1.0f, 1.0f,
+          1.0f, 1.0f,-1.0f,
+          
+          1.0f, 1.0f,-1.0f,  // +X side
+          1.0f, 1.0f, 1.0f,
+          1.0f,-1.0f, 1.0f,
+          1.0f,-1.0f, 1.0f,
+          1.0f,-1.0f,-1.0f,
+          1.0f, 1.0f,-1.0f,
+          
+          -1.0f, 1.0f, 1.0f,  // +Z side
+          -1.0f,-1.0f, 1.0f,
+          1.0f, 1.0f, 1.0f,
+          -1.0f,-1.0f, 1.0f,
+          1.0f,-1.0f, 1.0f,
+          1.0f, 1.0f, 1.0f,
+      };
+      
+      float const g_uv_buffer_data[] = {
+          0.0f, 1.0f,  // -X side
+          1.0f, 1.0f,
+          1.0f, 0.0f,
+          1.0f, 0.0f,
+          0.0f, 0.0f,
+          0.0f, 1.0f,
+          
+          1.0f, 1.0f,  // -Z side
+          0.0f, 0.0f,
+          0.0f, 1.0f,
+          1.0f, 1.0f,
+          1.0f, 0.0f,
+          0.0f, 0.0f,
+          
+          1.0f, 0.0f,  // -Y side
+          1.0f, 1.0f,
+          0.0f, 1.0f,
+          1.0f, 0.0f,
+          0.0f, 1.0f,
+          0.0f, 0.0f,
+          
+          1.0f, 0.0f,  // +Y side
+          0.0f, 0.0f,
+          0.0f, 1.0f,
+          1.0f, 0.0f,
+          0.0f, 1.0f,
+          1.0f, 1.0f,
+          
+          1.0f, 0.0f,  // +X side
+          0.0f, 0.0f,
+          0.0f, 1.0f,
+          0.0f, 1.0f,
+          1.0f, 1.0f,
+          1.0f, 0.0f,
+          
+          0.0f, 0.0f,  // +Z side
+          0.0f, 1.0f,
+          1.0f, 0.0f,
+          0.0f, 1.0f,
+          1.0f, 1.0f,
+          1.0f, 0.0f,
+      };
     // clang-format on
 
     _meshvertexBuffer = MTLDevice_newBufferWithLength(_device, sizeof(g_vertex_buffer_data), MTLResourceStorageModeShared);
@@ -298,7 +301,7 @@ void demo::_draw(struct MTKView *view)
 
         MTLCommandBuffer_presentDrawable(commandBuffer, MTKView_currentDrawable(view));
     }
-    
+
     _inFlightSemaphore[_uniformBufferIndex].Reset();
     MTLCommandBuffer_commit(commandBuffer);
 }

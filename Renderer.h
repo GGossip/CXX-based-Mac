@@ -34,6 +34,8 @@ struct demo
     
     void _init();
     
+    void _init2();
+    
     void _resize(float width, float height);
     
     void _draw(struct MTKView *view);
