@@ -19,4 +19,8 @@ struct NSString *NSString_initWithUTF8String(struct NSString *self, char const *
 void NSString_release(struct NSString *self);
 NSUInteger NSString_retainCount(struct NSString *self);
 
+//#include <objc/obc-internal.h>
+extern "C" void *objc_autoreleasePoolPush(void);
+extern "C" void objc_autoreleasePoolPop(void *);
+
 #endif
