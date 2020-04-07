@@ -1,23 +1,7 @@
-#include <stddef.h>
-
-#include "Headers_CXX/MetalKit_CXX.h"
-
 #include "Renderer.h"
-
-void _I_Renderer_drawableSizeWillChange_(struct MTKViewDelegate *self, struct MTKViewDelegate_drawableSizeWillChange_ *, struct MTKView *view, CGSize size)
-{
-    struct demo *demo = static_cast<struct demo *>(MTKViewDelegate_getUserData(self));
-    demo->_resize(size.width, size.height);
-}
-
-void _I_Renderer_drawInMTKView_(struct MTKViewDelegate *self, struct MTKViewDelegate_drawInMTKView_ *, struct MTKView *view)
-{
-    struct demo *demo = static_cast<struct demo *>(MTKViewDelegate_getUserData(self));
-    demo->_draw(view);
-}
-
 #include "ShaderTypes.h"
 
+#include <stddef.h>
 #include <stdint.h>
 #include <string.h>
 

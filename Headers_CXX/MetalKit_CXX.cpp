@@ -37,30 +37,27 @@ struct MTKViewDelegate_Class *MTKViewDelegate_allocClass(
             0);
         assert(class_MTKViewDelegate_CXX != NULL);
 
-        BOOL result_1 = class_addIvar(
-            class_MTKViewDelegate_CXX,
-            "pUserData",
-            sizeof(void *),
-            alignof(void *),
-            "^v");
-        assert(result_1 != NO);
-
-        BOOL result_2 = class_addMethod(
+        BOOL result_1 = class_addMethod(
             class_MTKViewDelegate_CXX,
             sel_registerName("mtkView:drawableSizeWillChange:"),
             reinterpret_cast<IMP>(_I_MTKViewDelegate_drawableSizeWillChange_),
             "v@:@{CGSize=dd}");
-        assert(result_2 != NO);
+        assert(result_1 != NO);
 
-        BOOL result_3 = class_addMethod(
+        BOOL result_2 = class_addMethod(
             class_MTKViewDelegate_CXX,
             sel_registerName("drawInMTKView:"),
             reinterpret_cast<IMP>(_I_MTKViewDelegate_drawInMTKView_),
             "v@:@");
-        assert(result_3 != NO);
+        assert(result_2 != NO);
     }
 
     return reinterpret_cast<struct MTKViewDelegate_Class *>(class_MTKViewDelegate_CXX);
+}
+
+bool MTKViewDelegate_Class_addIvarVoidPointer(struct MTKViewDelegate_Class *self, char const *ivarname)
+{
+    return OBJC_CLASS_addIvarVoidPointer(self, ivarname);
 }
 
 struct MTKViewDelegate *MTKViewDelegate_alloc(struct MTKViewDelegate_Class *class_MTKViewDelegate_CXX)
@@ -78,18 +75,14 @@ struct MTKViewDelegate *MTKViewDelegate_init(struct MTKViewDelegate *self)
     return static_cast<struct MTKViewDelegate *>(delegate);
 }
 
-void MTKViewDelegate_setUserData(struct MTKViewDelegate *self, void *pUserData)
+void MTKViewDelegate_setIvarVoidPointer(struct MTKViewDelegate *self, char const *ivarname, void *pVoid)
 {
-    Ivar ivar_pUserData = class_getInstanceVariable(object_getClass(self), "pUserData");
-    assert(ivar_pUserData != NULL);
-    (*reinterpret_cast<void **>(reinterpret_cast<uintptr_t>(self) + ivar_getOffset(ivar_pUserData))) = pUserData;
+    return OBJC_OBJECT_setIvarVoidPointer(self, ivarname, pVoid);
 }
 
-void *MTKViewDelegate_getUserData(struct MTKViewDelegate *self)
+void *MTKViewDelegate_getIvarVoidPointer(struct MTKViewDelegate *self, char const *ivarname)
 {
-    Ivar ivar_pUserData = class_getInstanceVariable(object_getClass(self), "pUserData");
-    assert(ivar_pUserData != NULL);
-    return (*reinterpret_cast<void **>(reinterpret_cast<uintptr_t>(self) + ivar_getOffset(ivar_pUserData)));
+    return OBJC_OBJECT_getIvarVoidPointer(self, ivarname);
 }
 
 void MTKView_setDelegate(struct MTKView *self, struct MTKViewDelegate *delegate)

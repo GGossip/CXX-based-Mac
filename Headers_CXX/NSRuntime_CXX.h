@@ -10,6 +10,11 @@ typedef int NSInteger;
 typedef unsigned int NSUInteger;
 #endif
 
+bool OBJC_CLASS_addIvarVoidPointer(struct OBJC_CLASS *self, char const *ivarname);
+
+void OBJC_OBJECT_setIvarVoidPointer(struct OBJC_OBJECT *self, char const *ivarname, void *pVoid);
+void *OBJC_OBJECT_getIvarVoidPointer(struct OBJC_OBJECT *self, char const *ivarname);
+
 struct NSObject *NSObject_init(struct NSObject *self);
 void NSObject_release(struct NSObject *self);
 NSUInteger NSObject_retainCount(struct NSObject *self);

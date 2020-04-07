@@ -13,13 +13,15 @@ struct MTKViewDelegate_Class *MTKViewDelegate_allocClass(
     void (*_I_MTKViewDelegate_drawableSizeWillChange_)(struct MTKViewDelegate *, struct MTKViewDelegate_drawableSizeWillChange_ *, struct MTKView *view, CGSize size),
     void (*_I_MTKViewDelegate_drawInMTKView_)(struct MTKViewDelegate *, struct MTKViewDelegate_drawInMTKView_ *, struct MTKView *view));
 
+bool MTKViewDelegate_Class_addIvarVoidPointer(struct MTKViewDelegate_Class *self, char const *ivarname);
+
 struct MTKViewDelegate *MTKViewDelegate_alloc(struct MTKViewDelegate_Class *);
 
 struct MTKViewDelegate *MTKViewDelegate_init(struct MTKViewDelegate *self);
 
-void MTKViewDelegate_setUserData(struct MTKViewDelegate *self, void *pUserData);
+void MTKViewDelegate_setIvarVoidPointer(struct MTKViewDelegate *self, char const *ivarname, void *pVoid);
 
-void *MTKViewDelegate_getUserData(struct MTKViewDelegate *self);
+void *MTKViewDelegate_getIvarVoidPointer(struct MTKViewDelegate *self, char const *ivarname);
 
 void MTKView_setDelegate(struct MTKView *self, struct MTKViewDelegate *delegate);
 

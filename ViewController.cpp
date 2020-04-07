@@ -14,23 +14,23 @@ static demo *g_demo;
 
 void _I_AppViewController_loadView(struct NSViewController *self, struct NSViewController_loadView *_cmd)
 {
-
     struct demo *_demo = new (malloc(sizeof(struct demo))) struct demo();
     _demo->_init();
 
     MTKViewDelegate_Class *renderer_Class = MTKViewDelegate_allocClass(
         "Renderer",
         [](struct MTKViewDelegate *self, struct MTKViewDelegate_drawableSizeWillChange_ *, struct MTKView *view, CGSize size) -> void {
-            struct demo *_demo = static_cast<struct demo *>(MTKViewDelegate_getUserData(self));
+            struct demo *_demo = static_cast<struct demo *>(MTKViewDelegate_getIvarVoidPointer(self, "pUserData"));
             _demo->_resize(size.width, size.height);
         },
         [](struct MTKViewDelegate *self, struct MTKViewDelegate_drawInMTKView_ *, struct MTKView *view) -> void {
-            struct demo *_demo = static_cast<struct demo *>(MTKViewDelegate_getUserData(self));
+            struct demo *_demo = static_cast<struct demo *>(MTKViewDelegate_getIvarVoidPointer(self, "pUserData"));
             _demo->_draw(view);
         });
+    MTKViewDelegate_Class_addIvarVoidPointer(renderer_Class, "pUserData");
 
     MTKViewDelegate *renderer = MTKViewDelegate_init(MTKViewDelegate_alloc(renderer_Class));
-    MTKViewDelegate_setUserData(renderer, _demo);
+    MTKViewDelegate_setIvarVoidPointer(renderer, "pUserData", _demo);
     MTKView_setDelegate(_demo->_view, renderer);
 
     NSViewController_setView(self, _demo->_view);

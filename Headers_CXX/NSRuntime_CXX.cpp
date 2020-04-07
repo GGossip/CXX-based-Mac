@@ -3,6 +3,36 @@
 
 #include <objc/objc-runtime.h>
 
+#include <assert.h>
+#include <string.h>
+
+bool OBJC_CLASS_addIvarVoidPointer(struct OBJC_CLASS *self, char const *ivarname)
+{
+    BOOL result = class_addIvar(
+        reinterpret_cast<Class>(self),
+        ivarname,
+        sizeof(void *),
+        alignof(void *),
+        "^v");
+    return (result != NO) ? true : false;
+}
+
+void OBJC_OBJECT_setIvarVoidPointer(struct OBJC_OBJECT *self, char const *ivarname, void *pVoid)
+{
+    Ivar ivar_pUserData = class_getInstanceVariable(object_getClass(self), ivarname);
+    assert(ivar_pUserData != NULL);
+    assert(strcmp(ivar_getTypeEncoding(ivar_pUserData), "^v") == 0);
+    (*reinterpret_cast<void **>(reinterpret_cast<uintptr_t>(self) + ivar_getOffset(ivar_pUserData))) = pVoid;
+}
+
+void *OBJC_OBJECT_getIvarVoidPointer(struct OBJC_OBJECT *self, char const *ivarname)
+{
+    Ivar ivar_pUserData = class_getInstanceVariable(object_getClass(self), ivarname);
+    assert(ivar_pUserData != NULL);
+    assert(strcmp(ivar_getTypeEncoding(ivar_pUserData), "^v") == 0);
+    return (*reinterpret_cast<void **>(reinterpret_cast<uintptr_t>(self) + ivar_getOffset(ivar_pUserData)));
+}
+
 struct NSObject *NSObject_init(struct NSObject *self)
 {
     struct objc_object *object = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
@@ -36,7 +66,7 @@ struct NSString *NSString_alloc()
 
 struct NSString *NSString_initWithUTF8String(struct NSString *self, char const *nullTerminatedCString)
 {
-      struct objc_object *string = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, char const *)>(objc_msgSend)(
+    struct objc_object *string = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, char const *)>(objc_msgSend)(
         self,
         sel_registerName("initWithUTF8String:"),
         nullTerminatedCString);

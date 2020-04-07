@@ -4,7 +4,17 @@
 
 #include <objc/objc.h>
 
-struct NSObject : public objc_object
+struct OBJC_CLASS : public objc_object
+{
+    OBJC_CLASS() = delete;
+};
+
+struct OBJC_OBJECT : public objc_object
+{
+    OBJC_OBJECT() = delete;
+};
+
+struct NSObject : public OBJC_OBJECT
 {
     NSObject() = delete;
 };
@@ -18,7 +28,7 @@ struct NSString : public NSObject
 // https://clang.llvm.org/docs/Block-ABI-Apple.html
 
 // This document describes the Apple ABI implementation specification of Blocks.
-// The first shipping version of this ABI is found in Mac OS X 10.6, and shall be referred to as 10.6.ABI. As of 2010/3/16, the following describes the ABI contract with 
+// The first shipping version of this ABI is found in Mac OS X 10.6, and shall be referred to as 10.6.ABI. As of 2010/3/16, the following describes the ABI contract with
 // the runtime and the compiler, and, as necessary, will be referred to as ABI.2010.3.16.
 // Since the Apple ABI references symbols from other elements of the system, any attempt to use this ABI on systems prior to SnowLeopard is undefined.
 
@@ -78,21 +88,21 @@ enum
 
 // The following discussions are presented as 10.6.ABI otherwise.
 
-// Block literals may occur within functions where the structure is created in stack local memory. They may also appear as initialization expressions for Block variables 
+// Block literals may occur within functions where the structure is created in stack local memory. They may also appear as initialization expressions for Block variables
 // of global or static local variables.
 
 // When a Block literal expression is evaluated the stack based structure is initialized as follows:
 
 // 1. A static descriptor structure is declared and initialized as follows:
-//      a. The invoke function pointer is set to a function that takes the Block structure as its first argument and the rest of the arguments (if any) to the Block 
+//      a. The invoke function pointer is set to a function that takes the Block structure as its first argument and the rest of the arguments (if any) to the Block
 //      and executes the Block compound statement.
 //      b. The size field is set to the size of the following Block literal structure.
 //      c. The copy_helper and dispose_helper function pointers are set to respective helper functions if they are required by the Block literal.
 
 // 2. A stack (or global) Block literal data structure is created and initialized as follows:
-//      a. The isa field is set to the address of the external _NSConcreteStackBlock, which is a block of uninitialized memory supplied in libSystem, or 
+//      a. The isa field is set to the address of the external _NSConcreteStackBlock, which is a block of uninitialized memory supplied in libSystem, or
 //      _NSConcreteGlobalBlock if this is a static or file level Block literal.
-//      b. The flags field is set to zero unless there are variables imported into the Block that need helper functions for program level Block_copy() and 
+//      b. The flags field is set to zero unless there are variables imported into the Block that need helper functions for program level Block_copy() and
 //      Block_release() operations, in which case the (1<<25) flags bit is set.
 
 // As an example, the Block literal expression:
@@ -122,7 +132,7 @@ enum
 //
 // struct __block_literal_1 _block_literal = {
 //      &_NSConcreteStackBlock,
-//      BLOCK_HAS_STRET, 
+//      BLOCK_HAS_STRET,
 //      <uninitialized>,
 //      __block_invoke_1,
 //      &__block_descriptor_1
@@ -139,19 +149,19 @@ enum
 //      &__block_descriptor_1
 // };
 //
-// that is, a different address is provided as the first value and a particular (BLOCK_IS_GLOBAL) bit is set in the flags field, and otherwise it is the same as for stack based Block literals. This is an optimization that can be used for any Block 
+// that is, a different address is provided as the first value and a particular (BLOCK_IS_GLOBAL) bit is set in the flags field, and otherwise it is the same as for stack based Block literals. This is an optimization that can be used for any Block
 // literal that imports no const or __block storage variables.
 
 // Imported Variables
 
-// Variables of auto storage class are imported as const copies. Variables of __block storage class are imported as a pointer to an enclosing data structure. Global 
+// Variables of auto storage class are imported as const copies. Variables of __block storage class are imported as a pointer to an enclosing data structure. Global
 // variables are simply referenced and not considered as imported.
 
 // Imported const copy variables
 // Automatic storage variables not marked with __block are imported as const copies.
 
 // The simplest example is that of importing a variable of type int:
-// 
+//
 // int x = 10;
 // void (^vv)(void) = ^{ printf("x is %d\n", x); }
 // x = 11;
