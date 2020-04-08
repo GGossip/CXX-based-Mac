@@ -89,7 +89,9 @@ int main(int argc, const char *argv[])
                     [](struct NSViewController *self, struct NSViewController_viewDidLoad *_cmd) -> void {
                         NSViewController_super_viewDidLoad(self, _cmd);
                         struct demo *_demo = static_cast<struct demo *>(NSViewController_getIvarVoidPointer(self, "pUserData"));
+                        void *__at_autoreleasepool_obj = objc_autoreleasePoolPush();
                         _demo->_init2();
+                        objc_autoreleasePoolPop(__at_autoreleasepool_obj);
                     },
                     [](struct NSViewController *self, struct NSViewController_setRepresentedObject_ *_cmd, void *representedObject) -> void {
                         NSViewController_super_setRepresentedObject_(self, _cmd, representedObject);

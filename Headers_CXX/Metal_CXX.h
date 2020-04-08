@@ -2,6 +2,7 @@
 #define _METAL_CXX_H_ 1
 
 #include "NSRuntime_CXX.h"
+#include "Dispatch_CXX.h"
 
 extern "C" struct MTLDevice *MTLCreateSystemDefaultDevice(void);
 
@@ -489,7 +490,9 @@ static inline void MTLRenderCommandEncoder_pushDebugGroup(struct MTLRenderComman
     NSString_release(string);
 }
 
-struct MTLLibrary *MTLDevice_newDefaultLibrary(struct MTLDevice *self);
+struct MTLLibrary *MTLDevice_newLibraryWithData(struct MTLDevice *self, dispatch_data_t data, struct NSError **error);
+void MTLLibrary_release(struct MTLLibrary *self);
+
 struct MTLFunction *MTLLibrary_newFunctionWithName(struct MTLLibrary *self, struct NSString *functionName);
 void MTLFunction_release(struct MTLFunction *self);
 NSUInteger MTLFunction_retainCount(struct MTLFunction *self);

@@ -1,4 +1,5 @@
 #include "Headers_CXX/Foundation_CXX.h"
+#include "Headers_CXX/Dispatch_CXX.h"
 
 #include "Renderer.h"
 #include "ShaderTypes.h"
@@ -10,6 +11,8 @@
 
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <unistd.h>
+#include <fcntl.h>
 
 static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
 
@@ -86,9 +89,49 @@ void demo::_init2()
     MTLVertexAttributeDescriptor_setOffset(MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_attributes(vertexdescriptor), VertexAttributeTexcoord), 0);
     MTLVertexAttributeDescriptor_setBufferIndex(MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_attributes(vertexdescriptor), VertexAttributeTexcoord), BufferIndexMeshGenerics);
 
-    struct MTLLibrary *defaultLibrary = MTLDevice_newDefaultLibrary(_device);
-    struct MTLFunction *vertexFunction = MTLLibrary_newFunctionWithName(defaultLibrary, "vertexShader");
-    struct MTLFunction *fragmentFunction = MTLLibrary_newFunctionWithName(defaultLibrary, "fragmentShader");
+    int fd_LibraryCaches;
+    {
+        char const *filenameautorelease = NSURL_fileSystemRepresentation(NSArrayNSURL_objectAtIndexedSubscript(NSFileManager_URLsForDirectory(NSFileManager_defaultManager(), NSCachesDirectory, NSUserDomainMask), 0));
+        //struct stat stbuf;
+        //assert(stat(filenameautorelease, &stbuf) == 0 && S_ISDIR(stbuf.st_mode));
+
+        fd_LibraryCaches = open(filenameautorelease, O_RDONLY, O_DIRECTORY);
+        assert(fd_LibraryCaches != -1);
+    }
+
+    size_t buffersize;
+    void *buffer;
+    {
+        int fd_metallib = openat(fd_LibraryCaches, "Shaders_MacOS.metallib", O_RDONLY);
+
+        struct stat stbuf;
+        int res = fstat(fd_metallib, &stbuf);
+        assert(res == 0 && S_ISREG(stbuf.st_mode));
+
+        buffersize = stbuf.st_size;
+        buffer = malloc(buffersize);
+        ssize_t res2 = read(fd_metallib, buffer, buffersize);
+        assert(res2 != -1 && res2 == buffersize);
+
+        uint8_t buf_u_assert_only[1];
+        ssize_t res3 = read(fd_metallib, buf_u_assert_only, 1);
+        assert(res3 != -1 && res3 == 0);
+
+        int res4 = close(fd_metallib);
+        assert(res4 == 0);
+    }
+
+    dispatch_queue_main_t mainqueue = dispatch_get_main_queue();
+    dispatch_data_t dispathdata = dispatch_data_create(buffer, buffersize, mainqueue, [](void *buffer) -> void {
+        free(buffer);
+    });
+
+    struct NSError *error1 = NULL;
+    struct MTLLibrary *myLibrary = MTLDevice_newLibraryWithData(_device, dispathdata, &error1);
+    dispatch_release(dispathdata);
+
+    struct MTLFunction *vertexFunction = MTLLibrary_newFunctionWithName(myLibrary, "vertexShader");
+    struct MTLFunction *fragmentFunction = MTLLibrary_newFunctionWithName(myLibrary, "fragmentShader");
 
     struct MTLRenderPipelineDescriptor *pipelineStateDescriptor = MTLRenderPipelineDescriptor_init(MTLRenderPipelineDescriptor_alloc());
     MTLRenderPipelineDescriptor_setLabel(pipelineStateDescriptor, "MyPipeline");
@@ -101,6 +144,7 @@ void demo::_init2()
     MTLRenderPipelineDescriptor_setStencilAttachmentPixelFormat(pipelineStateDescriptor, MTLPixelFormatDepth32Float_Stencil8);
     MTLFunction_release(vertexFunction);
     MTLFunction_release(fragmentFunction);
+    MTLLibrary_release(myLibrary);
     MTLVertexDescriptor_release(vertexdescriptor);
 
     struct NSError *error = NULL;
@@ -230,9 +274,6 @@ void demo::_init2()
     memcpy(MTLBuffer_contents(_meshvertexBuffer_Addition), g_uv_buffer_data, sizeof(g_uv_buffer_data));
 
     //Load Texture
-    char const *filenameautorelease = NSURL_fileSystemRepresentation(NSArrayNSURL_objectAtIndexedSubscript(NSFileManager_URLsForDirectory(NSFileManager_defaultManager(), NSCachesDirectory, NSUserDomainMask), 0));
-    struct stat stbuf;
-    assert(stat(filenameautorelease, &stbuf) == 0 && S_ISDIR(stbuf.st_mode));
 }
 
 void demo::_resize(float width, float height)

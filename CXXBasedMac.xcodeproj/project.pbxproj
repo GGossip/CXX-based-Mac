@@ -11,8 +11,8 @@
 		9202E2152439EDCD00FEC77B /* Appkit_CXX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9202E2112439EDCD00FEC77B /* Appkit_CXX.cpp */; };
 		9202E2192439FF7F00FEC77B /* MetalKit_CXX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9202E2172439FF7F00FEC77B /* MetalKit_CXX.cpp */; };
 		9202E21B243A06EA00FEC77B /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9202E21A243A06EA00FEC77B /* Renderer.cpp */; };
-		9202E21E243A2B2C00FEC77B /* Shaders.metal in Sources */ = {isa = PBXBuildFile; fileRef = 9202E21D243A2B2C00FEC77B /* Shaders.metal */; };
 		9202E221243A32C300FEC77B /* NSRuntime_CXX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9202E220243A32C300FEC77B /* NSRuntime_CXX.cpp */; };
+		92244DC9243DC7A00020A653 /* Dispatch_CXX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92244DC8243DC7A00020A653 /* Dispatch_CXX.cpp */; };
 		9279CC2024390AB900DACBD7 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9279CC1F24390AB900DACBD7 /* main.cpp */; };
 		92806A87243BBCA400EB0099 /* AppKit in Frameworks */ = {isa = PBXBuildFile; fileRef = 92806A86243BBCA400EB0099 /* AppKit */; };
 		92806A89243BBCF500EB0099 /* Metal in Frameworks */ = {isa = PBXBuildFile; fileRef = 92806A88243BBCF500EB0099 /* Metal */; };
@@ -31,9 +31,11 @@
 		9202E2182439FF7F00FEC77B /* MetalKit_CXX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MetalKit_CXX.h; path = Headers_CXX/MetalKit_CXX.h; sourceTree = "<group>"; };
 		9202E21A243A06EA00FEC77B /* Renderer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Renderer.cpp; sourceTree = "<group>"; };
 		9202E21C243A2B2C00FEC77B /* ShaderTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderTypes.h; sourceTree = "<group>"; };
-		9202E21D243A2B2C00FEC77B /* Shaders.metal */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.metal; path = Shaders.metal; sourceTree = "<group>"; };
 		9202E21F243A32C300FEC77B /* NSRuntime_CXX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = NSRuntime_CXX.h; path = Headers_CXX/NSRuntime_CXX.h; sourceTree = "<group>"; };
 		9202E220243A32C300FEC77B /* NSRuntime_CXX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = NSRuntime_CXX.cpp; path = Headers_CXX/NSRuntime_CXX.cpp; sourceTree = "<group>"; };
+		92244DC6243DC7A00020A653 /* Dispatch_CXX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Dispatch_CXX.h; path = Headers_CXX/Dispatch_CXX.h; sourceTree = "<group>"; };
+		92244DC7243DC7A00020A653 /* Dispatch_CXX_IMPL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Dispatch_CXX_IMPL.h; path = Headers_CXX/Dispatch_CXX_IMPL.h; sourceTree = "<group>"; };
+		92244DC8243DC7A00020A653 /* Dispatch_CXX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Dispatch_CXX.cpp; path = Headers_CXX/Dispatch_CXX.cpp; sourceTree = "<group>"; };
 		9279CC1F24390AB900DACBD7 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		92806A86243BBCA400EB0099 /* AppKit */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = AppKit; path = /System/Library/Frameworks/AppKit.framework/Versions/Current/AppKit; sourceTree = "<group>"; };
 		92806A88243BBCF500EB0099 /* Metal */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = Metal; path = /System/Library/Frameworks/Metal.framework/Versions/Current/Metal; sourceTree = "<group>"; };
@@ -70,6 +72,9 @@
 			isa = PBXGroup;
 			children = (
 				92806A93243CC03200EB0099 /* Foundation_CXX.cpp */,
+				92244DC7243DC7A00020A653 /* Dispatch_CXX_IMPL.h */,
+				92244DC8243DC7A00020A653 /* Dispatch_CXX.cpp */,
+				92244DC6243DC7A00020A653 /* Dispatch_CXX.h */,
 				92806A92243CBD5400EB0099 /* AppKit_CXX_IMPL.h */,
 				92806A8D243CBD5400EB0099 /* Foundation_CXX_IMPL.h */,
 				92806A90243CBD5400EB0099 /* Foundation_CXX.h */,
@@ -94,7 +99,6 @@
 			children = (
 				92806A95243CFA0600EB0099 /* Renderer.h */,
 				9202E21A243A06EA00FEC77B /* Renderer.cpp */,
-				9202E21D243A2B2C00FEC77B /* Shaders.metal */,
 				9202E21C243A2B2C00FEC77B /* ShaderTypes.h */,
 				9279CC1F24390AB900DACBD7 /* main.cpp */,
 				92806A8A243BC99200EB0099 /* GCEvent.h */,
@@ -201,11 +205,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9202E21E243A2B2C00FEC77B /* Shaders.metal in Sources */,
 				92806A94243CC03200EB0099 /* Foundation_CXX.cpp in Sources */,
 				9202E221243A32C300FEC77B /* NSRuntime_CXX.cpp in Sources */,
 				9279CC2024390AB900DACBD7 /* main.cpp in Sources */,
 				9202E2142439EDCD00FEC77B /* Metal_CXX.cpp in Sources */,
+				92244DC9243DC7A00020A653 /* Dispatch_CXX.cpp in Sources */,
 				92806A8C243BC99200EB0099 /* GCEvent.cpp in Sources */,
 				9202E21B243A06EA00FEC77B /* Renderer.cpp in Sources */,
 				9202E2192439FF7F00FEC77B /* MetalKit_CXX.cpp in Sources */,

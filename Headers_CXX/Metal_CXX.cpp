@@ -1,4 +1,5 @@
 #include "Metal_CXX.h"
+#include "Dispatch_CXX_IMPL.h"
 #include "Metal_CXX_IMPL.h"
 
 #include <objc/objc.h>
@@ -518,12 +519,19 @@ void MTLRenderCommandEncoder_endEncoding(struct MTLRenderCommandEncoder *self)
         sel_registerName("endEncoding"));
 }
 
-struct MTLLibrary *MTLDevice_newDefaultLibrary(struct MTLDevice *self)
+struct MTLLibrary *MTLDevice_newLibraryWithData(struct MTLDevice *self, dispatch_data_t data, struct NSError **error)
 {
-    struct objc_object *library = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+    struct objc_object *library = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, struct objc_object *, struct objc_object **)>(objc_msgSend)(
         self,
-        sel_registerName("newDefaultLibrary"));
+        sel_registerName("newLibraryWithData:error:"),
+        data,
+        reinterpret_cast<struct objc_object **>(error));
     return static_cast<struct MTLLibrary *>(library);
+}
+
+void MTLLibrary_release(struct MTLLibrary *self)
+{
+    return NSObject_release(self);
 }
 
 struct MTLFunction *MTLLibrary_newFunctionWithName(struct MTLLibrary *self, struct NSString *functionName)
