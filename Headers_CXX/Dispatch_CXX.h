@@ -16,8 +16,8 @@ void dispatch_release(dispatch_object_t object);
 
 dispatch_queue_main_t dispatch_get_main_queue(void);
 
-dispatch_data_t dispatch_data_create(void *buffer, size_t size, dispatch_queue_t queue, void (*pfnCallback)(void *buffer));
-dispatch_data_t dispatch_data_create(void *buffer, size_t size, dispatch_queue_main_t queue, void (*pfnCallback)(void *buffer));
+dispatch_data_t dispatch_data_create(void *buffer, size_t size, dispatch_queue_t queue, void *pUserData, void (*pfnCallback)(void *pUserData, void *buffer));
+dispatch_data_t dispatch_data_create(void *buffer, size_t size, dispatch_queue_main_t queue, void *pUserData, void (*pfnCallback)(void *pUserData, void *buffer));
 void dispatch_release(dispatch_data_t object);
 
 #endif

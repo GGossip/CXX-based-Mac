@@ -25,13 +25,14 @@ struct __block_literal_dispatch_block_t
     int reserved;
     void (*invoke)(struct __block_literal_dispatch_block_t *);
     struct __block_descriptor_dispatch_block_t *descriptor;
+    void *pUserData;
     void *buffer;
-    void (*pfnCallback)(void *buffer);
+    void (*pfnCallback)(void *pUserData, void *buffer);
 };
 
 static void __block_invoke_dispatch_block_t(struct __block_literal_dispatch_block_t *_block)
 {
-    _block->pfnCallback(_block->buffer);
+    _block->pfnCallback(_block->pUserData, _block->buffer);
 }
 
 static struct __block_descriptor_dispatch_block_t
@@ -42,7 +43,7 @@ static struct __block_descriptor_dispatch_block_t
 
 extern "C" dispatch_data_t dispatch_data_create(void const *buffer, size_t size, struct objc_object *queue, struct objc_object *destructor);
 
-dispatch_data_t dispatch_data_create(void *buffer, size_t size, dispatch_queue_t queue, void (*pfnCallback)(void *buffer))
+dispatch_data_t dispatch_data_create(void *buffer, size_t size, dispatch_queue_t queue, void *pUserData, void (*pfnCallback)(void *pUserData, void *buffer))
 {
     struct __block_literal_dispatch_block_t __block_literal_dispatch_block_t = {
         &_NSConcreteStackBlock,
@@ -50,14 +51,15 @@ dispatch_data_t dispatch_data_create(void *buffer, size_t size, dispatch_queue_t
         0, // uninitialized
         __block_invoke_dispatch_block_t,
         &__block_descriptor_dispatch_block_t,
+        pUserData,
         buffer,
         pfnCallback};
     return dispatch_data_create(buffer, size, queue, reinterpret_cast<struct objc_object *>(&__block_literal_dispatch_block_t));
 }
 
-dispatch_data_t dispatch_data_create(void *buffer, size_t size, dispatch_queue_main_t queue, void (*pfnCallback)(void *buffer))
+dispatch_data_t dispatch_data_create(void *buffer, size_t size, dispatch_queue_main_t queue, void *pUserData, void (*pfnCallback)(void *pUserData, void *buffer))
 {
-    return dispatch_data_create(buffer, size, static_cast<dispatch_queue_t>(queue), pfnCallback);
+    return dispatch_data_create(buffer, size, static_cast<dispatch_queue_t>(queue), pUserData, pfnCallback);
 }
 
 void dispatch_release(dispatch_data_t object)

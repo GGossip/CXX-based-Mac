@@ -10,6 +10,8 @@
 
 #include "Renderer.h"
 
+#include <assert.h>
+
 int main(int argc, const char *argv[])
 {
 
@@ -24,14 +26,12 @@ int main(int argc, const char *argv[])
 
         });
 
-        bool isMultiThreaded = NSThread_isMultiThreaded();
 
         struct NSThreadDetachTarget *threadWrapper = NSThreadDetachTarget_init(NSThreadDetachTarget_alloc(threadWrapper_Class));
 
         NSThread_detachNewThreadSelector("NSMain", threadWrapper, NULL);
 
-        //Shall we wait return?
-        isMultiThreaded = NSThread_isMultiThreaded();
+        assert(NSThread_isMultiThreaded()!=false);
 
         objc_autoreleasePoolPop(__at_autoreleasepool_obj);
     }

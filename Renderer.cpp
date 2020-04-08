@@ -122,7 +122,7 @@ void demo::_init2()
     }
 
     dispatch_queue_main_t mainqueue = dispatch_get_main_queue();
-    dispatch_data_t dispathdata = dispatch_data_create(buffer, buffersize, mainqueue, [](void *buffer) -> void {
+    dispatch_data_t dispathdata = dispatch_data_create(buffer, buffersize, mainqueue, NULL, [](void *, void *buffer) -> void {
         free(buffer);
     });
 
