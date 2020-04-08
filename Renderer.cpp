@@ -274,6 +274,52 @@ void demo::_init2()
     memcpy(MTLBuffer_contents(_meshvertexBuffer_Addition), g_uv_buffer_data, sizeof(g_uv_buffer_data));
 
     //Load Texture
+
+    //multi-thread
+    _workerTheadArg[0]._exit = false;
+    _workerTheadArg[0]._eventwait.CreateAutoEventNoThrow(false);
+    _workerTheadArg[0]._eventsignal.CreateAutoEventNoThrow(false);
+    _workerTheadArg[0]._secondarycmd = NULL;
+    _workerTheadArg[0]._self = this;
+
+    int res1 = pthread_create(&_workerThread[0], NULL, _workThreadMain, &_workerTheadArg[0]);
+    assert(res1 == 0);
+}
+
+void *demo::_workThreadMain(void *arg)
+{
+    while (!static_cast<struct WorkerTheadArg *>(arg)->_exit)
+    {
+        static_cast<struct WorkerTheadArg *>(arg)->_eventwait.Wait(INFINITE, false);
+
+        uint32_t uniformBufferOffset = kAlignedUniformsSize * static_cast<struct WorkerTheadArg *>(arg)->_self->_uniformBufferIndex;
+
+        struct MTLRenderCommandEncoder *renderEncoder = static_cast<struct WorkerTheadArg *>(arg)->_secondarycmd;
+
+        MTLRenderCommandEncoder_pushDebugGroup(renderEncoder, "DrawBox");
+
+        MTLRenderCommandEncoder_setFrontFacingWinding(renderEncoder, MTLWindingCounterClockwise);
+        MTLRenderCommandEncoder_setCullMode(renderEncoder, MTLCullModeBack);
+        MTLRenderCommandEncoder_setRenderPipelineState(renderEncoder, static_cast<struct WorkerTheadArg *>(arg)->_self->_pipelineState);
+        MTLRenderCommandEncoder_setDepthStencilState(renderEncoder, static_cast<struct WorkerTheadArg *>(arg)->_self->_depthState);
+
+        MTLRenderCommandEncoder_setVertexBuffer(renderEncoder, static_cast<struct WorkerTheadArg *>(arg)->_self->_dynamicUniformBuffer, uniformBufferOffset, BufferIndexUniforms);
+        MTLRenderCommandEncoder_setFragmentBuffer(renderEncoder, static_cast<struct WorkerTheadArg *>(arg)->_self->_dynamicUniformBuffer, uniformBufferOffset, BufferIndexUniforms);
+
+        MTLRenderCommandEncoder_setVertexBuffer(renderEncoder, static_cast<struct WorkerTheadArg *>(arg)->_self->_meshvertexBuffer, 0, BufferIndexMeshPositions);
+        MTLRenderCommandEncoder_setVertexBuffer(renderEncoder, static_cast<struct WorkerTheadArg *>(arg)->_self->_meshvertexBuffer_Addition, 0, BufferIndexMeshGenerics);
+
+        MTLRenderCommandEncoder_drawPrimitives(renderEncoder, MTLPrimitiveTypeTriangle, 0, 12 * 3, 1, 0);
+
+        MTLRenderCommandEncoder_popDebugGroup(renderEncoder);
+        MTLRenderCommandEncoder_endEncoding(renderEncoder);
+
+        static_cast<struct WorkerTheadArg *>(arg)->_secondarycmd = NULL;
+
+        static_cast<struct WorkerTheadArg *>(arg)->_eventsignal.Set();
+    }
+    
+    return NULL;
 }
 
 void demo::_resize(float width, float height)
@@ -300,10 +346,10 @@ void demo::_draw(struct MTKView *view)
     uniforms->projectionMatrix = _projectionMatrix;
     uniforms->modelViewMatrix = matrix_multiply(viewMatrix, modelMatrix);
 
-    struct MTLCommandBuffer *commandBuffer = MTLCommandQueue_commandBuffer(_commandQueue);
-    MTLCommandBuffer_setLabel(commandBuffer, "MyCommand");
+    struct MTLCommandBuffer *commandPool = MTLCommandQueue_commandBuffer(_commandQueue);
+    MTLCommandBuffer_setLabel(commandPool, "MyCommand");
 
-    MTLCommandBuffer_addCompletedHandler(commandBuffer, this, _uniformBufferIndex, [](void *pUserData, NSUInteger throttlingIndex, struct MTLCommandBuffer *buffer) -> void {
+    MTLCommandBuffer_addCompletedHandler(commandPool, this, _uniformBufferIndex, [](void *pUserData, NSUInteger throttlingIndex, struct MTLCommandBuffer *buffer) -> void {
         static_cast<struct demo *>(pUserData)->_inFlightSemaphore[throttlingIndex].Set();
     });
 
@@ -314,30 +360,21 @@ void demo::_draw(struct MTKView *view)
     {
         /// Final pass rendering code here
 
-        struct MTLRenderCommandEncoder *renderEncoder = MTLCommandBuffer_renderCommandEncoderWithDescriptor(commandBuffer, renderPassDescriptor);
-        MTLRenderCommandEncoder_setLabel(renderEncoder, "MyRenderEncoder");
+        struct MTLParallelRenderCommandEncoder *primarycmd = MTLCommandBuffer_parallelRenderCommandEncoderWithDescriptor(commandPool, renderPassDescriptor);
+        MTLParallelRenderCommandEncoder_setLabel(primarycmd, "MyPrimaryRenderEncoder");
 
-        MTLRenderCommandEncoder_pushDebugGroup(renderEncoder, "DrawBox");
+        assert(_workerTheadArg[0]._secondarycmd == NULL);
+        _workerTheadArg[0]._secondarycmd = MTLParallelRenderCommandEncoder_renderCommandEncoder(primarycmd);
+        MTLRenderCommandEncoder_setLabel(_workerTheadArg[0]._secondarycmd, "MySecondaryRenderEncoder");
+        _workerTheadArg[0]._eventwait.Set();
 
-        MTLRenderCommandEncoder_setFrontFacingWinding(renderEncoder, MTLWindingCounterClockwise);
-        MTLRenderCommandEncoder_setCullMode(renderEncoder, MTLCullModeBack);
-        MTLRenderCommandEncoder_setRenderPipelineState(renderEncoder, _pipelineState);
-        MTLRenderCommandEncoder_setDepthStencilState(renderEncoder, _depthState);
+        _workerTheadArg[0]._eventsignal.Wait(INFINITE, false);
 
-        MTLRenderCommandEncoder_setVertexBuffer(renderEncoder, _dynamicUniformBuffer, uniformBufferOffset, BufferIndexUniforms);
-        MTLRenderCommandEncoder_setFragmentBuffer(renderEncoder, _dynamicUniformBuffer, uniformBufferOffset, BufferIndexUniforms);
+        MTLParallelRenderCommandEncoder_endEncoding(primarycmd);
 
-        MTLRenderCommandEncoder_setVertexBuffer(renderEncoder, _meshvertexBuffer, 0, BufferIndexMeshPositions);
-        MTLRenderCommandEncoder_setVertexBuffer(renderEncoder, _meshvertexBuffer_Addition, 0, BufferIndexMeshGenerics);
-
-        MTLRenderCommandEncoder_drawPrimitives(renderEncoder, MTLPrimitiveTypeTriangle, 0, 12 * 3, 1, 0);
-
-        MTLRenderCommandEncoder_popDebugGroup(renderEncoder);
-        MTLRenderCommandEncoder_endEncoding(renderEncoder);
-
-        MTLCommandBuffer_presentDrawable(commandBuffer, MTKView_currentDrawable(view));
+        MTLCommandBuffer_presentDrawable(commandPool, MTKView_currentDrawable(view));
     }
 
     _inFlightSemaphore[_uniformBufferIndex].Reset();
-    MTLCommandBuffer_commit(commandBuffer);
+    MTLCommandBuffer_commit(commandPool);
 }

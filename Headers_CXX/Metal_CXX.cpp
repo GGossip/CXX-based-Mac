@@ -424,6 +424,13 @@ void MTLCommandEncoder_popDebugGroup(struct MTLCommandEncoder *self)
         sel_registerName("popDebugGroup"));
 }
 
+void MTLCommandEncoder_endEncoding(struct MTLCommandEncoder *self)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+        self,
+        sel_registerName("endEncoding"));
+}
+
 void MTLRenderCommandEncoder_setLabel(struct MTLRenderCommandEncoder *self, struct NSString *label)
 {
     return MTLCommandEncoder_setLabel(self, label);
@@ -514,9 +521,44 @@ void MTLRenderCommandEncoder_drawPrimitives(struct MTLRenderCommandEncoder *self
 
 void MTLRenderCommandEncoder_endEncoding(struct MTLRenderCommandEncoder *self)
 {
-    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+    return MTLCommandEncoder_endEncoding(self);
+}
+
+struct MTLParallelRenderCommandEncoder *MTLCommandBuffer_parallelRenderCommandEncoderWithDescriptor(struct MTLCommandBuffer *self, struct MTLRenderPassDescriptor *renderPassDescriptor)
+{
+    struct objc_object *parallelRenderCommandEncoder = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
         self,
-        sel_registerName("endEncoding"));
+        sel_registerName("parallelRenderCommandEncoderWithDescriptor:"),
+        renderPassDescriptor);
+    return static_cast<struct MTLParallelRenderCommandEncoder *>(parallelRenderCommandEncoder);
+}
+
+void MTLParallelRenderCommandEncoder_setLabel(struct MTLParallelRenderCommandEncoder *self, struct NSString *label)
+{
+    return MTLCommandEncoder_setLabel(self, label);
+}
+
+void MTLParallelRenderCommandEncoder_pushDebugGroup(struct MTLParallelRenderCommandEncoder *self, struct NSString *string)
+{
+    return MTLCommandEncoder_pushDebugGroup(self, string);
+}
+
+void MTLParallelRenderCommandEncoder_popDebugGroup(struct MTLParallelRenderCommandEncoder *self)
+{
+    return MTLCommandEncoder_popDebugGroup(self);
+}
+
+struct MTLRenderCommandEncoder *MTLParallelRenderCommandEncoder_renderCommandEncoder(struct MTLParallelRenderCommandEncoder *self)
+{
+    struct objc_object *renderCommandEncoder = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+        self,
+        sel_registerName("renderCommandEncoder"));
+    return static_cast<struct MTLRenderCommandEncoder *>(renderCommandEncoder);
+}
+
+void MTLParallelRenderCommandEncoder_endEncoding(struct MTLParallelRenderCommandEncoder *self)
+{
+    return MTLCommandEncoder_endEncoding(self);
 }
 
 struct MTLLibrary *MTLDevice_newLibraryWithData(struct MTLDevice *self, dispatch_data_t data, struct NSError **error)

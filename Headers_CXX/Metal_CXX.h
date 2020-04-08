@@ -439,6 +439,7 @@ static inline void MTLCommandBuffer_setLabel(struct MTLCommandBuffer *self, char
 void MTLCommandEncoder_setLabel(struct MTLCommandEncoder *self, struct NSString *label);
 void MTLCommandEncoder_pushDebugGroup(struct MTLCommandEncoder *self, struct NSString *string);
 void MTLCommandEncoder_popDebugGroup(struct MTLCommandEncoder *self);
+void MTLCommandEncoder_endEncoding(struct MTLCommandEncoder *self);
 
 typedef NSUInteger MTLPrimitiveType;
 enum
@@ -467,7 +468,7 @@ enum
 
 struct MTLRenderCommandEncoder *MTLCommandBuffer_renderCommandEncoderWithDescriptor(struct MTLCommandBuffer *self, struct MTLRenderPassDescriptor *renderPassDescriptor);
 void MTLRenderCommandEncoder_setLabel(struct MTLRenderCommandEncoder *self, struct NSString *label);
-void MTLRenderCommandEncoder_pushDebugGroup(struct MTLRenderCommandEncoder *self, struct NSString *label);
+void MTLRenderCommandEncoder_pushDebugGroup(struct MTLRenderCommandEncoder *self, struct NSString *string);
 void MTLRenderCommandEncoder_popDebugGroup(struct MTLRenderCommandEncoder *self);
 void MTLRenderCommandEncoder_setCullMode(struct MTLRenderCommandEncoder *self, MTLCullMode cullMode);
 void MTLRenderCommandEncoder_setFrontFacingWinding(struct MTLRenderCommandEncoder *self, MTLWinding frontFacingWinding);
@@ -487,6 +488,25 @@ static inline void MTLRenderCommandEncoder_pushDebugGroup(struct MTLRenderComman
 {
     struct NSString *string = NSString_initWithUTF8String(NSString_alloc(), label);
     MTLRenderCommandEncoder_pushDebugGroup(self, string);
+    NSString_release(string);
+}
+
+struct MTLParallelRenderCommandEncoder *MTLCommandBuffer_parallelRenderCommandEncoderWithDescriptor(struct MTLCommandBuffer *self, struct MTLRenderPassDescriptor *renderPassDescriptor);
+void MTLParallelRenderCommandEncoder_setLabel(struct MTLParallelRenderCommandEncoder *self, struct NSString *label);
+void MTLParallelRenderCommandEncoder_pushDebugGroup(struct MTLParallelRenderCommandEncoder *self, struct NSString *string);
+void MTLParallelRenderCommandEncoder_popDebugGroup(struct MTLParallelRenderCommandEncoder *self);
+struct MTLRenderCommandEncoder *MTLParallelRenderCommandEncoder_renderCommandEncoder(struct MTLParallelRenderCommandEncoder *self);
+void MTLParallelRenderCommandEncoder_endEncoding(struct MTLParallelRenderCommandEncoder *self);
+static inline void MTLParallelRenderCommandEncoder_setLabel(struct MTLParallelRenderCommandEncoder *self, char const *label)
+{
+    struct NSString *string = NSString_initWithUTF8String(NSString_alloc(), label);
+    MTLParallelRenderCommandEncoder_setLabel(self, string);
+    NSString_release(string);
+}
+static inline void MTLParallelRenderCommandEncoder_pushDebugGroup(struct MTLParallelRenderCommandEncoder *self, char const *label)
+{
+    struct NSString *string = NSString_initWithUTF8String(NSString_alloc(), label);
+    MTLParallelRenderCommandEncoder_pushDebugGroup(self, string);
     NSString_release(string);
 }
 
