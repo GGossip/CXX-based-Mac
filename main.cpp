@@ -26,12 +26,11 @@ int main(int argc, const char *argv[])
 
         });
 
-
         struct NSThreadDetachTarget *threadWrapper = NSThreadDetachTarget_init(NSThreadDetachTarget_alloc(threadWrapper_Class));
 
         NSThread_detachNewThreadSelector("NSMain", threadWrapper, NULL);
 
-        assert(NSThread_isMultiThreaded()!=false);
+        assert(NSThread_isMultiThreaded() != false);
 
         objc_autoreleasePoolPop(__at_autoreleasepool_obj);
     }
@@ -109,6 +108,9 @@ int main(int argc, const char *argv[])
             },
             [](struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationWillTerminate_ *, void *aNotification) -> void {
 
+            },
+            [](struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationShouldTerminateAfterLastWindowClosed_ *, struct NSApplication *sender) -> int8_t {
+                return 1;
             });
 
         struct NSApplicationDelegate *appdelegate = NSApplicationDelegate_init(NSApplicationDelegate_alloc(appdelegate_Class));

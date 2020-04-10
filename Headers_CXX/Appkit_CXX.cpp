@@ -183,7 +183,8 @@ void NSViewController_super_setRepresentedObject_(struct NSViewController *self,
 struct NSApplicationDelegate_Class *NSApplicationDelegate_allocClass(
     char const *classname,
     void (*_I_NSApplicationDelegate_applicationDidFinishLaunching_)(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationDidFinishLaunching_ *, void *aNotification),
-    void (*_I_NSApplicationDelegate_applicationWillTerminate_)(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationWillTerminate_ *, void *aNotification))
+    void (*_I_NSApplicationDelegate_applicationWillTerminate_)(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationWillTerminate_ *, void *aNotification),
+    int8_t (*_I_NSApplicationDelegate_applicationShouldTerminateAfterLastWindowClosed_)(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationShouldTerminateAfterLastWindowClosed_ *, struct NSApplication *sender))
 
 {
     Class class_NSApplicationDelegate_CXX;
@@ -209,6 +210,13 @@ struct NSApplicationDelegate_Class *NSApplicationDelegate_allocClass(
         reinterpret_cast<IMP>(_I_NSApplicationDelegate_applicationWillTerminate_),
         "v@:@");
     assert(result2 != NO);
+
+   BOOL result3 = class_addMethod(
+        class_NSApplicationDelegate_CXX,
+        sel_registerName("applicationShouldTerminateAfterLastWindowClosed:"),
+        reinterpret_cast<IMP>(_I_NSApplicationDelegate_applicationShouldTerminateAfterLastWindowClosed_),
+        "v@:@");
+    assert(result3 != NO);
 
     //res = class_addProtocol(
     //      class_MyDelegate,

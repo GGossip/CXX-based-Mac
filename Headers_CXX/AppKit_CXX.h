@@ -5,6 +5,8 @@
 
 #include "NSRuntime_CXX.h"
 
+#include <stdint.h>
+
 typedef CGSize NSSize;
 
 typedef CGRect NSRect;
@@ -87,7 +89,8 @@ void NSViewController_super_setRepresentedObject_(struct NSViewController *self,
 struct NSApplicationDelegate_Class *NSApplicationDelegate_allocClass(
     char const *classname,
     void (*_I_NSApplicationDelegate_applicationDidFinishLaunching_)(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationDidFinishLaunching_ *, void *aNotification),
-    void (*_I_NSApplicationDelegate_applicationWillTerminate_)(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationWillTerminate_ *, void *aNotification));
+    void (*_I_NSApplicationDelegate_applicationWillTerminate_)(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationWillTerminate_ *, void *aNotification),
+    int8_t (*_I_NSApplicationDelegate_applicationShouldTerminateAfterLastWindowClosed_)(struct NSApplicationDelegate *, struct NSApplicationDelegate_applicationShouldTerminateAfterLastWindowClosed_ *, struct NSApplication *sender));
 
 struct NSApplicationDelegate *NSApplicationDelegate_alloc(struct NSApplicationDelegate_Class *);
 
