@@ -59,7 +59,7 @@ static inline T roundUp(const T value, const T2 alignment)
 
 size_t TextureLoader_GetCopyableFootprints(struct TextureLoader_SpecificHeader const *vk_texture_header,
                                            VkDeviceSize optimalBufferCopyOffsetAlignment, VkDeviceSize optimalBufferCopyRowPitchAlignment,
-                                           size_t NumSubresources, struct TextureLoader_MemcpyDest *pDest, VkBufferImageCopy *pRegions)
+                                           uint32_t NumSubresources, struct TextureLoader_MemcpyDest *pDest, VkBufferImageCopy *pRegions)
 {
     // Context::texSubImage2D libANGLE/Context.cpp
     // Texture::setSubImage libANGLE/Texture.cpp
@@ -169,7 +169,7 @@ size_t TextureLoader_GetCopyableFootprints(struct TextureLoader_SpecificHeader c
                     allocationSize = roundUp(outputSlicePitch * outputNumSlices, optimalBufferCopyOffsetAlignment);
                 }
 
-                size_t DstSubresource = TextureLoader_CalcSubresource(mipLevel, arrayLayer, aspectIndex, vk_texture_header->mipLevels, vk_texture_header->arrayLayers);
+                uint32_t DstSubresource = TextureLoader_CalcSubresource(mipLevel, arrayLayer, aspectIndex, vk_texture_header->mipLevels, vk_texture_header->arrayLayers);
                 assert(DstSubresource < NumSubresources);
 
                 pDest[DstSubresource].stagingOffset = stagingOffset;

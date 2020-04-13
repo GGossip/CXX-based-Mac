@@ -5,6 +5,15 @@
 #include <objc/objc.h>
 #include <objc/objc-runtime.h>
 
+bool MTLDevice_supportsFeatureSet(struct MTLDevice *self, MTLFeatureSet featureSet)
+{
+    BOOL supportFeatureSet = reinterpret_cast<BOOL (*)(struct objc_object *, struct objc_selector *, MTLFeatureSet)>(objc_msgSend)(
+        self,
+        sel_registerName("supportsFeatureSet:"),
+        featureSet);
+    return (supportFeatureSet != NO) ? true : false;
+}
+
 struct MTLVertexDescriptor *MTLVertexDescriptor_alloc()
 {
     struct objc_object *vertexdescriptor = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(

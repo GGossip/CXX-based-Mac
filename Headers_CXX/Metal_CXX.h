@@ -6,6 +6,46 @@
 
 extern "C" struct MTLDevice *MTLCreateSystemDefaultDevice(void);
 
+typedef NSUInteger MTLFeatureSet;
+enum
+{
+    MTLFeatureSet_iOS_GPUFamily1_v1 __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 0,
+    MTLFeatureSet_iOS_GPUFamily2_v1 __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 1,
+
+    MTLFeatureSet_iOS_GPUFamily1_v2 __attribute__((availability(ios, introduced = 9.0), availability(macos, unavailable))) = 2,
+    MTLFeatureSet_iOS_GPUFamily2_v2 __attribute__((availability(ios, introduced = 9.0), availability(macos, unavailable))) = 3,
+    MTLFeatureSet_iOS_GPUFamily3_v1 __attribute__((availability(ios, introduced = 9.0), availability(macos, unavailable))) = 4,
+
+    MTLFeatureSet_iOS_GPUFamily1_v3 __attribute__((availability(ios, introduced = 10.0), availability(macos, unavailable))) = 5,
+    MTLFeatureSet_iOS_GPUFamily2_v3 __attribute__((availability(ios, introduced = 10.0), availability(macos, unavailable))) = 6,
+    MTLFeatureSet_iOS_GPUFamily3_v2 __attribute__((availability(ios, introduced = 10.0), availability(macos, unavailable))) = 7,
+
+    MTLFeatureSet_iOS_GPUFamily1_v4 __attribute__((availability(ios, introduced = 11.0), availability(macos, unavailable))) = 8,
+    MTLFeatureSet_iOS_GPUFamily2_v4 __attribute__((availability(ios, introduced = 11.0), availability(macos, unavailable))) = 9,
+    MTLFeatureSet_iOS_GPUFamily3_v3 __attribute__((availability(ios, introduced = 11.0), availability(macos, unavailable))) = 10,
+    MTLFeatureSet_iOS_GPUFamily4_v1 __attribute__((availability(ios, introduced = 11.0), availability(macos, unavailable))) = 11,
+
+    MTLFeatureSet_iOS_GPUFamily1_v5 __attribute__((availability(ios, introduced = 12.0), availability(macos, unavailable))) = 12,
+    MTLFeatureSet_iOS_GPUFamily2_v5 __attribute__((availability(ios, introduced = 12.0), availability(macos, unavailable))) = 13,
+    MTLFeatureSet_iOS_GPUFamily3_v4 __attribute__((availability(ios, introduced = 12.0), availability(macos, unavailable))) = 14,
+    MTLFeatureSet_iOS_GPUFamily4_v2 __attribute__((availability(ios, introduced = 12.0), availability(macos, unavailable))) = 15,
+
+    MTLFeatureSet_macOS_GPUFamily1_v1 __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 10000,
+    MTLFeatureSet_OSX_GPUFamily1_v1 __attribute__((availability(ios, unavailable), availability(macos, deprecated = 10.11))) = MTLFeatureSet_macOS_GPUFamily1_v1,
+
+    MTLFeatureSet_macOS_GPUFamily1_v2 __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.12))) = 10001,
+    MTLFeatureSet_OSX_GPUFamily1_v2 __attribute__((availability(ios, unavailable), availability(macos, deprecated = 10.12))) = MTLFeatureSet_macOS_GPUFamily1_v2,
+    MTLFeatureSet_macOS_ReadWriteTextureTier2 __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.12))) = 10002,
+    MTLFeatureSet_OSX_ReadWriteTextureTier2 __attribute__((availability(ios, unavailable), availability(macos, deprecated = 10.12))) = MTLFeatureSet_macOS_ReadWriteTextureTier2,
+
+    MTLFeatureSet_macOS_GPUFamily1_v3 __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.13))) = 10003,
+
+    MTLFeatureSet_macOS_GPUFamily1_v4 __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.14))) = 10004,
+    MTLFeatureSet_macOS_GPUFamily2_v1 __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.14))) = 10005,
+};
+
+bool MTLDevice_supportsFeatureSet(struct MTLDevice *self, MTLFeatureSet featureSet);
+
 typedef NSUInteger MTLPixelFormat;
 enum
 {

@@ -1,5 +1,10 @@
 #include "TextureLoader_MTL.h"
 
+//#include <TargetConditionals.h>
+#if !__has_builtin(__is_target_os)
+#define __is_target_os(x) 1
+#endif
+
 uint32_t TextureLoader_CalcSubresource(uint32_t mipLevel, uint32_t arrayLayer, uint32_t aspectIndex, uint32_t mipLevels, uint32_t arrayLayers)
 {
     return mipLevel + arrayLayer * mipLevels + aspectIndex * mipLevels * arrayLayers;
@@ -23,6 +28,25 @@ struct TextureLoader_SpecificHeader TextureLoader_ToSpecificHeader(struct Textur
     specific_texture_header.arrayLength = (!neutral_texture_header->isCubeMap) ? neutral_texture_header->arrayLayers : (neutral_texture_header->arrayLayers / 6);
 
     return specific_texture_header;
+}
+
+size_t TextureLoader_GetCopyableFootprints(struct TextureLoader_SpecificHeader const *mtl_texture_header,
+                                           NSInteger optimalBufferCopyOffsetAlignment, NSInteger optimalBufferCopyRowPitchAlignment,
+                                           uint32_t NumSubresources, struct TextureLoader_MemcpyDest *pDest, TextureLoader_MTLBufferImageCopy *pRegions)
+{
+//MoltenVK/MoltenVK/GPUObjects/MVKDevice.mm
+#if __is_target_os(ios)
+    //MTLDevice_supportsFeatureSet(_mtlDevice, MTLFeatureSet_iOS_GPUFamily3_v1)
+    //NSUInteger optimalBufferCopyOffsetAlignment) = 16;
+    //NSUInteger optimalBufferCopyRowPitchAlignment) = 1;
+    NSUInteger optimalBufferCopyOffsetAlignment = 64;
+    NSUInteger optimalBufferCopyRowPitchAlignment = 1;
+#elif __is_target_os(macos)
+    NSUInteger optimalBufferCopyOffsetAlignment = 256;
+    NSUInteger optimalBufferCopyRowPitchAlignment = 1;
+#else
+#error Unknown Target
+#endif
 }
 
 //--------------------------------------------------------------------------------------
@@ -98,7 +122,6 @@ static inline MTLTextureType _GetMetalType(bool isCubeCompatible, uint32_t neutr
 }
 
 //--------------------------------------------------------------------------------------
-//#include <TargetConditionals.h>
 #if __is_target_os(ios)
 static MTLPixelFormat gNeutralToMetalFormatMap[] = {
     MTLPixelFormatInvalid,               //TEXTURE_LOADER_FORMAT_R4G4_UNORM_PACK8
