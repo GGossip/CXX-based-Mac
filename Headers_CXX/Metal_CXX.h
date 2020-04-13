@@ -421,6 +421,57 @@ static inline void MTLBuffer_setLabel(struct MTLBuffer *self, char const *label)
     NSString_release(string);
 }
 
+typedef NSUInteger MTLTextureType;
+enum
+{
+    MTLTextureType1D __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 0,
+    MTLTextureType1DArray __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 1,
+    MTLTextureType2D __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 2,
+    MTLTextureType2DArray __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 3,
+    MTLTextureType2DMultisample __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 4,
+    MTLTextureTypeCube __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 5,
+    MTLTextureTypeCubeArray __attribute__((availability(ios, introduced = 11.0), availability(macos, introduced = 10.11))) = 6,
+    MTLTextureType3D __attribute__((availability(ios, introduced = 8.0), availability(macos, introduced = 10.11))) = 7,
+    MTLTextureType2DMultisampleArray __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.14))) = 8,
+    MTLTextureTypeTextureBuffer __attribute__((availability(ios, introduced = 12.0), availability(macos, introduced = 10.14))) = 9,
+};
+
+typedef NSUInteger MTLTextureUsage;
+enum
+{
+    MTLTextureUsageUnknown __attribute__((availability(ios, introduced = 9.0), availability(macos, introduced = 10.11))) = 0x0000,
+    MTLTextureUsageShaderRead __attribute__((availability(ios, introduced = 9.0), availability(macos, introduced = 10.11))) = 0x0001,
+    MTLTextureUsageShaderWrite __attribute__((availability(ios, introduced = 9.0), availability(macos, introduced = 10.11))) = 0x0002,
+    MTLTextureUsageRenderTarget __attribute__((availability(ios, introduced = 9.0), availability(macos, introduced = 10.11))) = 0x0004,
+    MTLTextureUsagePixelFormatView __attribute__((availability(ios, introduced = 9.0), availability(macos, introduced = 10.11))) = 0x0010,
+};
+
+struct MTLTextureDescriptor *MTLTextureDescriptor_alloc();
+struct MTLTextureDescriptor *MTLTextureDescriptor_init(struct MTLTextureDescriptor *self);
+void MTLTextureDescriptor_setTextureType(struct MTLTextureDescriptor *self, MTLTextureType textureType);
+void MTLTextureDescriptor_setPixelFormat(struct MTLTextureDescriptor *self, MTLPixelFormat pixelFormat);
+void MTLTextureDescriptor_setWidth(struct MTLTextureDescriptor *self, NSUInteger width);
+void MTLTextureDescriptor_setHeight(struct MTLTextureDescriptor *self, NSUInteger height);
+void MTLTextureDescriptor_setDepth(struct MTLTextureDescriptor *self, NSUInteger depth);
+void MTLTextureDescriptor_setMipmapLevelCount(struct MTLTextureDescriptor *self, NSUInteger mipmapLevelCount);
+void MTLTextureDescriptor_setSampleCount(struct MTLTextureDescriptor *self, NSUInteger sampleCount);
+void MTLTextureDescriptor_setArrayLength(struct MTLTextureDescriptor *self, NSUInteger arrayLength);
+void MTLTextureDescriptor_setResourceOptions(struct MTLTextureDescriptor *self, MTLResourceOptions resourceOptions);
+void MTLTextureDescriptor_setUsage(struct MTLTextureDescriptor *self, MTLTextureUsage usage);
+void MTLTextureDescriptor_release(struct MTLTextureDescriptor *self);
+NSUInteger MTLTextureDescriptor_retainCount(struct MTLTextureDescriptor *self);
+
+struct MTLTexture *MTLDevice_newTextureWithDescriptor(struct MTLDevice *self, struct MTLTextureDescriptor *descriptor);
+void MTLTexture_setLabel(struct MTLTexture *self, struct NSString *label);
+void MTLTexture_release(struct MTLTexture *self);
+NSUInteger MTLTexture_retainCount(struct MTLTexture *self);
+static inline void MTLTexture_setLabel(struct MTLTexture *self, char const *label)
+{
+    struct NSString *string = NSString_initWithUTF8String(NSString_alloc(), label);
+    MTLTexture_setLabel(self, string);
+    NSString_release(string);
+}
+
 struct MTLCommandQueue *MTLDevice_newCommandQueue(struct MTLDevice *self);
 
 struct MTLCommandBuffer *MTLCommandQueue_commandBuffer(struct MTLCommandQueue *self);
@@ -507,6 +558,39 @@ static inline void MTLParallelRenderCommandEncoder_pushDebugGroup(struct MTLPara
 {
     struct NSString *string = NSString_initWithUTF8String(NSString_alloc(), label);
     MTLParallelRenderCommandEncoder_pushDebugGroup(self, string);
+    NSString_release(string);
+}
+
+typedef struct
+{
+    NSUInteger x;
+    NSUInteger y;
+    NSUInteger z;
+} MTLOrigin;
+
+typedef struct
+{
+    NSUInteger width;
+    NSUInteger height;
+    NSUInteger depth;
+} MTLSize;
+
+struct MTLBlitCommandEncoder *MTLCommandBuffer_blitCommandEncoder(struct MTLCommandBuffer *self);
+void MTLBlitCommandEncoder_setLabel(struct MTLBlitCommandEncoder *self, struct NSString *label);
+void MTLBlitCommandEncoder_pushDebugGroup(struct MTLBlitCommandEncoder *self, struct NSString *string);
+void MTLBlitCommandEncoder_popDebugGroup(struct MTLBlitCommandEncoder *self);
+void MTLBlitCommandEncoder_copyFromBuffer(struct MTLBlitCommandEncoder *self, struct MTLBuffer *sourceBuffer, NSUInteger sourceOffset, NSUInteger sourceBytesPerRow, NSUInteger sourceBytesPerImage, MTLSize sourceSize, struct MTLTexture *destinationTexture, NSUInteger destinationSlice, NSUInteger destinationLevel, MTLOrigin destinationOrigin);
+void MTLBlitCommandEncoder_endEncoding(struct MTLBlitCommandEncoder *self);
+static inline void MTLBlitCommandEncoder_setLabel(struct MTLBlitCommandEncoder *self, char const *label)
+{
+    struct NSString *string = NSString_initWithUTF8String(NSString_alloc(), label);
+    MTLBlitCommandEncoder_setLabel(self, string);
+    NSString_release(string);
+}
+static inline void MTLBlitCommandEncoder_pushDebugGroup(struct MTLBlitCommandEncoder *self, char const *label)
+{
+    struct NSString *string = NSString_initWithUTF8String(NSString_alloc(), label);
+    MTLBlitCommandEncoder_pushDebugGroup(self, string);
     NSString_release(string);
 }
 

@@ -3,6 +3,7 @@
 
 #include "Renderer.h"
 #include "ShaderTypes.h"
+#include "TextureLoader.h"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -13,6 +14,8 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <fcntl.h>
+
+#include <string>
 
 static const size_t kAlignedUniformsSize = (sizeof(Uniforms) & ~0xFF) + 0x100;
 
@@ -90,10 +93,12 @@ void demo::_init2()
     MTLVertexAttributeDescriptor_setBufferIndex(MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_attributes(vertexdescriptor), VertexAttributeTexcoord), BufferIndexMeshGenerics);
 
     int fd_LibraryCaches;
+    std::string filename_LibraryCaches;
     {
         char const *filenameautorelease = NSURL_fileSystemRepresentation(NSArrayNSURL_objectAtIndexedSubscript(NSFileManager_URLsForDirectory(NSFileManager_defaultManager(), NSCachesDirectory, NSUserDomainMask), 0));
         //struct stat stbuf;
         //assert(stat(filenameautorelease, &stbuf) == 0 && S_ISDIR(stbuf.st_mode));
+        filename_LibraryCaches = filenameautorelease;
 
         fd_LibraryCaches = open(filenameautorelease, O_RDONLY, O_DIRECTORY);
         assert(fd_LibraryCaches != -1);
@@ -274,6 +279,12 @@ void demo::_init2()
     memcpy(MTLBuffer_contents(_meshvertexBuffer_Addition), g_uv_buffer_data, sizeof(g_uv_buffer_data));
 
     //Load Texture
+    std::string tex_filename = filename_LibraryCaches + "/Assets/Lenna/l_hires-DirectXTex.dds";
+    struct TextureLoader_NeutralHeader header;
+    size_t header_offset = 0;
+    TextureLoader_LoadHeaderFromFile(tex_filename.c_str(), &header, &header_offset);
+
+    struct MTLTextureDescriptor *textureDesc = MTLTextureDescriptor_init(MTLTextureDescriptor_alloc());
 
     //multi-thread
     _workerTheadArg[0]._exit = false;
@@ -318,7 +329,7 @@ void *demo::_workThreadMain(void *arg)
 
         static_cast<struct WorkerTheadArg *>(arg)->_eventsignal.Set();
     }
-    
+
     return NULL;
 }
 

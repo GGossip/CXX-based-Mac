@@ -316,6 +316,136 @@ NSUInteger MTLBuffer_retainCount(struct MTLBuffer *self)
     return NSObject_retainCount(self);
 }
 
+struct MTLTextureDescriptor *MTLTextureDescriptor_alloc()
+{
+    struct objc_object *texturedescriptor = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
+        objc_getClass("MTLTextureDescriptor"),
+        sel_registerName("alloc"));
+    return static_cast<struct MTLTextureDescriptor *>(texturedescriptor);
+}
+
+struct MTLTextureDescriptor *MTLTextureDescriptor_init(struct MTLTextureDescriptor *self)
+{
+    struct objc_object *texturedescriptor = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
+        objc_getClass("MTLTextureDescriptor"),
+        sel_registerName("alloc"));
+    return static_cast<struct MTLTextureDescriptor *>(texturedescriptor);
+}
+
+void MTLTextureDescriptor_setTextureType(struct MTLTextureDescriptor *self, MTLTextureType textureType)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, MTLTextureType)>(objc_msgSend)(
+        self,
+        sel_registerName("setTextureType:"),
+        textureType);
+}
+
+void MTLTextureDescriptor_setPixelFormat(struct MTLTextureDescriptor *self, MTLPixelFormat pixelFormat)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, MTLPixelFormat)>(objc_msgSend)(
+        self,
+        sel_registerName("setPixelFormat:"),
+        pixelFormat);
+}
+
+void MTLTextureDescriptor_setWidth(struct MTLTextureDescriptor *self, NSUInteger width)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, NSUInteger)>(objc_msgSend)(
+        self,
+        sel_registerName("setWidth:"),
+        width);
+}
+
+void MTLTextureDescriptor_setHeight(struct MTLTextureDescriptor *self, NSUInteger height)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, NSUInteger)>(objc_msgSend)(
+        self,
+        sel_registerName("setHeight:"),
+        height);
+}
+
+void MTLTextureDescriptor_setDepth(struct MTLTextureDescriptor *self, NSUInteger depth)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, NSUInteger)>(objc_msgSend)(
+        self,
+        sel_registerName("setDepth:"),
+        depth);
+}
+
+void MTLTextureDescriptor_setMipmapLevelCount(struct MTLTextureDescriptor *self, NSUInteger mipmapLevelCount)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, NSUInteger)>(objc_msgSend)(
+        self,
+        sel_registerName("setMipmapLevelCount:"),
+        mipmapLevelCount);
+}
+
+void MTLTextureDescriptor_setSampleCount(struct MTLTextureDescriptor *self, NSUInteger sampleCount)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, NSUInteger)>(objc_msgSend)(
+        self,
+        sel_registerName("setSampleCount:"),
+        sampleCount);
+}
+
+void MTLTextureDescriptor_setArrayLength(struct MTLTextureDescriptor *self, NSUInteger arrayLength)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, NSUInteger)>(objc_msgSend)(
+        self,
+        sel_registerName("setArrayLength:"),
+        arrayLength);
+}
+
+void MTLTextureDescriptor_setResourceOptions(struct MTLTextureDescriptor *self, MTLResourceOptions resourceOptions)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, MTLResourceOptions)>(objc_msgSend)(
+        self,
+        sel_registerName("setResourceOptions:"),
+        resourceOptions);
+}
+
+void MTLTextureDescriptor_setUsage(struct MTLTextureDescriptor *self, MTLTextureUsage usage)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, MTLTextureUsage)>(objc_msgSend)(
+        self,
+        sel_registerName("setUsage:"),
+        usage);
+}
+
+void MTLTextureDescriptor_release(struct MTLTextureDescriptor *self)
+{
+    return NSObject_release(self);
+}
+
+NSUInteger MTLTextureDescriptor_retainCount(struct MTLTextureDescriptor *self)
+{
+    return NSObject_retainCount(self);
+}
+
+struct MTLTexture *MTLDevice_newTextureWithDescriptor(struct MTLDevice *self, struct MTLTextureDescriptor *descriptor)
+{
+    struct objc_object *texture = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *, struct objc_object *)>(objc_msgSend)(
+        self,
+        sel_registerName("newTextureWithDescriptor:"),
+        descriptor);
+    return static_cast<struct MTLTexture *>(texture);
+}
+
+void MTLTexture_setLabel(struct MTLTexture *self, struct NSString *label)
+{
+    return MTLResource_setLabel(self, label);
+}
+
+void MTLTexture_release(struct MTLTexture *self)
+{
+    return NSObject_release(self);
+}
+
+NSUInteger MTLTexture_retainCount(struct MTLTexture *self)
+{
+    return NSObject_retainCount(self);
+}
+
 struct MTLCommandQueue *MTLDevice_newCommandQueue(struct MTLDevice *self)
 {
     struct objc_object *commandQueue = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(

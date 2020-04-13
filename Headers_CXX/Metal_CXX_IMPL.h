@@ -73,6 +73,16 @@ struct MTLBuffer : public MTLResource
     MTLBuffer() = delete;
 };
 
+struct MTLTextureDescriptor : public NSObject
+{
+    MTLTextureDescriptor() = delete;
+};
+
+struct MTLTexture : public MTLResource
+{
+    MTLTexture() = delete;
+};
+
 struct MTLCommandQueue : public MTLResource
 {
     MTLCommandQueue() = delete;

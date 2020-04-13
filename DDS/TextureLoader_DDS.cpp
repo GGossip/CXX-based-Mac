@@ -1091,7 +1091,7 @@ static inline bool GetSurfaceInfo(size_t width, size_t height, uint32_t fmt, siz
 //--------------------------------------------------------------------------------------
 // Return the BPP for a particular format
 //--------------------------------------------------------------------------------------
-static inline size_t BitsPerPixel(uint32_t fmt) noexcept
+static inline size_t BitsPerPixel(uint32_t fmt)
 {
     switch (fmt)
     {
