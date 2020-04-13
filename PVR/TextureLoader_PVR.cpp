@@ -1660,9 +1660,9 @@ static inline uint32_t _GetNeutralFormat(uint64_t pixelFormat, uint32_t colorSpa
         break;
         case Pvr_PixelTypeChar_D24:
         {
-            assert(channelType < (sizeof(gPvrD32ToNeutralFormatMap) / sizeof(gPvrD32ToNeutralFormatMap[0])));
-            assert(colorSpace < (sizeof(gPvrD32ToNeutralFormatMap[0]) / sizeof(gPvrD32ToNeutralFormatMap[0][0])));
-            neutralFormat = gPvrD32ToNeutralFormatMap[channelType][colorSpace];
+            assert(channelType < (sizeof(gPvrD24ToNeutralFormatMap) / sizeof(gPvrD24ToNeutralFormatMap[0])));
+            assert(colorSpace < (sizeof(gPvrD24ToNeutralFormatMap[0]) / sizeof(gPvrD24ToNeutralFormatMap[0][0])));
+            neutralFormat = gPvrD24ToNeutralFormatMap[channelType][colorSpace];
         }
         break;
         case Pvr_PixelTypeChar_D32:

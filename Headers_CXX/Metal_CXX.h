@@ -101,24 +101,24 @@ enum
     /* Compressed formats. */
 
     /* S3TC/DXT */
-    MTLPixelFormatBC1_RGBA __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 130,
-    MTLPixelFormatBC1_RGBA_sRGB __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 131,
-    MTLPixelFormatBC2_RGBA __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 132,
-    MTLPixelFormatBC2_RGBA_sRGB __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 133,
-    MTLPixelFormatBC3_RGBA __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 134,
-    MTLPixelFormatBC3_RGBA_sRGB __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 135,
+    MTLPixelFormatBC1_RGBA __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 130,
+    MTLPixelFormatBC1_RGBA_sRGB __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 131,
+    MTLPixelFormatBC2_RGBA __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 132,
+    MTLPixelFormatBC2_RGBA_sRGB __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 133,
+    MTLPixelFormatBC3_RGBA __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 134,
+    MTLPixelFormatBC3_RGBA_sRGB __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 135,
 
     /* RGTC */
-    MTLPixelFormatBC4_RUnorm __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 140,
-    MTLPixelFormatBC4_RSnorm __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 141,
-    MTLPixelFormatBC5_RGUnorm __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 142,
-    MTLPixelFormatBC5_RGSnorm __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 143,
+    MTLPixelFormatBC4_RUnorm __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 140,
+    MTLPixelFormatBC4_RSnorm __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 141,
+    MTLPixelFormatBC5_RGUnorm __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 142,
+    MTLPixelFormatBC5_RGSnorm __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 143,
 
     /* BPTC */
-    MTLPixelFormatBC6H_RGBFloat __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 150,
-    MTLPixelFormatBC6H_RGBUfloat __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 151,
-    MTLPixelFormatBC7_RGBAUnorm __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 152,
-    MTLPixelFormatBC7_RGBAUnorm_sRGB __attribute__((availability(ios, unavailable), availability(macos, introduced = 11.0))) = 153,
+    MTLPixelFormatBC6H_RGBFloat __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 150,
+    MTLPixelFormatBC6H_RGBUfloat __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 151,
+    MTLPixelFormatBC7_RGBAUnorm __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 152,
+    MTLPixelFormatBC7_RGBAUnorm_sRGB __attribute__((availability(ios, unavailable), availability(macos, introduced = 10.11))) = 153,
 
     /* PVRTC */
     MTLPixelFormatPVRTC_RGB_2BPP __attribute__((availability(ios, introduced = 8.0), availability(macos, unavailable))) = 160,

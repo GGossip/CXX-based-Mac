@@ -4,6 +4,7 @@
 #include "Renderer.h"
 #include "ShaderTypes.h"
 #include "TextureLoader.h"
+#include "MTL/TextureLoader_MTL.h"
 
 #include <stddef.h>
 #include <stdint.h>
@@ -284,7 +285,21 @@ void demo::_init2()
     size_t header_offset = 0;
     TextureLoader_LoadHeaderFromFile(tex_filename.c_str(), &header, &header_offset);
 
+    struct TextureLoader_SpecificHeader mtlheader = TextureLoader_ToSpecificHeader(&header);
+
     struct MTLTextureDescriptor *textureDesc = MTLTextureDescriptor_init(MTLTextureDescriptor_alloc());
+    MTLTextureDescriptor_setTextureType(textureDesc, mtlheader.textureType);
+    MTLTextureDescriptor_setPixelFormat(textureDesc, mtlheader.pixelFormat);
+    MTLTextureDescriptor_setWidth(textureDesc, mtlheader.width);
+    MTLTextureDescriptor_setHeight(textureDesc, mtlheader.height);
+    MTLTextureDescriptor_setDepth(textureDesc, mtlheader.depth);
+    MTLTextureDescriptor_setMipmapLevelCount(textureDesc, mtlheader.mipmapLevelCount);
+    MTLTextureDescriptor_setArrayLength(textureDesc, mtlheader.arrayLength);
+    MTLTextureDescriptor_setSampleCount(textureDesc, 1);
+    MTLTextureDescriptor_setResourceOptions(textureDesc, MTLResourceStorageModePrivate);
+
+    _colorMap = MTLDevice_newTextureWithDescriptor(_device, textureDesc);
+    MTLTextureDescriptor_release(textureDesc);
 
     //multi-thread
     _workerTheadArg[0]._exit = false;

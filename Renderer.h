@@ -33,6 +33,7 @@ struct demo
     float _rotation;
     struct MTLBuffer *_meshvertexBuffer;
     struct MTLBuffer *_meshvertexBuffer_Addition;
+    struct MTLTexture *_colorMap;
 
     struct WorkerTheadArg
     {

@@ -7,7 +7,6 @@
 
 struct TextureLoader_SpecificHeader
 {
-    bool isCubeCompatible;
     MTLTextureType textureType;
     MTLPixelFormat pixelFormat;
     NSUInteger width;
