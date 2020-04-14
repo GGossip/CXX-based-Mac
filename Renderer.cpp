@@ -172,7 +172,7 @@ void demo::_init2()
     }
 
     NSUInteger uniformBufferSize = kAlignedUniformsSize * kMaxBuffersInFlight;
-    _dynamicUniformBuffer = MTLDevice_newBufferWithLength(_device, uniformBufferSize, MTLResourceStorageModeShared);
+    _dynamicUniformBuffer = MTLDevice_newBufferWithLength(_device, uniformBufferSize, MTLResourceCPUCacheModeWriteCombined | MTLResourceStorageModeShared);
     MTLBuffer_setLabel(_dynamicUniformBuffer, "UniformBuffer");
 
     float aspect = _width / _height;
@@ -280,7 +280,12 @@ void demo::_init2()
     memcpy(MTLBuffer_contents(_meshvertexBuffer_Addition), g_uv_buffer_data, sizeof(g_uv_buffer_data));
 
     //Load Texture
-    std::string tex_filename = filename_LibraryCaches + "/Assets/Lenna/l_hires-DirectXTex.dds";
+    _stagingBuffer = MTLDevice_newBufferWithLength(_device, 1024 * 1024 * 70, MTLResourceStorageModeShared);
+    MTLBuffer_setLabel(_stagingBuffer, "StagingBuffer");
+
+    std::string tex_filename;
+    tex_filename = NSURL_fileSystemRepresentation(NSArrayNSURL_objectAtIndexedSubscript(NSFileManager_URLsForDirectory(NSFileManager_defaultManager(), NSCachesDirectory, NSUserDomainMask), 0));
+    tex_filename += "/Assets/Lenna/l_hires-RGBA.pvr";
     struct TextureLoader_NeutralHeader header;
     size_t header_offset = 0;
     TextureLoader_LoadHeaderFromFile(tex_filename.c_str(), &header, &header_offset);
@@ -297,9 +302,37 @@ void demo::_init2()
     MTLTextureDescriptor_setArrayLength(textureDesc, mtlheader.arrayLength);
     MTLTextureDescriptor_setSampleCount(textureDesc, 1);
     MTLTextureDescriptor_setResourceOptions(textureDesc, MTLResourceStorageModePrivate);
+    MTLTextureDescriptor_setUsage(textureDesc, MTLTextureUsageShaderRead);
 
     _colorMap = MTLDevice_newTextureWithDescriptor(_device, textureDesc);
     MTLTextureDescriptor_release(textureDesc);
+
+    uint32_t NumSubresource = TextureLoader_GetFormatAspectCount(mtlheader.pixelFormat) * ((mtlheader.textureType != MTLTextureTypeCube && mtlheader.textureType != MTLTextureTypeCubeArray) ? (mtlheader.arrayLength) : (6 * mtlheader.arrayLength)) * mtlheader.mipmapLevelCount;
+
+    struct TextureLoader_MemcpyDest dest[15];
+    struct TextureLoader_MTLCopyFromBuffer regions[15];
+    size_t TotalSize = TextureLoader_GetCopyableFootprints(&mtlheader, NumSubresource, dest, regions);
+
+    assert(TotalSize < (1024 * 1024 * 70));
+    TextureLoader_FillDataFromFile(tex_filename.c_str(), static_cast<uint8_t *>(MTLBuffer_contents(_stagingBuffer)), NumSubresource, dest, &header, &header_offset);
+
+    struct MTLCommandBuffer *commandPool = MTLCommandQueue_commandBuffer(_commandQueue);
+    MTLCommandBuffer_setLabel(commandPool, "TextureLoader");
+
+    struct MTLBlitCommandEncoder *commandBuffer = MTLCommandBuffer_blitCommandEncoder(commandPool);
+    MTLBlitCommandEncoder_setLabel(commandBuffer, "TextureLoader");
+    for (uint32_t i = 0; i < NumSubresource; ++i)
+    {
+        MTLBlitCommandEncoder_copyFromBuffer(commandBuffer, _stagingBuffer, regions[i].sourceOffset, regions[i].sourceBytesPerRow, regions[i].sourceBytesPerImage, regions[i].sourceSize, _colorMap, regions[i].destinationSlice, regions[i].destinationLevel, regions[i].destinationOrigin);
+    }
+    MTLBlitCommandEncoder_endEncoding(commandBuffer);
+
+    _event_colorMap.CreateManualEventNoThrow(false);
+
+    MTLCommandBuffer_addCompletedHandler(commandPool, &_event_colorMap, 0, [](void *pUserData, NSUInteger throttlingIndex, struct MTLCommandBuffer *) -> void {
+        static_cast<GCEvent *>(pUserData)->Set();
+    });
+    MTLCommandBuffer_commit(commandPool);
 
     //multi-thread
     _workerTheadArg[0]._exit = false;
@@ -331,7 +364,7 @@ void *demo::_workThreadMain(void *arg)
 
         MTLRenderCommandEncoder_setVertexBuffer(renderEncoder, static_cast<struct WorkerTheadArg *>(arg)->_self->_dynamicUniformBuffer, uniformBufferOffset, BufferIndexUniforms);
         MTLRenderCommandEncoder_setFragmentBuffer(renderEncoder, static_cast<struct WorkerTheadArg *>(arg)->_self->_dynamicUniformBuffer, uniformBufferOffset, BufferIndexUniforms);
-
+        MTLRenderCommandEncoder_setFragmentTexture(renderEncoder, static_cast<struct WorkerTheadArg *>(arg)->_self->_colorMap, TextureIndexColor);
         MTLRenderCommandEncoder_setVertexBuffer(renderEncoder, static_cast<struct WorkerTheadArg *>(arg)->_self->_meshvertexBuffer, 0, BufferIndexMeshPositions);
         MTLRenderCommandEncoder_setVertexBuffer(renderEncoder, static_cast<struct WorkerTheadArg *>(arg)->_self->_meshvertexBuffer_Addition, 0, BufferIndexMeshGenerics);
 
@@ -384,6 +417,12 @@ void demo::_draw(struct MTKView *view)
     struct MTLRenderPassDescriptor *renderPassDescriptor = MTKView_currentRenderPassDescriptor(view);
     if (NULL != renderPassDescriptor)
     {
+        if (!_init_colorMap)
+        {
+            _init_colorMap = true;
+            _event_colorMap.Wait(INFINITE, false);
+        }
+
         /// Final pass rendering code here
 
         struct MTLParallelRenderCommandEncoder *primarycmd = MTLCommandBuffer_parallelRenderCommandEncoderWithDescriptor(commandPool, renderPassDescriptor);

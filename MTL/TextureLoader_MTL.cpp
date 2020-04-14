@@ -30,23 +30,164 @@ struct TextureLoader_SpecificHeader TextureLoader_ToSpecificHeader(struct Textur
     return specific_texture_header;
 }
 
-size_t TextureLoader_GetCopyableFootprints(struct TextureLoader_SpecificHeader const *mtl_texture_header,
-                                           NSInteger optimalBufferCopyOffsetAlignment, NSInteger optimalBufferCopyRowPitchAlignment,
-                                           uint32_t NumSubresources, struct TextureLoader_MemcpyDest *pDest, TextureLoader_MTLBufferImageCopy *pRegions)
+static inline uint32_t _GetFormatAspectCount(MTLPixelFormat mtlformat);
+
+uint32_t TextureLoader_GetFormatAspectCount(MTLPixelFormat mtlformat)
 {
-//MoltenVK/MoltenVK/GPUObjects/MVKDevice.mm
+    return _GetFormatAspectCount(mtlformat);
+}
+
+static inline bool _IsFormatCompressed(MTLPixelFormat mtlformat);
+
+static inline bool _IsFormatRGBA(MTLPixelFormat mtlformat);
+
+static inline bool _IsFormatDepthStencil(MTLPixelFormat mtlformat);
+
+static inline uint32_t _GetCompressedFormatBlockWidth(MTLPixelFormat mtlformat);
+
+static inline uint32_t _GetCompressedFormatBlockHeight(MTLPixelFormat mtlformat);
+
+static inline uint32_t _GetCompressedFormatBlockDepth(MTLPixelFormat mtlformat);
+
+static inline uint32_t _GetCompressedFormatBlockSizeInBytes(MTLPixelFormat mtlformat);
+
+static inline uint32_t _GetRGBAFormatPixelBytes(MTLPixelFormat mtlformat);
+
+static inline uint32_t _GetDepthStencilFormatPixelBytes(MTLPixelFormat mtlformat, uint32_t aspectIndex);
+
+template <typename T, typename T2>
+static inline T roundUp(const T value, const T2 alignment)
+{
+    auto temp = value + alignment - static_cast<T>(1);
+    return temp - temp % alignment;
+}
+
+size_t TextureLoader_GetCopyableFootprints(struct TextureLoader_SpecificHeader const *mtl_texture_header,
+                                           uint32_t NumSubresources, struct TextureLoader_MemcpyDest *pDest, TextureLoader_MTLCopyFromBuffer *pRegions)
+{
+    // MoltenVK/GPUObjects/MVKDevice.mm
 #if __is_target_os(ios)
-    //MTLDevice_supportsFeatureSet(_mtlDevice, MTLFeatureSet_iOS_GPUFamily3_v1)
-    //NSUInteger optimalBufferCopyOffsetAlignment) = 16;
-    //NSUInteger optimalBufferCopyRowPitchAlignment) = 1;
     NSUInteger optimalBufferCopyOffsetAlignment = 64;
     NSUInteger optimalBufferCopyRowPitchAlignment = 1;
+    // MTLDevice_supportsFeatureSet(_mtlDevice, MTLFeatureSet_iOS_GPUFamily3_v1)
+    // NSUInteger optimalBufferCopyOffsetAlignment) = 16;
+    // NSUInteger optimalBufferCopyRowPitchAlignment) = 1;
 #elif __is_target_os(macos)
     NSUInteger optimalBufferCopyOffsetAlignment = 256;
     NSUInteger optimalBufferCopyRowPitchAlignment = 1;
 #else
 #error Unknown Target
 #endif
+
+    // MVKCmdBufferImageCopy::encode // MoltenVK/Commands/MVKCmdTransfer.mm
+    // TextureMtl::setSubImageImpl  // src/libANGLE/renderer/metal/TextureMtl.mm
+
+    uint32_t aspectCount = _GetFormatAspectCount(mtl_texture_header->pixelFormat);
+
+    uint32_t arrayLayers = ((mtl_texture_header->textureType != MTLTextureTypeCube && mtl_texture_header->textureType != MTLTextureTypeCubeArray) ? (mtl_texture_header->arrayLength) : (6 * mtl_texture_header->arrayLength));
+
+    size_t stagingOffset = 0;
+    size_t TotalBytes = 0;
+
+    for (uint32_t aspectIndex = 0; aspectIndex < aspectCount; ++aspectIndex)
+    {
+        for (uint32_t arrayLayer = 0; arrayLayer < arrayLayers; ++arrayLayer)
+        {
+            size_t w = mtl_texture_header->width;
+            size_t h = mtl_texture_header->height;
+            size_t d = mtl_texture_header->depth;
+            for (uint32_t mipLevel = 0; mipLevel < mtl_texture_header->mipmapLevelCount; ++mipLevel)
+            {
+                size_t outputRowPitch;
+                size_t outputRowSize;
+                size_t outputNumRows;
+                size_t outputSlicePitch;
+                size_t outputNumSlices;
+
+                size_t allocationSize;
+                if (_IsFormatCompressed(mtl_texture_header->pixelFormat))
+                {
+                    assert(1 == _GetCompressedFormatBlockDepth(mtl_texture_header->pixelFormat));
+
+                    outputRowSize = ((w + _GetCompressedFormatBlockWidth(mtl_texture_header->pixelFormat) - 1) / _GetCompressedFormatBlockWidth(mtl_texture_header->pixelFormat)) * _GetCompressedFormatBlockSizeInBytes(mtl_texture_header->pixelFormat);
+                    outputNumRows = (h + _GetCompressedFormatBlockHeight(mtl_texture_header->pixelFormat) - 1) / _GetCompressedFormatBlockHeight(mtl_texture_header->pixelFormat);
+                    outputNumSlices = d;
+
+                    outputRowPitch = roundUp(outputRowSize, optimalBufferCopyRowPitchAlignment);
+                    outputSlicePitch = outputRowPitch * outputNumRows;
+
+                    allocationSize = roundUp(outputSlicePitch * outputNumSlices, optimalBufferCopyOffsetAlignment);
+                }
+                else if (_IsFormatRGBA(mtl_texture_header->pixelFormat))
+                {
+
+                    outputRowSize = _GetRGBAFormatPixelBytes(mtl_texture_header->pixelFormat) * w;
+                    outputNumRows = h;
+                    outputNumSlices = d;
+
+                    outputRowPitch = roundUp(outputRowSize, optimalBufferCopyRowPitchAlignment);
+                    outputSlicePitch = outputRowPitch * outputNumRows;
+
+                    allocationSize = roundUp(outputSlicePitch * outputNumSlices, optimalBufferCopyOffsetAlignment);
+                }
+                else
+                {
+                    assert(_IsFormatDepthStencil(mtl_texture_header->pixelFormat));
+                    outputRowSize = _GetDepthStencilFormatPixelBytes(mtl_texture_header->pixelFormat, aspectIndex) * w;
+                    outputNumRows = h;
+                    outputNumSlices = d;
+
+                    outputRowPitch = roundUp(outputRowSize, optimalBufferCopyRowPitchAlignment);
+                    outputSlicePitch = outputRowPitch * outputNumRows;
+
+                    allocationSize = roundUp(outputSlicePitch * outputNumSlices, optimalBufferCopyOffsetAlignment);
+                }
+
+                uint32_t DstSubresource = TextureLoader_CalcSubresource(mipLevel, arrayLayer, aspectIndex, mtl_texture_header->mipmapLevelCount, arrayLayers);
+                assert(DstSubresource < NumSubresources);
+
+                pDest[DstSubresource].stagingOffset = stagingOffset;
+                pDest[DstSubresource].outputRowPitch = outputRowPitch;
+                pDest[DstSubresource].outputRowSize = outputRowSize;
+                pDest[DstSubresource].outputNumRows = outputNumRows;
+                pDest[DstSubresource].outputSlicePitch = outputSlicePitch;
+                pDest[DstSubresource].outputNumSlices = outputNumSlices;
+
+                pRegions[DstSubresource].sourceOffset = stagingOffset;
+                pRegions[DstSubresource].sourceBytesPerRow = outputRowPitch;
+                pRegions[DstSubresource].sourceBytesPerImage = outputSlicePitch;
+                pRegions[DstSubresource].sourceSize.width = w;
+                pRegions[DstSubresource].sourceSize.height = h;
+                pRegions[DstSubresource].sourceSize.depth = d;
+                pRegions[DstSubresource].destinationSlice = arrayLayer;
+                pRegions[DstSubresource].destinationLevel = mipLevel;
+                pRegions[DstSubresource].destinationOrigin.x = 0;
+                pRegions[DstSubresource].destinationOrigin.y = 0;
+                pRegions[DstSubresource].destinationOrigin.z = 0;
+
+                stagingOffset += allocationSize;
+                TotalBytes += allocationSize;
+
+                w = w >> 1;
+                h = h >> 1;
+                d = d >> 1;
+                if (w == 0)
+                {
+                    w = 1;
+                }
+                if (h == 0)
+                {
+                    h = 1;
+                }
+                if (d == 0)
+                {
+                    d = 1;
+                }
+            }
+        }
+    }
+    
+    return TotalBytes;
 }
 
 //--------------------------------------------------------------------------------------
@@ -504,4 +645,402 @@ static inline MTLPixelFormat _GetMetalFormat(uint32_t neutralformat)
 {
     assert(neutralformat < (sizeof(gNeutralToMetalFormatMap) / sizeof(gNeutralToMetalFormatMap[0])));
     return gNeutralToMetalFormatMap[neutralformat];
+}
+
+//--------------------------------------------------------------------------------------
+struct _FormatInfo
+{
+    uint32_t _union_tag;
+
+    union {
+        struct
+        {
+            uint32_t pixelBytes;
+        } rgba;
+        struct
+        {
+            uint32_t depthBytes;
+            uint32_t stencilBytes;
+        } depthstencil;
+        struct
+        {
+            uint32_t compressedBlockWidth;
+            uint32_t compressedBlockHeight;
+            uint32_t compressedBlockDepth;
+            uint32_t compressedBlockSizeInBytes;
+        } compressed;
+    };
+};
+
+static struct _FormatInfo const gMetelFormatInfoTable[] = {
+    {0},                                       //MTLPixelFormatInvalid = 0
+    {1, .rgba = {1}},                          //MTLPixelFormatA8Unorm = 1
+    {0},                                       //MTLPixelFormat_2
+    {0},                                       //MTLPixelFormat_3
+    {0},                                       //MTLPixelFormat_4
+    {0},                                       //MTLPixelFormat_5
+    {0},                                       //MTLPixelFormat_6
+    {0},                                       //MTLPixelFormat_7
+    {0},                                       //MTLPixelFormat_8
+    {0},                                       //MTLPixelFormat_9
+    {1, .rgba = {1}},                          //MTLPixelFormatR8Unorm = 10
+    {1, .rgba = {1}},                          //MTLPixelFormatR8Unorm_sRGB = 11
+    {1, .rgba = {1}},                          //MTLPixelFormatR8Snorm = 12
+    {1, .rgba = {1}},                          //MTLPixelFormatR8Uint = 13
+    {1, .rgba = {1}},                          //MTLPixelFormatR8Sint = 14
+    {0},                                       //MTLPixelFormat_15
+    {0},                                       //MTLPixelFormat_16
+    {0},                                       //MTLPixelFormat_17
+    {0},                                       //MTLPixelFormat_18
+    {0},                                       //MTLPixelFormat_19
+    {1, .rgba = {2}},                          //MTLPixelFormatR16Unorm = 20
+    {0},                                       //MTLPixelFormat_21
+    {1, .rgba = {2}},                          //MTLPixelFormatR16Snorm = 22
+    {1, .rgba = {2}},                          //MTLPixelFormatR16Uint = 23
+    {1, .rgba = {2}},                          //MTLPixelFormatR16Sint = 24
+    {1, .rgba = {2}},                          //MTLPixelFormatR16Float = 25
+    {0},                                       //MTLPixelFormat_26
+    {0},                                       //MTLPixelFormat_27
+    {0},                                       //MTLPixelFormat_28
+    {0},                                       //MTLPixelFormat_29
+    {1, .rgba = {2}},                          //MTLPixelFormatRG8Unorm = 30
+    {1, .rgba = {2}},                          //MTLPixelFormatRG8Unorm_sRGB = 31
+    {1, .rgba = {2}},                          //MTLPixelFormatRG8Snorm = 32
+    {1, .rgba = {2}},                          //MTLPixelFormatRG8Uint = 33
+    {1, .rgba = {2}},                          //MTLPixelFormatRG8Sint = 34
+    {0},                                       //MTLPixelFormat_35
+    {0},                                       //MTLPixelFormat_36
+    {0},                                       //MTLPixelFormat_37
+    {0},                                       //MTLPixelFormat_38
+    {0},                                       //MTLPixelFormat_39
+    {1, .rgba = {2}},                          //MTLPixelFormatB5G6R5Unorm = 40
+    {1, .rgba = {2}},                          //MTLPixelFormatA1BGR5Unorm = 41
+    {1, .rgba = {2}},                          //MTLPixelFormatABGR4Unorm = 42
+    {1, .rgba = {2}},                          //MTLPixelFormatBGR5A1Unorm = 43
+    {0},                                       //MTLPixelFormat_44
+    {0},                                       //MTLPixelFormat_45
+    {0},                                       //MTLPixelFormat_46
+    {0},                                       //MTLPixelFormat_47
+    {0},                                       //MTLPixelFormat_48
+    {0},                                       //MTLPixelFormat_49
+    {0},                                       //MTLPixelFormat_50
+    {0},                                       //MTLPixelFormat_51
+    {0},                                       //MTLPixelFormat_52
+    {1, .rgba = {4}},                          //MTLPixelFormatR32Uint = 53
+    {1, .rgba = {4}},                          //MTLPixelFormatR32Sint = 54
+    {1, .rgba = {4}},                          //MTLPixelFormatR32Float = 55
+    {0},                                       //MTLPixelFormat_56
+    {0},                                       //MTLPixelFormat_57
+    {0},                                       //MTLPixelFormat_58
+    {0},                                       //MTLPixelFormat_59
+    {1, .rgba = {4}},                          //MTLPixelFormatRG16Unorm = 60
+    {0},                                       //MTLPixelFormat_61
+    {1, .rgba = {4}},                          //MTLPixelFormatRG16Snorm = 62
+    {1, .rgba = {4}},                          //MTLPixelFormatRG16Uint = 63
+    {1, .rgba = {4}},                          //MTLPixelFormatRG16Sint = 64
+    {1, .rgba = {4}},                          //MTLPixelFormatRG16Float = 65
+    {0},                                       //MTLPixelFormat_66
+    {0},                                       //MTLPixelFormat_67
+    {0},                                       //MTLPixelFormat_68
+    {0},                                       //MTLPixelFormat_69
+    {1, .rgba = {4}},                          //MTLPixelFormatRGBA8Unorm = 70
+    {1, .rgba = {4}},                          //MTLPixelFormatRGBA8Unorm_sRGB = 71
+    {1, .rgba = {4}},                          //MTLPixelFormatRGBA8Snorm = 72
+    {1, .rgba = {4}},                          //MTLPixelFormatRGBA8Uint = 73
+    {1, .rgba = {4}},                          //MTLPixelFormatRGBA8Sint = 74
+    {0},                                       //MTLPixelFormat_75
+    {0},                                       //MTLPixelFormat_76
+    {0},                                       //MTLPixelFormat_77
+    {0},                                       //MTLPixelFormat_78
+    {0},                                       //MTLPixelFormat_79
+    {1, .rgba = {4}},                          //MTLPixelFormatBGRA8Unorm = 80
+    {1, .rgba = {4}},                          //MTLPixelFormatBGRA8Unorm_sRGB = 81
+    {0},                                       //MTLPixelFormat_82
+    {0},                                       //MTLPixelFormat_83
+    {0},                                       //MTLPixelFormat_84
+    {0},                                       //MTLPixelFormat_85
+    {0},                                       //MTLPixelFormat_86
+    {0},                                       //MTLPixelFormat_87
+    {0},                                       //MTLPixelFormat_88
+    {0},                                       //MTLPixelFormat_89
+    {1, .rgba = {4}},                          //MTLPixelFormatRGB10A2Unorm = 90
+    {1, .rgba = {4}},                          //MTLPixelFormatRGB10A2Uint = 91
+    {1, .rgba = {4}},                          //MTLPixelFormatRG11B10Float = 92
+    {1, .rgba = {4}},                          //MTLPixelFormatRGB9E5Float = 93
+    {1, .rgba = {4}},                          //MTLPixelFormatBGR10A2Unorm = 94
+    {0},                                       //MTLPixelFormat_95
+    {0},                                       //MTLPixelFormat_96
+    {0},                                       //MTLPixelFormat_97
+    {0},                                       //MTLPixelFormat_98
+    {0},                                       //MTLPixelFormat_99
+    {0},                                       //MTLPixelFormat_100
+    {0},                                       //MTLPixelFormat_101
+    {0},                                       //MTLPixelFormat_102
+    {1, .rgba = {8}},                          //MTLPixelFormatRG32Uint = 103
+    {1, .rgba = {8}},                          //MTLPixelFormatRG32Sint = 104
+    {1, .rgba = {8}},                          //MTLPixelFormatRG32Float = 105
+    {0},                                       //MTLPixelFormat_106
+    {0},                                       //MTLPixelFormat_107
+    {0},                                       //MTLPixelFormat_108
+    {0},                                       //MTLPixelFormat_109
+    {1, .rgba = {8}},                          //MTLPixelFormatRGBA16Unorm = 110
+    {0},                                       //MTLPixelFormat_111
+    {1, .rgba = {8}},                          //MTLPixelFormatRGBA16Snorm = 112
+    {1, .rgba = {8}},                          //MTLPixelFormatRGBA16Uint = 113
+    {1, .rgba = {8}},                          //MTLPixelFormatRGBA16Sint = 114
+    {1, .rgba = {8}},                          //MTLPixelFormatRGBA16Float = 115
+    {0},                                       //MTLPixelFormat_116
+    {0},                                       //MTLPixelFormat_117
+    {0},                                       //MTLPixelFormat_118
+    {0},                                       //MTLPixelFormat_119
+    {0},                                       //MTLPixelFormat_120
+    {0},                                       //MTLPixelFormat_121
+    {0},                                       //MTLPixelFormat_122
+    {1, .rgba = {16}},                         //MTLPixelFormatRGBA32Uint = 123
+    {1, .rgba = {16}},                         //MTLPixelFormatRGBA32Sint = 124
+    {1, .rgba = {16}},                         //MTLPixelFormatRGBA32Float = 125
+    {0},                                       //MTLPixelFormat_126
+    {0},                                       //MTLPixelFormat_127
+    {0},                                       //MTLPixelFormat_128
+    {0},                                       //MTLPixelFormat_129
+    {3, .compressed = {4, 4, 1, (64 / 8)}},    //MTLPixelFormatBC1_RGBA = 130
+    {3, .compressed = {4, 4, 1, (64 / 8)}},    //MTLPixelFormatBC1_RGBA_sRGB = 131
+    {3, .compressed = {4, 4, 1, (128 / 8)}},   //MTLPixelFormatBC2_RGBA = 132
+    {3, .compressed = {4, 4, 1, (128 / 8)}},   //MTLPixelFormatBC2_RGBA_sRGB = 133
+    {3, .compressed = {4, 4, 1, (128 / 8)}},   //MTLPixelFormatBC3_RGBA = 134
+    {3, .compressed = {4, 4, 1, (128 / 8)}},   //MTLPixelFormatBC3_RGBA_sRGB = 135
+    {0},                                       //MTLPixelFormat_136
+    {0},                                       //MTLPixelFormat_137
+    {0},                                       //MTLPixelFormat_138
+    {0},                                       //MTLPixelFormat_139
+    {3, .compressed = {4, 4, 1, (64 / 8)}},    //MTLPixelFormatBC4_RUnorm = 140
+    {3, .compressed = {4, 4, 1, (64 / 8)}},    //MTLPixelFormatBC4_RSnorm = 141
+    {3, .compressed = {4, 4, 1, (128 / 8)}},   //MTLPixelFormatBC5_RGUnorm = 142
+    {3, .compressed = {4, 4, 1, (128 / 8)}},   //MTLPixelFormatBC5_RGSnorm = 143
+    {0},                                       //MTLPixelFormat_144
+    {0},                                       //MTLPixelFormat_145
+    {0},                                       //MTLPixelFormat_146
+    {0},                                       //MTLPixelFormat_147
+    {0},                                       //MTLPixelFormat_148
+    {0},                                       //MTLPixelFormat_149
+    {3, .compressed = {4, 4, 1, (128 / 8)}},   //MTLPixelFormatBC6H_RGBFloat = 150
+    {3, .compressed = {4, 4, 1, (128 / 8)}},   //MTLPixelFormatBC6H_RGBUfloat = 151
+    {3, .compressed = {4, 4, 1, (128 / 8)}},   //MTLPixelFormatBC7_RGBAUnorm = 152
+    {3, .compressed = {4, 4, 1, (128 / 8)}},   //MTLPixelFormatBC7_RGBAUnorm_sRGB = 153
+    {0},                                       //MTLPixelFormat_154
+    {0},                                       //MTLPixelFormat_155
+    {0},                                       //MTLPixelFormat_156
+    {0},                                       //MTLPixelFormat_157
+    {0},                                       //MTLPixelFormat_158
+    {0},                                       //MTLPixelFormat_159
+    {0},                                       //MTLPixelFormatPVRTC_RGB_2BPP = 160
+    {0},                                       //MTLPixelFormatPVRTC_RGB_2BPP_sRGB = 161
+    {0},                                       //MTLPixelFormatPVRTC_RGB_4BPP = 162
+    {0},                                       //MTLPixelFormatPVRTC_RGB_4BPP_sRGB = 163
+    {0},                                       //MTLPixelFormatPVRTC_RGBA_2BPP = 164
+    {0},                                       //MTLPixelFormatPVRTC_RGBA_2BPP_sRGB = 165
+    {0},                                       //MTLPixelFormatPVRTC_RGBA_4BPP = 166
+    {0},                                       //MTLPixelFormatPVRTC_RGBA_4BPP_sRGB = 167
+    {0},                                       //MTLPixelFormat_168
+    {0},                                       //MTLPixelFormat_169
+    {3, .compressed = {4, 4, 1, (64 / 8)}},    //MTLPixelFormatEAC_R11Unorm = 170
+    {0},                                       //MTLPixelFormat_171
+    {3, .compressed = {4, 4, 1, (64 / 8)}},    //MTLPixelFormatEAC_R11Snorm = 172
+    {0},                                       //MTLPixelFormat_173
+    {3, .compressed = {4, 4, 1, (128 / 8)}},   //MTLPixelFormatEAC_RG11Unorm = 174
+    {0},                                       //MTLPixelFormat_175
+    {3, .compressed = {4, 4, 1, (128 / 8)}},   //MTLPixelFormatEAC_RG11Snorm = 176
+    {0},                                       //MTLPixelFormat_177
+    {3, .compressed = {4, 4, 1, (128 / 8)}},   //MTLPixelFormatEAC_RGBA8 = 178
+    {3, .compressed = {4, 4, 1, (128 / 8)}},   //MTLPixelFormatEAC_RGBA8_sRGB = 179
+    {3, .compressed = {4, 4, 1, (64 / 8)}},    //MTLPixelFormatETC2_RGB8 = 180
+    {3, .compressed = {4, 4, 1, (64 / 8)}},    //MTLPixelFormatETC2_RGB8_sRGB = 181
+    {3, .compressed = {4, 4, 1, (64 / 8)}},    //MTLPixelFormatETC2_RGB8A1 = 182
+    {3, .compressed = {4, 4, 1, (64 / 8)}},    //MTLPixelFormatETC2_RGB8A1_sRGB = 183
+    {0},                                       //MTLPixelFormat_184
+    {0},                                       //MTLPixelFormat_185
+    {3, .compressed = {4, 4, 1, (128 / 8)}},   //MTLPixelFormatASTC_4x4_sRGB = 186
+    {3, .compressed = {5, 4, 1, (128 / 8)}},   //MTLPixelFormatASTC_5x4_sRGB = 187
+    {3, .compressed = {5, 5, 1, (128 / 8)}},   //MTLPixelFormatASTC_5x5_sRGB = 188
+    {3, .compressed = {6, 5, 1, (128 / 8)}},   //MTLPixelFormatASTC_6x5_sRGB = 189
+    {3, .compressed = {6, 6, 1, (128 / 8)}},   //MTLPixelFormatASTC_6x6_sRGB = 190
+    {0},                                       //MTLPixelFormat_191
+    {3, .compressed = {8, 5, 1, (128 / 8)}},   //MTLPixelFormatASTC_8x5_sRGB = 192
+    {3, .compressed = {8, 6, 1, (128 / 8)}},   //MTLPixelFormatASTC_8x6_sRGB = 193
+    {3, .compressed = {8, 8, 1, (128 / 8)}},   //MTLPixelFormatASTC_8x8_sRGB = 194
+    {3, .compressed = {10, 5, 1, (128 / 8)}},  //MTLPixelFormatASTC_10x5_sRGB = 195
+    {3, .compressed = {10, 6, 1, (128 / 8)}},  //MTLPixelFormatASTC_10x6_sRGB = 196
+    {3, .compressed = {10, 8, 1, (128 / 8)}},  //MTLPixelFormatASTC_10x8_sRGB = 197
+    {3, .compressed = {10, 10, 1, (128 / 8)}}, //MTLPixelFormatASTC_10x10_sRGB = 198
+    {3, .compressed = {12, 10, 1, (128 / 8)}}, //MTLPixelFormatASTC_12x10_sRGB = 199
+    {3, .compressed = {12, 12, 1, (128 / 8)}}, //MTLPixelFormatASTC_12x12_sRGB = 200
+    {0},                                       //MTLPixelFormat_201
+    {0},                                       //MTLPixelFormat_202
+    {0},                                       //MTLPixelFormat_203
+    {3, .compressed = {4, 4, 1, (128 / 8)}},   //MTLPixelFormatASTC_4x4_LDR = 204
+    {3, .compressed = {5, 4, 1, (128 / 8)}},   //MTLPixelFormatASTC_5x4_LDR = 205
+    {3, .compressed = {5, 5, 1, (128 / 8)}},   //MTLPixelFormatASTC_5x5_LDR = 206
+    {3, .compressed = {6, 5, 1, (128 / 8)}},   //MTLPixelFormatASTC_6x5_LDR = 207
+    {3, .compressed = {6, 6, 1, (128 / 8)}},   //MTLPixelFormatASTC_6x6_LDR = 208
+    {0},                                       //MTLPixelFormat_209
+    {3, .compressed = {8, 5, 1, (128 / 8)}},   //MTLPixelFormatASTC_8x5_LDR = 210
+    {3, .compressed = {8, 6, 1, (128 / 8)}},   //MTLPixelFormatASTC_8x6_LDR = 211
+    {3, .compressed = {8, 8, 1, (128 / 8)}},   //MTLPixelFormatASTC_8x8_LDR = 212
+    {3, .compressed = {10, 5, 1, (128 / 8)}},  //MTLPixelFormatASTC_10x5_LDR = 213
+    {3, .compressed = {10, 6, 1, (128 / 8)}},  //MTLPixelFormatASTC_10x6_LDR = 214
+    {3, .compressed = {10, 8, 1, (128 / 8)}},  //MTLPixelFormatASTC_10x8_LDR = 215
+    {3, .compressed = {10, 10, 1, (128 / 8)}}, //MTLPixelFormatASTC_10x10_LDR = 216
+    {3, .compressed = {12, 10, 1, (128 / 8)}}, //MTLPixelFormatASTC_12x10_LDR = 217
+    {3, .compressed = {12, 12, 1, (128 / 8)}}, //MTLPixelFormatASTC_12x12_LDR = 218
+    //{0}, //MTLPixelFormatGBGR422 = 240
+    //{0}, //MTLPixelFormatBGRG422 = 241
+    //{0}, //MTLPixelFormatDepth16Unorm = 250
+    //{0}, //MTLPixelFormatDepth32Float = 252
+    //{0}, //MTLPixelFormatStencil8 = 253
+    //{0}, //MTLPixelFormatDepth24Unorm_Stencil8 = 255,
+    //{0}, //MTLPixelFormatDepth32Float_Stencil8  = 260,
+    //{0}, //MTLPixelFormatX32_Stencil8 = 261
+    //{0}, //MTLPixelFormatBGRA10_XR  = 552
+    //{0}, //MTLPixelFormatBGRA10_XR_sRGB  = 553
+    //{0}, //MTLPixelFormatBGR10_XR  = 554
+    //{0}, //MTLPixelFormatBGR10_XR_sRGB  = 555
+};
+static_assert(219 == (sizeof(gMetelFormatInfoTable) / sizeof(gMetelFormatInfoTable[0])), "gMetelFormatInfoTable may not match!");
+
+static inline uint32_t _GetFormatAspectCount(MTLPixelFormat mtlformat)
+{
+    assert(mtlformat < (sizeof(gMetelFormatInfoTable) / sizeof(gMetelFormatInfoTable[0])));
+
+    _FormatInfo vk_format_info = gMetelFormatInfoTable[mtlformat];
+
+    assert(vk_format_info._union_tag == 3 || vk_format_info._union_tag == 1 || vk_format_info._union_tag == 2);
+    if (vk_format_info._union_tag == 3 || vk_format_info._union_tag == 1)
+    {
+        return 1;
+    }
+    else if (vk_format_info._union_tag == 2)
+    {
+        if (vk_format_info.depthstencil.depthBytes == 0 || vk_format_info.depthstencil.stencilBytes == 0)
+        {
+            return 1;
+        }
+        else
+        {
+            return 2;
+        }
+    }
+    else
+    {
+        return 0;
+    }
+}
+
+static inline bool _IsFormatCompressed(MTLPixelFormat mtlformat)
+{
+    assert(mtlformat < (sizeof(gMetelFormatInfoTable) / sizeof(gMetelFormatInfoTable[0])));
+
+    _FormatInfo vk_format_info = gMetelFormatInfoTable[mtlformat];
+
+    return (vk_format_info._union_tag == 3);
+}
+
+static inline bool _IsFormatRGBA(MTLPixelFormat mtlformat)
+{
+    assert(mtlformat < (sizeof(gMetelFormatInfoTable) / sizeof(gMetelFormatInfoTable[0])));
+
+    _FormatInfo vk_format_info = gMetelFormatInfoTable[mtlformat];
+
+    return (vk_format_info._union_tag == 1);
+}
+
+static inline bool _IsFormatDepthStencil(MTLPixelFormat mtlformat)
+{
+    assert(mtlformat < (sizeof(gMetelFormatInfoTable) / sizeof(gMetelFormatInfoTable[0])));
+
+    _FormatInfo vk_format_info = gMetelFormatInfoTable[mtlformat];
+
+    return (vk_format_info._union_tag == 2);
+}
+
+static inline uint32_t _GetCompressedFormatBlockWidth(MTLPixelFormat mtlformat)
+{
+    assert(_IsFormatCompressed(mtlformat));
+
+    assert(mtlformat < (sizeof(gMetelFormatInfoTable) / sizeof(gMetelFormatInfoTable[0])));
+
+    _FormatInfo vk_format_info = gMetelFormatInfoTable[mtlformat];
+
+    return vk_format_info.compressed.compressedBlockWidth;
+}
+
+static inline uint32_t _GetCompressedFormatBlockHeight(MTLPixelFormat mtlformat)
+{
+    assert(_IsFormatCompressed(mtlformat));
+
+    assert(mtlformat < (sizeof(gMetelFormatInfoTable) / sizeof(gMetelFormatInfoTable[0])));
+
+    _FormatInfo vk_format_info = gMetelFormatInfoTable[mtlformat];
+
+    return vk_format_info.compressed.compressedBlockHeight;
+}
+
+static inline uint32_t _GetCompressedFormatBlockDepth(MTLPixelFormat mtlformat)
+{
+    assert(_IsFormatCompressed(mtlformat));
+
+    assert(mtlformat < (sizeof(gMetelFormatInfoTable) / sizeof(gMetelFormatInfoTable[0])));
+
+    _FormatInfo vk_format_info = gMetelFormatInfoTable[mtlformat];
+
+    return vk_format_info.compressed.compressedBlockDepth;
+}
+
+static inline uint32_t _GetCompressedFormatBlockSizeInBytes(MTLPixelFormat mtlformat)
+{
+    assert(_IsFormatCompressed(mtlformat));
+
+    assert(mtlformat < (sizeof(gMetelFormatInfoTable) / sizeof(gMetelFormatInfoTable[0])));
+
+    _FormatInfo vk_format_info = gMetelFormatInfoTable[mtlformat];
+
+    return vk_format_info.compressed.compressedBlockSizeInBytes;
+}
+
+static inline uint32_t _GetRGBAFormatPixelBytes(MTLPixelFormat mtlformat)
+{
+    assert(_IsFormatRGBA(mtlformat));
+
+    assert(mtlformat < (sizeof(gMetelFormatInfoTable) / sizeof(gMetelFormatInfoTable[0])));
+
+    _FormatInfo vk_format_info = gMetelFormatInfoTable[mtlformat];
+
+    return vk_format_info.rgba.pixelBytes;
+}
+
+static inline uint32_t _GetDepthStencilFormatPixelBytes(MTLPixelFormat mtlformat, uint32_t aspectIndex)
+{
+    assert(_IsFormatDepthStencil(mtlformat));
+
+    assert(mtlformat < (sizeof(gMetelFormatInfoTable) / sizeof(gMetelFormatInfoTable[0])));
+
+    _FormatInfo vk_format_info = gMetelFormatInfoTable[mtlformat];
+
+    if (vk_format_info.depthstencil.stencilBytes == 0)
+    {
+        assert(aspectIndex < 1);
+        uint32_t pixelBytes[1] = {vk_format_info.depthstencil.depthBytes};
+        return pixelBytes[aspectIndex];
+    }
+    else if (vk_format_info.depthstencil.depthBytes != 0)
+    {
+        assert(aspectIndex < 2);
+        uint32_t pixelBytes[2] = {vk_format_info.depthstencil.depthBytes, vk_format_info.depthstencil.stencilBytes};
+        return pixelBytes[aspectIndex];
+    }
+    else
+    {
+        assert(aspectIndex < 1);
+        uint32_t pixelBytes[1] = {vk_format_info.depthstencil.stencilBytes};
+        return pixelBytes[aspectIndex];
+    }
 }

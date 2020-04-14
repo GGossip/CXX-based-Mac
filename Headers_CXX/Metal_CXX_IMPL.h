@@ -118,6 +118,11 @@ struct MTLParallelRenderCommandEncoder : public MTLCommandEncoder
     MTLParallelRenderCommandEncoder() = delete;
 };
 
+struct MTLBlitCommandEncoder : public MTLCommandEncoder
+{
+    MTLBlitCommandEncoder() = delete;
+};
+
 struct MTLLibrary : public NSObject
 {
     MTLLibrary() = delete;

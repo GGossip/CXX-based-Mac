@@ -567,6 +567,7 @@ void MTLRenderCommandEncoder_setRenderPipelineState(struct MTLRenderCommandEncod
 void MTLRenderCommandEncoder_setDepthStencilState(struct MTLRenderCommandEncoder *self, struct MTLDepthStencilState *depthStencilState);
 void MTLRenderCommandEncoder_setVertexBuffer(struct MTLRenderCommandEncoder *self, struct MTLBuffer *buffer, NSUInteger offset, NSUInteger index);
 void MTLRenderCommandEncoder_setFragmentBuffer(struct MTLRenderCommandEncoder *self, struct MTLBuffer *buffer, NSUInteger offset, NSUInteger index);
+void MTLRenderCommandEncoder_setFragmentTexture(struct MTLRenderCommandEncoder *self, struct MTLTexture *texture, NSUInteger index);
 void MTLRenderCommandEncoder_drawPrimitives(struct MTLRenderCommandEncoder *self, MTLPrimitiveType primitiveType, NSUInteger vertexStart, NSUInteger vertexCount, NSUInteger instanceCount, NSUInteger baseInstance);
 void MTLRenderCommandEncoder_endEncoding(struct MTLRenderCommandEncoder *self);
 static inline void MTLRenderCommandEncoder_setLabel(struct MTLRenderCommandEncoder *self, char const *label)

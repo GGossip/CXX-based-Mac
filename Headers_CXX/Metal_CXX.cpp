@@ -335,9 +335,9 @@ struct MTLTextureDescriptor *MTLTextureDescriptor_alloc()
 
 struct MTLTextureDescriptor *MTLTextureDescriptor_init(struct MTLTextureDescriptor *self)
 {
-    struct objc_object *texturedescriptor = reinterpret_cast<struct objc_object *(*)(Class, struct objc_selector *)>(objc_msgSend)(
-        objc_getClass("MTLTextureDescriptor"),
-        sel_registerName("alloc"));
+    struct objc_object *texturedescriptor = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+        self,
+        sel_registerName("init"));
     return static_cast<struct MTLTextureDescriptor *>(texturedescriptor);
 }
 
@@ -646,6 +646,15 @@ void MTLRenderCommandEncoder_setFragmentBuffer(struct MTLRenderCommandEncoder *s
         index);
 }
 
+void MTLRenderCommandEncoder_setFragmentTexture(struct MTLRenderCommandEncoder *self, struct MTLTexture *texture, NSUInteger index)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *, NSUInteger)>(objc_msgSend)(
+        self,
+        sel_registerName("setFragmentTexture:atIndex:"),
+        texture,
+        index);
+}
+
 void MTLRenderCommandEncoder_drawPrimitives(struct MTLRenderCommandEncoder *self, MTLPrimitiveType primitiveType, NSUInteger vertexStart, NSUInteger vertexCount, NSUInteger instanceCount, NSUInteger baseInstance)
 {
     reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, MTLPrimitiveType, NSUInteger, NSUInteger, NSUInteger, NSUInteger)>(objc_msgSend)(
@@ -696,6 +705,50 @@ struct MTLRenderCommandEncoder *MTLParallelRenderCommandEncoder_renderCommandEnc
 }
 
 void MTLParallelRenderCommandEncoder_endEncoding(struct MTLParallelRenderCommandEncoder *self)
+{
+    return MTLCommandEncoder_endEncoding(self);
+}
+
+struct MTLBlitCommandEncoder *MTLCommandBuffer_blitCommandEncoder(struct MTLCommandBuffer *self)
+{
+    struct objc_object *blitCommandEncoder = reinterpret_cast<struct objc_object *(*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+        self,
+        sel_registerName("blitCommandEncoder"));
+    return static_cast<struct MTLBlitCommandEncoder *>(blitCommandEncoder);
+}
+
+void MTLBlitCommandEncoder_setLabel(struct MTLBlitCommandEncoder *self, struct NSString *label)
+{
+    return MTLCommandEncoder_setLabel(self, label);
+}
+
+void MTLBlitCommandEncoder_pushDebugGroup(struct MTLBlitCommandEncoder *self, struct NSString *string)
+{
+    return MTLCommandEncoder_pushDebugGroup(self, string);
+}
+
+void MTLBlitCommandEncoder_popDebugGroup(struct MTLBlitCommandEncoder *self)
+{
+    return MTLCommandEncoder_popDebugGroup(self);
+}
+
+void MTLBlitCommandEncoder_copyFromBuffer(struct MTLBlitCommandEncoder *self, struct MTLBuffer *sourceBuffer, NSUInteger sourceOffset, NSUInteger sourceBytesPerRow, NSUInteger sourceBytesPerImage, MTLSize sourceSize, struct MTLTexture *destinationTexture, NSUInteger destinationSlice, NSUInteger destinationLevel, MTLOrigin destinationOrigin)
+{
+    reinterpret_cast<void (*)(struct objc_object *, struct objc_selector *, struct objc_object *, NSUInteger, NSUInteger, NSUInteger, MTLSize, struct objc_object *, NSUInteger, NSUInteger, MTLOrigin)>(objc_msgSend)(
+        self,
+        sel_registerName("copyFromBuffer:sourceOffset:sourceBytesPerRow:sourceBytesPerImage:sourceSize:toTexture:destinationSlice:destinationLevel:destinationOrigin:"),
+        sourceBuffer,
+        sourceOffset,
+        sourceBytesPerRow,
+        sourceBytesPerImage,
+        sourceSize,
+        destinationTexture,
+        destinationSlice,
+        destinationLevel,
+        destinationOrigin);
+}
+
+void MTLBlitCommandEncoder_endEncoding(struct MTLBlitCommandEncoder *self)
 {
     return MTLCommandEncoder_endEncoding(self);
 }

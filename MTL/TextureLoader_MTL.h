@@ -18,7 +18,9 @@ struct TextureLoader_SpecificHeader
 
 struct TextureLoader_SpecificHeader TextureLoader_ToSpecificHeader(struct TextureLoader_NeutralHeader const *neutral_texture_header);
 
-struct TextureLoader_MTLBufferImageCopy
+uint32_t TextureLoader_GetFormatAspectCount(MTLPixelFormat mtlformat);
+
+struct TextureLoader_MTLCopyFromBuffer
 {
     NSUInteger sourceOffset;
     NSUInteger sourceBytesPerRow;
@@ -30,6 +32,6 @@ struct TextureLoader_MTLBufferImageCopy
 };
 
 size_t TextureLoader_GetCopyableFootprints(struct TextureLoader_SpecificHeader const *mtl_texture_header,
-                                           uint32_t NumSubresources, struct TextureLoader_MemcpyDest *pDest, TextureLoader_MTLBufferImageCopy *pRegions);
+                                           uint32_t NumSubresources, struct TextureLoader_MemcpyDest *pDest, TextureLoader_MTLCopyFromBuffer *pRegions);
 
 #endif
