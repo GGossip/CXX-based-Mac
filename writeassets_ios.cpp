@@ -21,12 +21,16 @@ void write_assets()
 
     int fd_LibraryCaches;
     {
+        void *__at_autoreleasepool_obj = objc_autoreleasePoolPush();
+
         char const *filenameautorelease = NSURL_fileSystemRepresentation(NSArrayNSURL_objectAtIndexedSubscript(NSFileManager_URLsForDirectory(NSFileManager_defaultManager(), NSCachesDirectory, NSUserDomainMask), 0));
         //struct stat stbuf;
         //assert(stat(filenameautorelease, &stbuf) == 0 && S_ISDIR(stbuf.st_mode));
 
         fd_LibraryCaches = open(filenameautorelease, O_RDONLY, O_DIRECTORY);
         assert(fd_LibraryCaches != -1);
+
+        objc_autoreleasePoolPop(__at_autoreleasepool_obj);
     }
 
     //Shaders.metallib
