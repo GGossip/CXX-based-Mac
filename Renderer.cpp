@@ -285,7 +285,7 @@ void demo::_init2()
 
     std::string tex_filename;
     tex_filename = NSURL_fileSystemRepresentation(NSArrayNSURL_objectAtIndexedSubscript(NSFileManager_URLsForDirectory(NSFileManager_defaultManager(), NSCachesDirectory, NSUserDomainMask), 0));
-    tex_filename += "/Assets/Lenna/l_hires-RGBA.pvr";
+    tex_filename += "/Assets/Lenna/l_hires-DirectXTex.dds";
     struct TextureLoader_NeutralHeader header;
     size_t header_offset = 0;
     TextureLoader_LoadHeaderFromFile(tex_filename.c_str(), &header, &header_offset);
@@ -306,8 +306,9 @@ void demo::_init2()
 
     _colorMap = MTLDevice_newTextureWithDescriptor(_device, textureDesc);
     MTLTextureDescriptor_release(textureDesc);
+    MTLTexture_setLabel(_colorMap, "ColorMap");
 
-    uint32_t NumSubresource = TextureLoader_GetFormatAspectCount(mtlheader.pixelFormat) * ((mtlheader.textureType != MTLTextureTypeCube && mtlheader.textureType != MTLTextureTypeCubeArray) ? (mtlheader.arrayLength) : (6 * mtlheader.arrayLength)) * mtlheader.mipmapLevelCount;
+    uint32_t NumSubresource = TextureLoader_GetFormatAspectCount(mtlheader.pixelFormat) * TextureLoader_GetSliceCount(mtlheader.textureType, mtlheader.arrayLength) * mtlheader.mipmapLevelCount;
 
     struct TextureLoader_MemcpyDest dest[15];
     struct TextureLoader_MTLCopyFromBuffer regions[15];

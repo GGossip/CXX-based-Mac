@@ -55,6 +55,16 @@ static inline uint32_t _GetRGBAFormatPixelBytes(MTLPixelFormat mtlformat);
 
 static inline uint32_t _GetDepthStencilFormatPixelBytes(MTLPixelFormat mtlformat, uint32_t aspectIndex);
 
+static inline uint32_t _GetSliceCount(MTLTextureType textureType, uint32_t arrayLength)
+{
+    return ((textureType != MTLTextureTypeCube && textureType != MTLTextureTypeCubeArray) ? (arrayLength) : (6 * arrayLength));
+}
+
+uint32_t TextureLoader_GetSliceCount(MTLTextureType textureType, uint32_t arrayLength)
+{
+    return _GetSliceCount(textureType, arrayLength);
+}
+
 template <typename T, typename T2>
 static inline T roundUp(const T value, const T2 alignment)
 {
@@ -83,15 +93,14 @@ size_t TextureLoader_GetCopyableFootprints(struct TextureLoader_SpecificHeader c
     // TextureMtl::setSubImageImpl  // src/libANGLE/renderer/metal/TextureMtl.mm
 
     uint32_t aspectCount = _GetFormatAspectCount(mtl_texture_header->pixelFormat);
+    uint32_t sliceCount = _GetSliceCount(mtl_texture_header->textureType, mtl_texture_header->arrayLength);
 
-    uint32_t arrayLayers = ((mtl_texture_header->textureType != MTLTextureTypeCube && mtl_texture_header->textureType != MTLTextureTypeCubeArray) ? (mtl_texture_header->arrayLength) : (6 * mtl_texture_header->arrayLength));
-
-    size_t stagingOffset = 0;
     size_t TotalBytes = 0;
+    size_t stagingOffset = 0;
 
     for (uint32_t aspectIndex = 0; aspectIndex < aspectCount; ++aspectIndex)
     {
-        for (uint32_t arrayLayer = 0; arrayLayer < arrayLayers; ++arrayLayer)
+        for (uint32_t sliceIndex = 0; sliceIndex < sliceCount; ++sliceIndex)
         {
             size_t w = mtl_texture_header->width;
             size_t h = mtl_texture_header->height;
@@ -107,6 +116,14 @@ size_t TextureLoader_GetCopyableFootprints(struct TextureLoader_SpecificHeader c
                 size_t allocationSize;
                 if (_IsFormatCompressed(mtl_texture_header->pixelFormat))
                 {
+                    // https://developer.apple.com/documentation/metal/mtlblitcommandencoder/1400752-copyfrombuffer
+                    //
+                    // If the texture’s pixel format is a compressed format, then sourceSize must be a multiple of
+                    // the pixel format’s block size or be clamped to the edge of the texture if the block extends
+                    // outside the bounds of a texture. For a compressed format, sourceBytesPerRow is the
+                    // number of bytes from the start of one row of blocks to the start of the next row of blocks.
+                    //
+
                     assert(1 == _GetCompressedFormatBlockDepth(mtl_texture_header->pixelFormat));
 
                     outputRowSize = ((w + _GetCompressedFormatBlockWidth(mtl_texture_header->pixelFormat) - 1) / _GetCompressedFormatBlockWidth(mtl_texture_header->pixelFormat)) * _GetCompressedFormatBlockSizeInBytes(mtl_texture_header->pixelFormat);
@@ -143,7 +160,7 @@ size_t TextureLoader_GetCopyableFootprints(struct TextureLoader_SpecificHeader c
                     allocationSize = roundUp(outputSlicePitch * outputNumSlices, optimalBufferCopyOffsetAlignment);
                 }
 
-                uint32_t DstSubresource = TextureLoader_CalcSubresource(mipLevel, arrayLayer, aspectIndex, mtl_texture_header->mipmapLevelCount, arrayLayers);
+                uint32_t DstSubresource = TextureLoader_CalcSubresource(mipLevel, sliceIndex, aspectIndex, mtl_texture_header->mipmapLevelCount, sliceCount);
                 assert(DstSubresource < NumSubresources);
 
                 pDest[DstSubresource].stagingOffset = stagingOffset;
@@ -159,14 +176,14 @@ size_t TextureLoader_GetCopyableFootprints(struct TextureLoader_SpecificHeader c
                 pRegions[DstSubresource].sourceSize.width = w;
                 pRegions[DstSubresource].sourceSize.height = h;
                 pRegions[DstSubresource].sourceSize.depth = d;
-                pRegions[DstSubresource].destinationSlice = arrayLayer;
+                pRegions[DstSubresource].destinationSlice = sliceIndex;
                 pRegions[DstSubresource].destinationLevel = mipLevel;
                 pRegions[DstSubresource].destinationOrigin.x = 0;
                 pRegions[DstSubresource].destinationOrigin.y = 0;
                 pRegions[DstSubresource].destinationOrigin.z = 0;
 
-                stagingOffset += allocationSize;
                 TotalBytes += allocationSize;
+                stagingOffset += TotalBytes;
 
                 w = w >> 1;
                 h = h >> 1;
@@ -186,7 +203,7 @@ size_t TextureLoader_GetCopyableFootprints(struct TextureLoader_SpecificHeader c
             }
         }
     }
-    
+
     return TotalBytes;
 }
 

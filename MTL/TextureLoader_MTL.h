@@ -9,16 +9,18 @@ struct TextureLoader_SpecificHeader
 {
     MTLTextureType textureType;
     MTLPixelFormat pixelFormat;
-    NSUInteger width;
-    NSUInteger height;
-    NSUInteger depth;
-    NSUInteger mipmapLevelCount;
-    NSUInteger arrayLength;
+    uint32_t width;
+    uint32_t height;
+    uint32_t depth;
+    uint32_t mipmapLevelCount;
+    uint32_t arrayLength;
 };
 
 struct TextureLoader_SpecificHeader TextureLoader_ToSpecificHeader(struct TextureLoader_NeutralHeader const *neutral_texture_header);
 
 uint32_t TextureLoader_GetFormatAspectCount(MTLPixelFormat mtlformat);
+
+uint32_t TextureLoader_GetSliceCount(MTLTextureType textureType, uint32_t arrayLength);
 
 struct TextureLoader_MTLCopyFromBuffer
 {
