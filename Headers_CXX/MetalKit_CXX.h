@@ -1,8 +1,15 @@
 #ifndef _METALKIT_CXX_H_
 #define _METALKIT_CXX_H_ 1
 
-#include "AppKit_CXX.h"
 #include "Metal_CXX.h"
+
+#if __is_target_os(ios)
+#include "UIKit_CXX.h"
+#elif __is_target_os(macos)
+#include "AppKit_CXX.h"
+#else
+#error Unknown Target
+#endif
 
 struct MTKView *MTKView_alloc();
 
@@ -35,7 +42,13 @@ struct MTLRenderPassDescriptor *MTKView_currentRenderPassDescriptor(struct MTKVi
 
 struct CAMetalDrawable *MTKView_currentDrawable(struct MTKView *self);
 
+#if __is_target_os(ios)
+void UIViewController_setView(struct UIViewController *self, struct MTKView *view);
+#elif __is_target_os(macos)
 void NSViewController_setView(struct NSViewController *self, struct MTKView *view);
+#else
+#error Unknown Target
+#endif
 
 void MTLCommandBuffer_presentDrawable(struct MTLCommandBuffer *self, struct CAMetalDrawable *drawable);
 

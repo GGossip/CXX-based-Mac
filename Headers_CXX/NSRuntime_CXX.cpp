@@ -1,7 +1,18 @@
 #include "NSRuntime_CXX.h"
 #include "NSRuntime_CXX_IMPL.h"
 
+#if _VSCODE_INTELLISENCE_
 #include <objc/objc-runtime.h>
+#else
+#if __is_target_os(ios)
+#include <objc/message.h>
+#include <objc/runtime.h>
+#elif __is_target_os(macos)
+#include <objc/objc-runtime.h>
+#else
+#error Unknown Target
+#endif
+#endif
 
 #include <assert.h>
 #include <string.h>

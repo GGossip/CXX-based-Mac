@@ -60,12 +60,15 @@ void demo::_init()
 
     _width = 800;
     _height = 600;
-    _view = MTKView_initWithFrame(MTKView_alloc(), NSMakeRect(0, 0, _width, _height), _device);
+    CGRect frame = {{0, 0}, {_width, _height}};
+    _view = MTKView_initWithFrame(MTKView_alloc(), frame, _device);
 
     MTKView_setColorPixelFormat(_view, MTLPixelFormatBGRA8Unorm_sRGB);
-    MTKView_setDepthStencilPixelFormat(_view, MTLPixelFormatDepth32Float_Stencil8);
+    MTKView_setDepthStencilPixelFormat(_view, MTLPixelFormatDepth32Float);
     MTKView_setSampleCount(_view, 1);
 }
+
+#include <dirent.h>
 
 void demo::_init2()
 {
@@ -93,22 +96,14 @@ void demo::_init2()
     MTLVertexAttributeDescriptor_setOffset(MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_attributes(vertexdescriptor), VertexAttributeTexcoord), 0);
     MTLVertexAttributeDescriptor_setBufferIndex(MTLVertexAttributeDescriptorArray_objectAtIndexedSubscript(MTLVertexDescriptor_attributes(vertexdescriptor), VertexAttributeTexcoord), BufferIndexMeshGenerics);
 
-    int fd_LibraryCaches;
-    std::string filename_LibraryCaches;
-    {
-        char const *filenameautorelease = NSURL_fileSystemRepresentation(NSArrayNSURL_objectAtIndexedSubscript(NSFileManager_URLsForDirectory(NSFileManager_defaultManager(), NSCachesDirectory, NSUserDomainMask), 0));
-        //struct stat stbuf;
-        //assert(stat(filenameautorelease, &stbuf) == 0 && S_ISDIR(stbuf.st_mode));
-        filename_LibraryCaches = filenameautorelease;
-
-        fd_LibraryCaches = open(filenameautorelease, O_RDONLY, O_DIRECTORY);
-        assert(fd_LibraryCaches != -1);
-    }
-
     size_t buffersize;
     void *buffer;
     {
-        int fd_metallib = openat(fd_LibraryCaches, "Shaders_MacOS.metallib", O_RDONLY);
+        std::string metallib_filename;
+           metallib_filename = NSURL_fileSystemRepresentation(NSArrayNSURL_objectAtIndexedSubscript(NSFileManager_URLsForDirectory(NSFileManager_defaultManager(), NSCachesDirectory, NSUserDomainMask), 0));
+           metallib_filename += "/Shaders.metallib";
+        
+        int fd_metallib = openat(AT_FDCWD, metallib_filename.c_str(), O_RDONLY);
 
         struct stat stbuf;
         int res = fstat(fd_metallib, &stbuf);
@@ -146,8 +141,8 @@ void demo::_init2()
     MTLRenderPipelineDescriptor_setFragmentFunction(pipelineStateDescriptor, fragmentFunction);
     MTLRenderPipelineDescriptor_setVertexDescriptor(pipelineStateDescriptor, vertexdescriptor);
     MTLRenderPipelineColorAttachmentDescriptor_setPixelFormat(MTLRenderPipelineDescriptor_colorAttachmentAt(pipelineStateDescriptor, 0), MTLPixelFormatBGRA8Unorm_sRGB);
-    MTLRenderPipelineDescriptor_setDepthAttachmentPixelFormat(pipelineStateDescriptor, MTLPixelFormatDepth32Float_Stencil8);
-    MTLRenderPipelineDescriptor_setStencilAttachmentPixelFormat(pipelineStateDescriptor, MTLPixelFormatDepth32Float_Stencil8);
+    MTLRenderPipelineDescriptor_setDepthAttachmentPixelFormat(pipelineStateDescriptor, MTLPixelFormatDepth32Float);
+    MTLRenderPipelineDescriptor_setStencilAttachmentPixelFormat(pipelineStateDescriptor, MTLPixelFormatInvalid);
     MTLFunction_release(vertexFunction);
     MTLFunction_release(fragmentFunction);
     MTLLibrary_release(myLibrary);
@@ -285,7 +280,7 @@ void demo::_init2()
 
     std::string tex_filename;
     tex_filename = NSURL_fileSystemRepresentation(NSArrayNSURL_objectAtIndexedSubscript(NSFileManager_URLsForDirectory(NSFileManager_defaultManager(), NSCachesDirectory, NSUserDomainMask), 0));
-    tex_filename += "/Assets/Lenna/l_hires-DirectXTex.dds";
+    tex_filename += "/l_hires";
     struct TextureLoader_NeutralHeader header;
     size_t header_offset = 0;
     TextureLoader_LoadHeaderFromFile(tex_filename.c_str(), &header, &header_offset);

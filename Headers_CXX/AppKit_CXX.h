@@ -31,7 +31,7 @@ static inline NSRect NSMakeRect(CGFloat x, CGFloat y, CGFloat w, CGFloat h)
 
 struct NSScreen *NSScreen_mainScreen();
 
-NSRect NSScreen_frame(struct NSScreen *);
+NSRect NSScreen_frame(struct NSScreen *self);
 
 struct NSWindow *NSWindow_alloc();
 

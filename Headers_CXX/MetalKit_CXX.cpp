@@ -1,8 +1,14 @@
 #include "MetalKit_CXX.h"
 #include "MetalKit_CXX_IMPL.h"
 
-#include <objc/objc.h>
+#if __is_target_os(ios)
+#include <objc/message.h>
+#include <objc/runtime.h>
+#elif __is_target_os(macos)
 #include <objc/objc-runtime.h>
+#else
+#error Unknown Target
+#endif
 
 #include <assert.h>
 
@@ -133,10 +139,19 @@ struct CAMetalDrawable *MTKView_currentDrawable(struct MTKView *self)
     return static_cast<struct CAMetalDrawable *>(drawable);
 }
 
+#if __is_target_os(ios)
+void UIViewController_setView(struct UIViewController *self, struct MTKView *view)
+{
+    return UIViewController_setView(self, static_cast<struct UIView *>(view));
+}
+#elif __is_target_os(macos)
 void NSViewController_setView(struct NSViewController *self, struct MTKView *view)
 {
-    NSViewController_setView(self, static_cast<struct NSView *>(view));
+    return NSViewController_setView(self, static_cast<struct NSView *>(view));
 }
+#else
+#error Unknown Target
+#endif
 
 void MTLCommandBuffer_presentDrawable(struct MTLCommandBuffer *self, struct CAMetalDrawable *drawable)
 {

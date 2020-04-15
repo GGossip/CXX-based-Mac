@@ -2,8 +2,14 @@
 #include "Dispatch_CXX_IMPL.h"
 #include "Metal_CXX_IMPL.h"
 
-#include <objc/objc.h>
+#if __is_target_os(ios)
+#include <objc/message.h>
+#include <objc/runtime.h>
+#elif __is_target_os(macos)
 #include <objc/objc-runtime.h>
+#else
+#error Unknown Target
+#endif
 
 bool MTLDevice_supportsFeatureSet(struct MTLDevice *self, MTLFeatureSet featureSet)
 {
