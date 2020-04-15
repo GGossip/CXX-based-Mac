@@ -3,8 +3,8 @@
 
 #include "Renderer.h"
 #include "ShaderTypes.h"
-#include "TextureLoader.h"
-#include "MTL/TextureLoader_MTL.h"
+#include "TextureLoader/TextureLoader.h"
+#include "TextureLoader/MTL/TextureLoader_MTL.h"
 
 #include <stddef.h>
 #include <stdint.h>
