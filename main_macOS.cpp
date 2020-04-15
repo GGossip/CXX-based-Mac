@@ -12,8 +12,11 @@
 
 #include <assert.h>
 
+void write_assets();
+
 int main(int argc, const char *argv[])
 {
+    write_assets();
 
     //Enable MultiThreaded
     {
