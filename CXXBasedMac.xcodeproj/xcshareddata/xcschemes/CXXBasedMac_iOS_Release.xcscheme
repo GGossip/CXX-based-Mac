@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "92F977E32439099000C5F3C5"
-               BuildableName = "CXXBasedMac.app"
-               BlueprintName = "CXXBasedMac"
+               BlueprintIdentifier = "92983F172447725E003F48B6"
+               BuildableName = "CXXBasedMac_iOS.app"
+               BlueprintName = "CXXBasedMac_iOS"
                ReferencedContainer = "container:CXXBasedMac.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -31,7 +31,7 @@
       </Testables>
    </TestAction>
    <LaunchAction
-      buildConfiguration = "Debug"
+      buildConfiguration = "Release"
       selectedDebuggerIdentifier = "Xcode.DebuggerFoundation.Debugger.LLDB"
       selectedLauncherIdentifier = "Xcode.DebuggerFoundation.Launcher.LLDB"
       launchStyle = "0"
@@ -39,14 +39,17 @@
       ignoresPersistentStateOnLaunch = "NO"
       debugDocumentVersioning = "YES"
       debugServiceExtension = "internal"
-      allowLocationSimulation = "YES">
+      enableGPUFrameCaptureMode = "3"
+      enableGPUValidationMode = "1"
+      allowLocationSimulation = "YES"
+      GPUProfilerEnabled = "No">
       <BuildableProductRunnable
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "92F977E32439099000C5F3C5"
-            BuildableName = "CXXBasedMac.app"
-            BlueprintName = "CXXBasedMac"
+            BlueprintIdentifier = "92983F172447725E003F48B6"
+            BuildableName = "CXXBasedMac_iOS.app"
+            BlueprintName = "CXXBasedMac_iOS"
             ReferencedContainer = "container:CXXBasedMac.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -61,9 +64,9 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "92F977E32439099000C5F3C5"
-            BuildableName = "CXXBasedMac.app"
-            BlueprintName = "CXXBasedMac"
+            BlueprintIdentifier = "92983F172447725E003F48B6"
+            BuildableName = "CXXBasedMac_iOS.app"
+            BlueprintName = "CXXBasedMac_iOS"
             ReferencedContainer = "container:CXXBasedMac.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>

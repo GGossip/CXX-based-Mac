@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "92F977E32439099000C5F3C5"
-               BuildableName = "CXXBasedMac.app"
-               BlueprintName = "CXXBasedMac"
+               BuildableName = "CXXBasedMac_macOS.app"
+               BlueprintName = "CXXBasedMac_macOS"
                ReferencedContainer = "container:CXXBasedMac.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -48,8 +48,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "92F977E32439099000C5F3C5"
-            BuildableName = "CXXBasedMac.app"
-            BlueprintName = "CXXBasedMac"
+            BuildableName = "CXXBasedMac_macOS.app"
+            BlueprintName = "CXXBasedMac_macOS"
             ReferencedContainer = "container:CXXBasedMac.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -65,8 +65,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "92F977E32439099000C5F3C5"
-            BuildableName = "CXXBasedMac.app"
-            BlueprintName = "CXXBasedMac"
+            BuildableName = "CXXBasedMac_macOS.app"
+            BlueprintName = "CXXBasedMac_macOS"
             ReferencedContainer = "container:CXXBasedMac.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
