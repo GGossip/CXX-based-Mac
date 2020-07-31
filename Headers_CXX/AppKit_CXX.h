@@ -49,12 +49,12 @@ typedef NSUInteger NSBackingStoreType;
 enum
 {
 
-    NSBackingStoreRetained = 0,
-    NSBackingStoreNonretained = 1,
+    NSBackingStoreRetained __attribute__((availability(macos, introduced = 10.0, deprecated = 10.13, replacement = "NSBackingStoreBuffered"))) = 0,
+    NSBackingStoreNonretained __attribute__((availability(macos, introduced = 10.0, deprecated = 10.13, replacement = "NSBackingStoreBuffered"))) = 1,
     NSBackingStoreBuffered = 2,
 };
 
-struct NSWindow *NSWindow_initWithContentRect(struct NSWindow *self, NSRect rect, NSWindowStyleMask styleMask, NSBackingStoreType backing, bool defer);
+struct NSWindow * __attribute__((availability(macos, introduced = 10.5))) NSWindow_initWithContentRect(struct NSWindow *self, NSRect rect, NSWindowStyleMask styleMask, NSBackingStoreType backing, bool defer);
 
 void NSWindow_setContentViewController(struct NSWindow *self, struct NSViewController *contentViewController);
 
