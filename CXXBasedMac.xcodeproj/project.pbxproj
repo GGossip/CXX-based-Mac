@@ -68,10 +68,6 @@
 		92244DC6243DC7A00020A653 /* Dispatch_CXX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Dispatch_CXX.h; path = Headers_CXX/Dispatch_CXX.h; sourceTree = "<group>"; };
 		92244DC7243DC7A00020A653 /* Dispatch_CXX_IMPL.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Dispatch_CXX_IMPL.h; path = Headers_CXX/Dispatch_CXX_IMPL.h; sourceTree = "<group>"; };
 		92244DC8243DC7A00020A653 /* Dispatch_CXX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Dispatch_CXX.cpp; path = Headers_CXX/Dispatch_CXX.cpp; sourceTree = "<group>"; };
-		9275BE97244066C500D728FF /* Foundation */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = Foundation; path = /System/Library/Frameworks/Foundation.framework/Versions/Current/Foundation; sourceTree = "<group>"; };
-		9275BE99244066DB00D728FF /* AppKit */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = AppKit; path = /System/Library/Frameworks/AppKit.framework/Versions/Current/AppKit; sourceTree = "<group>"; };
-		9275BE9B244066FC00D728FF /* Metal */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = Metal; path = /System/Library/Frameworks/Metal.framework/Versions/Current/Metal; sourceTree = "<group>"; };
-		9275BE9D2440670200D728FF /* MetalKit */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = MetalKit; path = /System/Library/Frameworks/MetalKit.framework/Versions/Current/MetalKit; sourceTree = "<group>"; };
 		9279CC1F24390AB900DACBD7 /* main_macOS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main_macOS.cpp; sourceTree = "<group>"; };
 		92806A8A243BC99200EB0099 /* GCEvent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GCEvent.h; sourceTree = "<group>"; };
 		92806A8B243BC99200EB0099 /* GCEvent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GCEvent.cpp; sourceTree = "<group>"; };
@@ -200,10 +196,6 @@
 				92F0793224479F0600F82881 /* Foundation.tbd */,
 				92F078932447863B00F82881 /* libobjc.tbd */,
 				92F0788D2447818700F82881 /* UIKit.tbd */,
-				9275BE9D2440670200D728FF /* MetalKit */,
-				9275BE9B244066FC00D728FF /* Metal */,
-				9275BE99244066DB00D728FF /* AppKit */,
-				9275BE97244066C500D728FF /* Foundation */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
