@@ -7,16 +7,17 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		62D793B525974516001CC2AF /* libobjc.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62D793B425974516001CC2AF /* libobjc.tbd */; };
+		62D793B925974525001CC2AF /* AppKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62D793B825974525001CC2AF /* AppKit.tbd */; };
+		62D793BD25974534001CC2AF /* Foundation.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62D793BC25974534001CC2AF /* Foundation.tbd */; };
+		62D793C125974546001CC2AF /* Metal.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62D793C025974546001CC2AF /* Metal.tbd */; };
+		62D793C72597454D001CC2AF /* MetalKit.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 62D793C62597454D001CC2AF /* MetalKit.tbd */; };
 		9202E2142439EDCD00FEC77B /* Metal_CXX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9202E2102439EDCD00FEC77B /* Metal_CXX.cpp */; };
 		9202E2152439EDCD00FEC77B /* Appkit_CXX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9202E2112439EDCD00FEC77B /* Appkit_CXX.cpp */; };
 		9202E2192439FF7F00FEC77B /* MetalKit_CXX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9202E2172439FF7F00FEC77B /* MetalKit_CXX.cpp */; };
 		9202E21B243A06EA00FEC77B /* Renderer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9202E21A243A06EA00FEC77B /* Renderer.cpp */; };
 		9202E221243A32C300FEC77B /* NSRuntime_CXX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9202E220243A32C300FEC77B /* NSRuntime_CXX.cpp */; };
 		92244DC9243DC7A00020A653 /* Dispatch_CXX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92244DC8243DC7A00020A653 /* Dispatch_CXX.cpp */; };
-		9275BE98244066C500D728FF /* Foundation in Frameworks */ = {isa = PBXBuildFile; fileRef = 9275BE97244066C500D728FF /* Foundation */; };
-		9275BE9A244066DB00D728FF /* AppKit in Frameworks */ = {isa = PBXBuildFile; fileRef = 9275BE99244066DB00D728FF /* AppKit */; };
-		9275BE9C244066FC00D728FF /* Metal in Frameworks */ = {isa = PBXBuildFile; fileRef = 9275BE9B244066FC00D728FF /* Metal */; };
-		9275BE9E2440670200D728FF /* MetalKit in Frameworks */ = {isa = PBXBuildFile; fileRef = 9275BE9D2440670200D728FF /* MetalKit */; };
 		9279CC2024390AB900DACBD7 /* main_macOS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 9279CC1F24390AB900DACBD7 /* main_macOS.cpp */; };
 		92806A8C243BC99200EB0099 /* GCEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92806A8B243BC99200EB0099 /* GCEvent.cpp */; };
 		92806A94243CC03200EB0099 /* Foundation_CXX.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 92806A93243CC03200EB0099 /* Foundation_CXX.cpp */; };
@@ -48,6 +49,11 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		62D793B425974516001CC2AF /* libobjc.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libobjc.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/usr/lib/libobjc.tbd; sourceTree = DEVELOPER_DIR; };
+		62D793B825974525001CC2AF /* AppKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = AppKit.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/AppKit.framework/AppKit.tbd; sourceTree = DEVELOPER_DIR; };
+		62D793BC25974534001CC2AF /* Foundation.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = Foundation.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Foundation.framework/Foundation.tbd; sourceTree = DEVELOPER_DIR; };
+		62D793C025974546001CC2AF /* Metal.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = Metal.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/Metal.framework/Metal.tbd; sourceTree = DEVELOPER_DIR; };
+		62D793C62597454D001CC2AF /* MetalKit.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = MetalKit.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX.sdk/System/Library/Frameworks/MetalKit.framework/MetalKit.tbd; sourceTree = DEVELOPER_DIR; };
 		9202E20F2439EDCD00FEC77B /* CoreGraphics_CXX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CoreGraphics_CXX.h; path = Headers_CXX/CoreGraphics_CXX.h; sourceTree = "<group>"; };
 		9202E2102439EDCD00FEC77B /* Metal_CXX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Metal_CXX.cpp; path = Headers_CXX/Metal_CXX.cpp; sourceTree = "<group>"; };
 		9202E2112439EDCD00FEC77B /* Appkit_CXX.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; name = Appkit_CXX.cpp; path = Headers_CXX/Appkit_CXX.cpp; sourceTree = "<group>"; };
@@ -121,10 +127,11 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				9275BE98244066C500D728FF /* Foundation in Frameworks */,
-				9275BE9A244066DB00D728FF /* AppKit in Frameworks */,
-				9275BE9C244066FC00D728FF /* Metal in Frameworks */,
-				9275BE9E2440670200D728FF /* MetalKit in Frameworks */,
+				62D793B525974516001CC2AF /* libobjc.tbd in Frameworks */,
+				62D793B925974525001CC2AF /* AppKit.tbd in Frameworks */,
+				62D793BD25974534001CC2AF /* Foundation.tbd in Frameworks */,
+				62D793C125974546001CC2AF /* Metal.tbd in Frameworks */,
+				62D793C72597454D001CC2AF /* MetalKit.tbd in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -183,6 +190,11 @@
 		9279CC2124390AE300DACBD7 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				62D793C62597454D001CC2AF /* MetalKit.tbd */,
+				62D793C025974546001CC2AF /* Metal.tbd */,
+				62D793BC25974534001CC2AF /* Foundation.tbd */,
+				62D793B825974525001CC2AF /* AppKit.tbd */,
+				62D793B425974516001CC2AF /* libobjc.tbd */,
 				92F0793624479F1500F82881 /* MetalKit.tbd */,
 				92F0793424479F1000F82881 /* Metal.tbd */,
 				92F0793224479F0600F82881 /* Foundation.tbd */,

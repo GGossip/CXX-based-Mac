@@ -31,7 +31,7 @@ struct CAMetalDrawable : public MTLDrawable
     CAMetalDrawable() = delete;
 };
 
-struct MTKViewDelegate_Class : public OBJC_CLASS
+struct MTKViewDelegate_Class : objc_class
 {
     MTKViewDelegate_Class() = delete;
 };

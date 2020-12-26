@@ -25,10 +25,19 @@ struct NSScreen *NSScreen_mainScreen()
 
 NSRect NSScreen_frame(struct NSScreen *self)
 {
+#if defined(__x86_64__) || defined(__i386__) || defined(__arm__)
     assert(sizeof(NSRect) != 1 && sizeof(NSRect) != 2 && sizeof(NSRect) != 4 && sizeof(NSRect) != 8);
     NSRect _frame = reinterpret_cast<NSRect (*)(struct objc_object *, struct objc_selector *)>(objc_msgSend_stret)(
         self,
         sel_registerName("frame"));
+#elif defined(__aarch64__)
+    assert(sizeof(NSRect) != 1 && sizeof(NSRect) != 2 && sizeof(NSRect) != 4 && sizeof(NSRect) != 8);
+    NSRect _frame = reinterpret_cast<NSRect (*)(struct objc_object *, struct objc_selector *)>(objc_msgSend)(
+        self,
+        sel_registerName("frame"));
+#else
+#error Unknown Architecture
+#endif
     return _frame;
 }
 

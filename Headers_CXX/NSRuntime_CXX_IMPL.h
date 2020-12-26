@@ -4,17 +4,20 @@
 
 #include <objc/objc.h>
 
-struct OBJC_CLASS : public objc_object
-{
-    OBJC_CLASS() = delete;
-};
+#if _VSCODE_INTELLISENCE_
+#include <objc/objc-runtime.h>
+#else
+#if __is_target_os(ios)
+#include <objc/message.h>
+#include <objc/runtime.h>
+#elif __is_target_os(macos)
+#include <objc/objc-runtime.h>
+#else
+#error Unknown Target
+#endif
+#endif
 
-struct OBJC_OBJECT : public objc_object
-{
-    OBJC_OBJECT() = delete;
-};
-
-struct NSObject : public OBJC_OBJECT
+struct NSObject : public objc_object
 {
     NSObject() = delete;
 };

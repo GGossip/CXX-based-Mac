@@ -18,7 +18,7 @@ struct UIView : public NSObject
     UIView() = delete;
 };
 
-struct UIViewController_Class : OBJC_CLASS
+struct UIViewController_Class : objc_class
 {
     UIViewController_Class() = delete;
 };
@@ -37,6 +37,5 @@ struct UIApplication : public NSObject
 {
     UIApplication() = delete;
 };
-
 
 #endif

@@ -18,7 +18,7 @@ struct NSView : public NSObject
     NSView() = delete;
 };
 
-struct NSViewController_Class : OBJC_CLASS
+struct NSViewController_Class : objc_class
 {
     NSViewController_Class() = delete;
 };

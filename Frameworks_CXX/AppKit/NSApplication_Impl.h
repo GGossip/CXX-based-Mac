@@ -6,7 +6,7 @@ struct NSApplication : public NSObject
     NSApplication() = delete;
 };
 
-struct NSApplicationDelegate_Class : struct objc_class
+struct NSApplicationDelegate_Class : objc_class
 {
     NSApplicationDelegate_Class() = delete;
 };

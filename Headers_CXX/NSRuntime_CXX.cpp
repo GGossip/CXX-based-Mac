@@ -1,23 +1,10 @@
 #include "NSRuntime_CXX.h"
 #include "NSRuntime_CXX_IMPL.h"
 
-#if _VSCODE_INTELLISENCE_
-#include <objc/objc-runtime.h>
-#else
-#if __is_target_os(ios)
-#include <objc/message.h>
-#include <objc/runtime.h>
-#elif __is_target_os(macos)
-#include <objc/objc-runtime.h>
-#else
-#error Unknown Target
-#endif
-#endif
-
 #include <assert.h>
 #include <string.h>
 
-bool OBJC_CLASS_addIvarVoidPointer(struct OBJC_CLASS *self, char const *ivarname)
+bool OBJC_CLASS_addIvarVoidPointer(struct objc_class *self, char const *ivarname)
 {
     BOOL result = class_addIvar(
         reinterpret_cast<Class>(self),
@@ -28,7 +15,7 @@ bool OBJC_CLASS_addIvarVoidPointer(struct OBJC_CLASS *self, char const *ivarname
     return (result != NO) ? true : false;
 }
 
-void OBJC_OBJECT_setIvarVoidPointer(struct OBJC_OBJECT *self, char const *ivarname, void *pVoid)
+void OBJC_OBJECT_setIvarVoidPointer(struct objc_object *self, char const *ivarname, void *pVoid)
 {
     Ivar ivar_pUserData = class_getInstanceVariable(object_getClass(self), ivarname);
     assert(ivar_pUserData != NULL);
@@ -36,7 +23,7 @@ void OBJC_OBJECT_setIvarVoidPointer(struct OBJC_OBJECT *self, char const *ivarna
     (*reinterpret_cast<void **>(reinterpret_cast<uintptr_t>(self) + ivar_getOffset(ivar_pUserData))) = pVoid;
 }
 
-void *OBJC_OBJECT_getIvarVoidPointer(struct OBJC_OBJECT *self, char const *ivarname)
+void *OBJC_OBJECT_getIvarVoidPointer(struct objc_object *self, char const *ivarname)
 {
     Ivar ivar_pUserData = class_getInstanceVariable(object_getClass(self), ivarname);
     assert(ivar_pUserData != NULL);
